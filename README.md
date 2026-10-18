@@ -1,0 +1,2 @@
+Brian Swingle - 10/17/2026: The purpose of this project is to understand the recent essay https://already-clean.goodfire.com/. This likely includes filling in a lot of background material, potentially reproducing claims in small examples, and producing explanatory material. The broad audience is interpretability amatuers with a physics background. I'd like to go slowly section by section through the essay, keeping things organized into separate sub-folders.
+
