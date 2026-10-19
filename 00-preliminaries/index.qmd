@@ -1,0 +1,322 @@
+---
+title: "Preliminaries: the objects the essay talks about"
+subtitle: "Neurons, features, the residual stream, and the tools used to look at them"
+---
+
+The essay assumes its reader already knows what a neuron is, what a feature is, why anyone
+would train a sparse autoencoder, and what an attribution graph shows. This page fills that in
+for someone with a physics background and no interpretability background. It is deliberately
+concrete: every object is defined by an equation or a procedure, and the vocabulary the essay
+uses is collected in a glossary at the end.
+
+If you already work in interpretability, skip to the [glossary](#glossary) and the
+[map for physicists](#a-map-for-physicists).
+
+## 1. Neurons
+
+A trained network is a fixed function $f_\theta$ from inputs to outputs. "Interpretability" in
+the sense of this essay means explaining *how* it computes that function in terms of its
+internal parts, the way a biologist explains an organism in terms of cells and organs rather
+than in terms of its genome.
+
+The basic internal part is the **neuron**. In a fully-connected (MLP) layer with input vector
+$x \in \mathbb{R}^d$, neuron $i$ has an input weight vector $w_i \in \mathbb{R}^d$, a bias
+$b_i$, and a scalar nonlinearity $\phi$:
+
+$$
+a_i(x) = \phi\big(w_i \cdot x + b_i\big).
+$$
+
+The quantity $w_i\cdot x + b_i$ is the **preactivation**; $a_i$ is the **activation**. The
+layer's output is then a linear map of the activation vector, $y = \sum_i a_i\, v_i$, where
+$v_i$ is neuron $i$'s **output weight** vector. So each neuron *reads* one direction
+($w_i$) and *writes* one direction ($v_i$), with a scalar nonlinearity in between. The essay's
+language of "readers" and "what a neuron lets through" is literal: downstream neurons whose
+$w_j$ has a large component along $v_i$ are the readers of neuron $i$.
+
+Three nonlinearities matter here:
+
+- **ReLU**, $\phi(z) = \max(z, 0)$. Used in InceptionV1 and most pre-2020 vision models. The
+  negative side of the preactivation is thrown away.
+- **GELU**, a smooth version of ReLU, $\phi(z) = z\,\Phi(z)$ with $\Phi$ the Gaussian CDF.
+  Used in GPT-2 and ConvNeXt. Slightly negative for small negative $z$, which is why the essay
+  can talk about a neuron's negative side even in GELU networks.
+- **SwiGLU** (gated), used in Llama, Qwen, and most modern language models. The neuron has two
+  input weight vectors, a *gate* $g_i$ and a *value* $u_i$, and
+  $$
+  a_i(x) = \mathrm{SiLU}(g_i\cdot x)\,(u_i\cdot x), \qquad \mathrm{SiLU}(z) = \frac{z}{1+e^{-z}}.
+  $$
+  Since $\mathrm{SiLU}(z)$ is slightly negative for $z<0$, the product is *positive* when both
+  the gate and the value are negative. The essay calls this the "double-negative regime" and
+  argues it is an architectural artefact, so keep it in mind.
+
+**The negative pole.** Even with ReLU, the preactivation $w_i\cdot x + b_i$ can be driven
+strongly negative by some inputs. The essay insists that this negative side is meaningful:
+the weights $w_i$ are learned as a sum of "votes", and whatever pushes the preactivation
+down is, by construction, the thing the neuron is built to *not* respond to. The essay's
+canonical example is a neuron whose positive pole is "V-shaped" and whose negative pole is
+"round". It uses the word **pole** for each side.
+
+**Neurons in convolutional networks.** In a conv net the "neuron" is a *channel*: a filter
+$w_i$ that is applied at every spatial position, giving an activation *map* $a_i(x, \text{pos})$
+rather than a single number. InceptionV1 neuron "4e:55" means channel 55 of the layer named
+`mixed4e`. When the essay shows an image that "activates" a neuron it usually means the
+maximum, or sum, of the map over positions.
+
+**Neurons in transformers.** A transformer block has an attention sublayer and an MLP
+sublayer. The "neurons" are the hidden units of the MLP: for a model with residual width
+$d_{\text{model}}$ the MLP expands to $d_{\text{mlp}} \approx 4\, d_{\text{model}}$ (or
+$\approx \tfrac{8}{3} d_{\text{model}}$ for SwiGLU) hidden units, each of which is a neuron in
+exactly the sense above. There is one activation per neuron *per token*. Qwen3-32B has 64
+layers with 25,600 neurons each, so about 1.6 million neurons, which is the "more than a
+million neurons" the essay mentions. Attention heads are not neurons and the essay treats
+them separately.
+
+## 2. The residual stream
+
+Modern networks (ResNets, ConvNeXt, every transformer) are **residual**: each layer adds its
+output to a running vector rather than replacing it,
+
+$$
+x_{\ell+1} = x_\ell + f_\ell(x_\ell).
+$$
+
+The running vector $x_\ell \in \mathbb{R}^{d_{\text{model}}}$ is the **residual stream**. In a
+transformer there is one such vector per token position. Every neuron in every layer reads
+from the stream by taking an inner product with its $w_i$ and writes back to it by adding a
+multiple of its $v_i$. The stream is therefore a shared, high-dimensional bus; the only
+nonlinear operations are the elementwise $\phi$ inside the MLPs, the softmax inside
+attention, and the normalisation (**LayerNorm**: subtract the mean, divide by the standard
+deviation across the $d_{\text{model}}$ components, then rescale) that precedes each
+sublayer.
+
+Two facts about the stream drive much of the essay:
+
+- It has **no privileged basis**. Rotating the stream by an orthogonal matrix $R$, and
+  correspondingly rotating every $w_i \to R w_i$ and $v_i \to R v_i$, gives an identical
+  network. Nothing about a single coordinate of the stream has any meaning. Neuron
+  activations, by contrast, *do* have a privileged basis, because $\phi$ acts elementwise:
+  rotating the neurons changes the function. This is why "look at the neurons" is a
+  well-posed instruction and "look at the stream's coordinates" is not.
+- InceptionV1 has **no residual stream** (it predates ResNets). Each layer must carry
+  everything the next layer needs. The essay argues that this, rather than any inherent
+  property of learning, is why InceptionV1's late layers looked like a mess, and it uses the
+  absence of a residual stream to design a squeeze experiment later on.
+
+## 3. Attention, briefly
+
+An attention head at layer $\ell$ moves information between token positions. For each pair
+of positions $(s, t)$ it computes a score from the **query** at $t$ and the **key** at $s$,
+softmaxes the scores over $s$ to get weights $A_{ts}$, and then adds to the stream at $t$ the
+weighted sum $\sum_s A_{ts}\, W_O W_V\, x_s$. The essay's four questions about a head are:
+*where* it looks ($A_{ts}$, cheap to read off), *what* it looks for (the query-key circuit),
+*what it does* when it finds it (the output-value circuit, which can be read in terms of
+which neurons' $v_i$ it picks up and which neurons' $w_j$ it lands on), and *why*. The essay
+only claims progress on the first three and says little about the fourth.
+
+## 4. Features and the two hypotheses
+
+A **feature** is, informally, a property of the input that the network represents. The
+word is notoriously hard to make precise and the essay's appendix has a note on exactly this
+problem. The working definition in most of the field is the **linear representation
+hypothesis**: a feature is a *direction* $d_k$ in some activation space, and the degree to
+which the feature is present in input $x$ is the projection of the activation onto $d_k$.
+
+If the feature directions happened to coincide with neuron directions, every neuron would
+respond to exactly one human-recognisable thing. Such a neuron is called **monosemantic**. A
+neuron that seems to respond to several unrelated things is **polysemantic**. The famous
+example, and the essay's opening target, is InceptionV1 neuron 4e:55, which the 2020 *Zoom
+In* paper reported as responding to both cat faces and car fronts.
+
+Two explanations for polysemanticity were on the table before this essay:
+
+1. **Superposition.** The network wants to represent more features than it has neurons, so it
+   assigns features to *nearly* orthogonal directions that are not neuron-aligned. Each neuron
+   then carries small pieces of several unrelated features. The next page reproduces the toy
+   model that made this precise. Under this hypothesis the neurons are the wrong basis, and
+   the right move is to *decompose* the activations into the underlying features by some
+   optimisation (a sparse autoencoder).
+2. **Generalisation / composition.** The neuron really does respond to one thing, but that
+   thing is not a noun we have a word for ("V-shape" rather than "cat or car"), or the neuron
+   grew outward from a core onto related territory during training ("recursive
+   generalisation"). Under this hypothesis the neurons are the right basis and the task is
+   to explain them better.
+
+These make opposite predictions about what should be bundled together: superposition
+bundles things *because* they are unrelated (so that they rarely co-occur and interfere
+little), generalisation bundles things *because* they are related. The essay's entire
+argument is that the evidence points to the second.
+
+## 5. How people look at neurons
+
+The tools below are the "microscope" the essay says was mis-set. Each is simple to state.
+
+**Top-activating examples.** Run a large dataset through the network, record each neuron's
+activation on every input (or every token), and sort. The top few dozen inputs are the
+cheapest description of a neuron, and automated labelling pipelines mostly look at these.
+The essay's "weak activations" section is about everything *below* the top of this list.
+
+**Feature visualisation.** Instead of searching a dataset, synthesise an input by gradient
+ascent on the activation, $x^\star = \arg\max_x a_i(x)$, starting from noise. Done naively
+this produces adversarial high-frequency noise. The 2017 *Feature Visualization* paper made
+it work by parametrising the image in a decorrelated Fourier basis and by **transformation
+robustness**: optimise the expected activation under random jitter, scaling and rotation of
+the image, so the optimiser must find a pattern that excites the neuron the way a real
+image would. The essay's point about "reward hacking" is that in late layers the optimiser
+still finds a route the network rarely uses on real data (it draws dogs when the real
+circuit carries car information), and that this is a property of the tool, not the neuron.
+
+**Ablation.** Set a neuron's activation to zero (or to its dataset mean) on a given input
+and measure what changes in the output. This is the interventional test behind statements
+like "remove the eight neurons with a Santa negative side and the Santa probability falls
+from near-certain to 6 percent".
+
+**Attribution.** For a given input, estimate how much neuron $i$ in one layer contributes to
+neuron $j$ in a later layer. The simplest version is the product of $a_i$ and the gradient
+$\partial a_j / \partial a_i$, which is exact when the path between them is linear. In a
+residual network the path from $v_i$ to $w_j$ *through the stream* is exactly linear, so the
+direct effect is just $a_i\,(v_i\cdot w_j)$, and the only approximation is in how the
+indirect effects through intervening nonlinearities are handled.
+
+**Attribution graphs.** Take one prompt, compute attributions between all pairs of units
+across all layers, keep the strong edges, and draw the result as a graph from input tokens
+to output logits. Anthropic's 2025 *circuit tracing* work builds these graphs on
+**transcoder** features rather than neurons. A transcoder is a trained replacement for each
+MLP with a sparse, wide hidden layer, chosen so that the hidden units are more interpretable
+than the original neurons. The cost is that the replacement model is only approximately the
+original: the essay quotes Anthropic's own methods page for the figure that it predicts the
+same next token only about half the time. The essay's language-model claim is that the same
+graphs can be built on the original neurons with no replacement model at all.
+
+**Steering.** Add a multiple of $v_i$ to the stream during generation and see what the model
+does. Used in the essay as an informal check ("steering the Colorado neuron makes the model
+want to go hiking").
+
+## 6. Sparse autoencoders (dictionary learning)
+
+If superposition is true, activation vectors $x \in \mathbb{R}^d$ are sparse non-negative
+combinations of $n \gg d$ feature directions, $x \approx \sum_k f_k(x)\, d_k$ with few
+$f_k \neq 0$. A **sparse autoencoder** (SAE) tries to recover the dictionary $\{d_k\}$ and the
+coefficients $f_k$ by training
+
+$$
+f(x) = \mathrm{ReLU}(W_{\text{enc}}\, x + b_{\text{enc}}), \qquad
+\hat x = W_{\text{dec}}\, f(x) + b_{\text{dec}},
+$$
+
+to minimise $\|x - \hat x\|^2 + \lambda \|f(x)\|_1$ over a large dataset of activations. The
+$\ell_1$ penalty enforces sparsity; the columns of $W_{\text{dec}}$ are the learned feature
+directions. A **TopK** SAE replaces the penalty by keeping only the $k$ largest
+preactivations per input, which is what the essay uses (640 features, $k=2$). "Dictionary
+learning" is the general name for this family.
+
+Two numbers are always reported. **Variance explained** says how well $\hat x$ reconstructs
+$x$. More honest is to **splice** the SAE into the network, replacing $x$ by $\hat x$ at that
+layer, and measure how much the network's accuracy or loss degrades, because small
+reconstruction error can still destroy information the network needed. The essay reports
+both for its squeeze experiment.
+
+The essay is not against SAEs as such. Its claim is that, in the networks it studied, an SAE
+mostly rediscovers the neurons (88 percent of SAE activity on ConvNeXt's last layer is a near
+copy of a single neuron) and the rest is loose regroupings of them, and that on InceptionV1
+4e:55 the SAE "fractures" a single V-shape neuron into a car feature and a cat feature, which
+is further from what the neuron does.
+
+## 7. The model zoo
+
+The essay moves between several networks. A one-line sketch of each:
+
+| Model | Year | Size | Type | Why it appears |
+|---|---|---|---|---|
+| InceptionV1 (GoogLeNet) | 2014 | 6.6 M params | conv net, no residual stream, ReLU | The original model organism; layers named `mixed3a … mixed5b` |
+| ConvNeXt (small / medium / large) | 2022 design, trained by the author | 92 k / 7.06 M / 28.6 M | modern conv net with residuals, LayerNorm, GELU | A 300× size sweep at fixed architecture; medium matches InceptionV1's parameter count |
+| CLIP | 2021 | ~ 400 M | image–text contrastive model | Source of the "multimodal neurons" paper |
+| DINOv2 | 2023 | ~ 86 M (ViT-B) | self-supervised vision transformer | Shows the same pose neuron appears at 10× InceptionV1's size |
+| GPT-2 XL | 2019 | 1.5 B | transformer, GELU | Model of the 2023 OpenAI automated-interpretability project |
+| Qwen3-32B | 2025 | 32 B | dense transformer, SwiGLU | Main language model in the essay |
+| Qwen3.6 (MoE) | 2026 | — | mixture of experts | The 10,240-expert survey |
+| Kimi K3 | 2026 | > 1 T | mixture of experts | "First attribution graph of a multi-trillion parameter model" |
+
+**Mixture of experts.** In an MoE transformer the MLP sublayer is replaced by many
+independent MLPs ("experts") and a learned router that sends each token to a few of them.
+Each expert has its own neurons. The essay argues experts are far more specialised than
+usually reported and calls the architecture "anti-superposition", because the router would
+have to recognise thousands of distinct things for packing to occur.
+
+## 8. A map for physicists {#a-map-for-physicists}
+
+Some intuitions carry over cleanly; others actively mislead. A short list.
+
+- **Superposition is a compressed-sensing statement.** $n$ sparse signals in $d < n$
+  dimensions can be stored and recovered if their directions are nearly orthogonal
+  (Johnson–Lindenstrauss: one can fit $e^{O(\epsilon^2 d)}$ vectors in $\mathbb{R}^d$ with
+  pairwise overlaps below $\epsilon$). The toy model on the next page is a learned version of
+  this with ReLU as the decoder. The essay accepts the mathematics and disputes whether real
+  networks are in the regime where the trade-off (capacity vs interference) is the dominant
+  consideration.
+- **"Circuit racing" is mode competition.** The essay's account of why networks generalise is
+  that broad features fire on more of the data, receive more gradient, and starve the narrow
+  ones. This is rich-get-richer dynamics in the sense of a linear instability: whichever
+  direction has the largest growth rate dominates. The companion idea in the literature is
+  "gradient starvation" and "coherent gradients".
+- **The privileged basis is a symmetry statement.** The residual stream has an $O(d)$
+  symmetry; the neuron layer breaks it to permutations (and sign flips, in some cases)
+  because $\phi$ is elementwise. Asking which basis is "real" is asking which symmetry the
+  dynamics breaks.
+- **Recursive generalisation vs superposition is a locality question.** Generalisation is
+  local in some similarity metric on the data; superposition is non-local by design. This is
+  the one empirical dichotomy the essay turns on, and watching a neuron over training
+  checkpoints is the proposed experiment.
+- **Beware "feature" as a conserved quantity.** The essay's appendix argues that the toy
+  model prices the *cost* of sharing a neuron (interference) but not the *benefit* (reuse by
+  downstream readers), because in the toy there is nothing downstream. In a real network a
+  representation only matters through what reads it. A physicist's instinct to count degrees
+  of freedom and ask whether $n > d$ is, on the essay's account, the wrong question.
+- **Beware the "microscope" analogy as reassurance.** A real microscope's artefacts are well
+  understood; the essay's whole historical section is about artefacts in feature
+  visualisation and in the choice of model organism that went unrecognised for years.
+
+## Glossary {#glossary}
+
+Terms in the essay's own sense, in roughly the order they appear.
+
+- **Polysemantic / monosemantic.** A neuron that appears to respond to several unrelated
+  things / to one thing. The essay argues the first is largely an observer's statement.
+- **Superposition.** Unrelated features stored in overlapping, non-neuron-aligned directions
+  because the network has run out of neurons. The essay distinguishes three senses: (a)
+  more features than dimensions, which a clean network could also satisfy; (b) a learning
+  principle that packs unrelated things into neurons, which is what the essay argues
+  against; (c) the same principle applied to directions in the residual stream.
+- **Recursive generalisation.** A neuron starts on one core and sprouts related offshoots as
+  training proceeds, "the way a tree branch sprouts sub-branches". Earlier called "conjoined
+  features" in the multimodal-neurons paper.
+- **Pole.** The positive or negative side of a neuron's preactivation. Both are treated as
+  meaningful.
+- **Gate.** A neuron viewed as control flow: what it lets through and what it keeps out,
+  rather than what noun it names.
+- **Circuit.** A set of neurons across layers connected by large weights, doing an
+  identifiable sub-computation.
+- **Motif.** A pattern that recurs across many circuits (e.g. "summary on punctuation",
+  "say or just think", pose neurons feeding class detectors).
+- **Weak activations.** Everything below the top of a neuron's activation distribution; the
+  essay argues they are mostly generalisation and mostly ablatable.
+- **Blind maximum.** Test an explanation by having a second agent, who sees only the
+  explanation, write an input intended to maximally activate the neuron. If it beats the
+  dataset maximum the explanation captured the centre of the neuron.
+- **Neuron paper.** A short written audit of one neuron, produced by an agent; the essay
+  reports statistics over 1,000 of them.
+- **Attribution graph.** A per-prompt graph of which units drive which, from tokens to logits.
+- **Enumerative vs exploratory interpretability.** Build a complete list of features to
+  audit, vs start from questions and move through the network as needed. The essay favours
+  the second and says the first was "always a means to an end".
+- **Already clean.** The essay's thesis: the network's own parts are built to be read by its
+  own downstream parts, and are therefore readable by us without being decomposed first.
+
+## Further reading for this page
+
+- Olah et al., *Feature Visualization*, Distill 2017.
+- Olah et al., *Zoom In: An Introduction to Circuits*, Distill 2020.
+- Elhage et al., *Toy Models of Superposition*, Transformer Circuits 2022 (next page).
+- Bricken et al., *Towards Monosemanticity*, Transformer Circuits 2023 (the SAE paper).
+- Ameisen et al., *Circuit Tracing* and Lindsey et al., *On the Biology of a Large Language
+  Model*, Transformer Circuits 2025 (attribution graphs).

@@ -1,0 +1,234 @@
+---
+title: "Cars and Animals"
+subtitle: "Essay section 2: is the famous cat-and-car neuron a V-shape neuron? A direct check on the original weights"
+---
+
+The essay's first piece of evidence is a reinterpretation of the most famous polysemantic
+neuron in the field, InceptionV1's **4e:55** (channel 55 of layer `mixed4e`). *Zoom In* (2020)
+presented it as responding to cat faces and car fronts and said outright that it "isn't
+responding to some commonality of cars and cat faces". The essay now says it is a **V-shape**
+neuron: pointed things drive it positive, round things drive it negative, and the cats and cars
+are two of many things with a V in them.
+
+The original 2014 InceptionV1 weights are public (the `inception5h` graph that the Lucid and
+Lucent libraries ship), so this is a claim we can check directly. We do not have ImageNet, so
+we use the 5,000 COCO validation images instead, which have cats, cars, dogs and much else, and
+which come with object labels we can use for statistics.
+
+## What the essay claims, specifically
+
+1. The neuron's strongest inputs from the previous layer include 4d:493 (fox snout),
+   4d:477 (wolf face) and 4d:201 (van front); its strongest reader downstream is 5a:94
+   (V-shaped flames).
+2. Its negative pole is "an O, round where the V is pointed".
+3. Its positive pole generalises beyond cats and cars to anything pointed: fox faces, pool
+   tables, bullet trains.
+4. Therefore the right description is a *shared pattern* (a verb, "pointed versus round"), not
+   a *list of nouns* (cats OR cars).
+
+Claims 1 and 2 are checkable from the weights and from any photo collection. Claim 3 we can
+check partially with COCO's labels. Claim 4 is an interpretation, and the last section
+discusses how much the evidence supports it.
+
+```{python}
+#| code-summary: "Setup: load the original InceptionV1 and scan COCO (cached after the first run)"
+import sys, pathlib, json, numpy as np, torch, matplotlib.pyplot as plt
+from PIL import Image
+ROOT = pathlib.Path.cwd().parent
+sys.path.insert(0, str(ROOT))
+from common.inception import load_inceptionv1, scan_layer, receptive_crop
+plt.rcParams.update({"figure.dpi": 110, "font.size": 9})
+DEV = "cuda" if torch.cuda.is_available() else "cpu"
+CH = 55
+model = load_inceptionv1(DEV)
+paths = sorted((ROOT / "data/coco/val2017").glob("*.jpg"))
+cache = ROOT / "data/cache/mixed4e_1x1_prerelu_coco.npz"
+if cache.exists():
+    z = dict(np.load(cache))
+else:
+    res = scan_layer(model, "mixed4e_1x1_pre_relu_conv", paths, device=DEV, batch=100)
+    np.savez_compressed(cache, **{k: v for k, v in res.items() if k != "paths"}, paths=np.array(res["paths"]))
+    z = dict(np.load(cache))
+mx, mn, grid = z["max"][:, CH], z["min"][:, CH], int(z["grid"][0])
+print(f"{len(paths)} images; 4e:55 pre-ReLU spatial max: median {np.median(mx):.0f}, "
+      f"99th pct {np.percentile(mx, 99):.0f}, top {mx.max():.0f}; spatial min: bottom {mn.min():.0f}")
+```
+
+A note on what is measured. `mixed4e` is a concatenation of four branches and channel 55 is in
+the 1×1 branch, so we hook that branch's convolution *before* its ReLU. That way the negative
+pole is visible; after the ReLU it would be zero everywhere. For each image we record the
+maximum and minimum over the 14×14 spatial grid and where they occur, and show a crop around
+that location as a stand-in for the receptive field.
+
+## The two poles on 5,000 photographs
+
+```{python}
+#| code-summary: "Contact sheets of the strongest positive and negative responses"
+#| fig-cap: "Left: crops around the location of the 40 strongest positive responses of 4e:55 in COCO val2017. Right: the 40 strongest negative responses. Each crop is about 45% of the 224-pixel input, centred on the activation's location."
+def sheet(order, locs, n=40, ncol=8, size=96):
+    W = Image.new("RGB", (ncol*size, (n//ncol)*size), "white")
+    for k, i in enumerate(order[:n]):
+        c = receptive_crop(pathlib.Path(z["paths"][i]), locs[i, CH], grid).resize((size, size))
+        W.paste(c, ((k % ncol)*size, (k//ncol)*size))
+    return W
+pos = sheet(np.argsort(-mx), z["argmax_yx"]); neg = sheet(np.argsort(mn), z["argmin_yx"])
+fig, axes = plt.subplots(1, 2, figsize=(11, 3.8))
+for ax, im, t in zip(axes, [pos, neg], ["positive pole (top 40)", "negative pole (bottom 40)"]):
+    ax.imshow(im); ax.set_title(t); ax.axis("off")
+plt.tight_layout()
+```
+
+The positive sheet is the famous grid: frontal cat faces and the fronts of cars, with a couple
+of small dogs. The negative sheet is clocks, the round heads of bears and cows, teddy bears,
+the backs of human heads, plates and bowls. The essay's description of the negative pole as
+"an O" holds up on a dataset the neuron was never ranked on before.
+
+## Is it really just cats and cars? Using the labels
+
+COCO's instance annotations tell us what is in each image. If the neuron were an OR of cat
+and car, images with neither should not reach the top. If it is a V-shape detector, some
+should, and they should be pointed things.
+
+```{python}
+#| code-summary: "Label statistics of the top images"
+ann = json.load(open(ROOT / "data/coco/annotations/instances_val2017.json"))
+cat_name = {c["id"]: c["name"] for c in ann["categories"]}
+labels = {}
+for a in ann["annotations"]:
+    labels.setdefault(a["image_id"], set()).add(cat_name[a["category_id"]])
+ids = [int(pathlib.Path(p).stem) for p in z["paths"]]
+def has(i, names): return bool(labels.get(ids[i], set()) & set(names))
+order = np.argsort(-mx)
+vehicles = ["car", "truck", "bus"]
+print(f"{'top-k':>6s} {'cat':>6s} {'car/truck/bus':>14s} {'dog':>6s} {'none of these':>14s}")
+for k in (20, 50, 200, 500):
+    top = order[:k]
+    print(f"{k:6d} {np.mean([has(i,['cat']) for i in top]):6.2f} "
+          f"{np.mean([has(i,vehicles) for i in top]):14.2f} "
+          f"{np.mean([has(i,['dog']) for i in top]):6.2f} "
+          f"{np.mean([not has(i,['cat','dog']+vehicles) for i in top]):14.2f}")
+```
+
+```{python}
+#| code-summary: "The strongest responses among images with no cat, dog, car, truck or bus"
+#| fig-cap: "The 40 strongest positive responses among COCO images that contain no cat, dog, car, truck or bus. The best of these reaches above the 99th percentile of all images."
+rest = [i for i in order if not has(i, ["cat", "dog"] + vehicles)]
+print(f"best 'neither' image: activation {mx[rest[0]]:.0f} vs overall top {mx[order[0]]:.0f} "
+      f"and 99th percentile {np.percentile(mx, 99):.0f}")
+from collections import Counter
+print("most common labels in the top 60 of these:",
+      Counter(l for i in rest[:60] for l in labels.get(ids[i], [])).most_common(10))
+fig, ax = plt.subplots(figsize=(8, 5))
+ax.imshow(sheet(rest, z["argmax_yx"])); ax.axis("off")
+```
+
+What drives the neuron when cats and cars are excluded: frontal animal faces (goat, bighorn
+sheep, horse, zebra, bear, small birds), the noses of trains and aircraft, computer mice and
+remote controls seen end-on, and scenes with strong converging perspective lines such as tennis
+courts, baseball diamonds, railway tracks and bed corners. The essay's own examples of what the
+V generalises to were fox faces, pool tables and bullet trains. The COCO list is the same kind
+of thing: pointed fronts and converging lines. This is the strongest evidence on this page for
+the "V, not OR(cat, car)" reading.
+
+## The circuit: inputs and readers from the weights
+
+The essay names specific neighbours. Because `mixed4e`'s 1×1 branch is a 1×1 convolution,
+its weight matrix is directly the vector of votes each `mixed4d` channel casts for 4e:55, and
+the `mixed5a` convolutions give the votes 4e:55 casts for each `mixed5a` channel.
+
+```{python}
+#| code-summary: "Rank the essay's named inputs and reader by weight"
+w_in = model.mixed4e_1x1_pre_relu_conv.weight[CH, :, 0, 0].detach().cpu()
+top = torch.argsort(-w_in)[:8]
+print("strongest inputs from mixed4d  (channel, weight):", [(int(i), round(float(w_in[i]), 3)) for i in top])
+for c, name in [(493, "fox snout"), (477, "wolf face"), (201, "van front")]:
+    print(f"  essay's 4d:{c} ({name}): weight {float(w_in[c]):+.3f}, rank {int((w_in > w_in[c]).sum())+1} of 528")
+w1 = model.mixed5a_1x1_pre_relu_conv.weight[:, CH, 0, 0].detach().cpu()
+print("strongest readers in mixed5a 1x1 branch:", [(int(i), round(float(w1[i]), 3)) for i in torch.argsort(-w1)[:6]])
+print(f"  essay's 5a:94 (V-shaped flames): weight {float(w1[94]):+.3f}, rank {int((w1 > w1[94]).sum())+1} of 256")
+```
+
+The essay's named input 4d:493 is the single strongest weight into the neuron, by a factor of
+more than two over the next, and its named reader 5a:94 is the single strongest reader in that
+branch. The other two named inputs are in the top fifteen of 528. These are raw weights rather
+than data-weighted attributions, so the agreement is if anything stronger than the essay
+needed. (We have not visualised 4d:493 or 5a:94 ourselves; the labels "fox snout" and
+"V-shaped flames" are the essay's.)
+
+## A synthetic probe: does a bare V excite it?
+
+If the neuron were a geometric V detector in the way an early-layer curve detector is a curve
+detector, a line drawing of a V should drive it. We draw simple shapes on a grey background and
+record the pre-ReLU maximum and minimum.
+
+```{python}
+#| code-summary: "Line-drawn shapes on grey"
+from PIL import ImageDraw
+feats = {}
+hook = dict(model.named_modules())["mixed4e_1x1_pre_relu_conv"].register_forward_hook(
+    lambda m, i, o: feats.__setitem__("x", o))
+def canvas(): return Image.new("RGB", (224, 224), (128, 128, 128))
+def shape(kind, size=90, width=10, angle=0.0, color=(0, 0, 0), cx=112, cy=112):
+    im = canvas(); d = ImageDraw.Draw(im)
+    if kind == "V":
+        a = np.deg2rad(angle); half = np.deg2rad(35)
+        apex = np.array([cx, cy]) + size*0.5*np.array([np.sin(a), np.cos(a)])
+        for s in (+1, -1):
+            end = apex - size*np.array([np.sin(a+s*half), np.cos(a+s*half)])
+            d.line([tuple(apex), tuple(end)], fill=color, width=width)
+    elif kind == "O": d.ellipse([cx-size/2, cy-size/2, cx+size/2, cy+size/2], outline=color, width=width)
+    elif kind == "disc": d.ellipse([cx-size/2, cy-size/2, cx+size/2, cy+size/2], fill=color)
+    elif kind == "square": d.rectangle([cx-size/2, cy-size/2, cx+size/2, cy+size/2], outline=color, width=width)
+    elif kind == "X":
+        d.line([(cx-size/2, cy-size/2), (cx+size/2, cy+size/2)], fill=color, width=width)
+        d.line([(cx-size/2, cy+size/2), (cx+size/2, cy-size/2)], fill=color, width=width)
+    elif kind == "triangle":
+        d.polygon([(cx, cy+size/2), (cx-size/2, cy-size/2), (cx+size/2, cy-size/2)], outline=color, width=width)
+    return im
+@torch.no_grad()
+def run(imgs):
+    x = torch.stack([torch.from_numpy(np.asarray(im, dtype=np.float32) - 117).permute(2, 0, 1) for im in imgs]).to(DEV)
+    model(x); fm = feats["x"][:, CH]
+    return fm.flatten(1).max(1).values.cpu().numpy(), fm.flatten(1).min(1).values.cpu().numpy()
+kinds = ["V", "triangle", "X", "square", "O", "disc", "blank"]
+sizes, widths, colours = [60, 90, 120, 150], [6, 12], [(0, 0, 0), (255, 255, 255)]
+print(f"{'shape':9s} {'mean max':>9s} {'mean min':>9s}    (over 4 sizes x 2 widths x 2 colours; photo scale: 99th pct max = {np.percentile(mx,99):.0f})")
+for kind in kinds:
+    imgs = [canvas() if kind == "blank" else shape(kind, s, w, color=c) for s in sizes for w in widths for c in colours]
+    a, b = run(imgs); print(f"{kind:9s} {a.mean():9.0f} {b.mean():9.0f}")
+hook.remove()
+```
+
+Two things come out. The round shapes (an outline O and a filled disc) give the most negative
+responses of any stimulus, a good deal below a blank grey field, so "round pushes it negative"
+survives even in line drawings. But a bare V does *not* excite the neuron much: its positive
+response is about a tenth of what a real cat face produces and no larger than a square's.
+Whatever "V" means for this neuron, it is a pattern inside high-level structure (a face, a car
+front, a converging road) rather than a geometric primitive. The essay says as much in its
+footnote: "generalization happens inside high-level patterns", and the V neuron "really does
+take in cat circuitry". A mid-network neuron's inputs are already fairly abstract, so this is
+not a surprise, but it is a limit on how literally to take the word "V".
+
+## Assessment
+
+- **Confirmed on public weights:** the named inputs and reader are the strongest by weight;
+  the negative pole is round things; the positive pole extends beyond cats and cars to frontal
+  animal faces, vehicle noses and converging lines.
+- **Supported but not proven:** that "pointed versus round" is the *right* one-line
+  description. It fits everything we saw, and it fits better than OR(cat, car), which cannot
+  explain the goats, trains and tennis courts. A line-drawn V alone is not enough, so the
+  description is of a high-level shape cue, not a contour.
+- **Not addressed here:** the second half of the essay's section, the car-into-dogs circuit
+  and the "generalised pose neurons". That needs feature visualisation with and without the
+  bias toward natural paths, which is the subject of the next section.
+
+## Discussion questions
+
+1. The neuron fires on cat faces far more strongly than on anything else in COCO. Is a neuron
+   whose top of the distribution is 85% cats, but whose tail is "pointed things", best
+   called a cat neuron, a V neuron, or something else? Does the answer depend on what reads
+   it?
+2. The essay's recommended trick is to describe a neuron without nouns. Try it on the
+   negative-pole sheet above. Is "round" the only candidate?
+3. How would one tell a "V-shape" neuron from a "frontal face or front of object" neuron?
+   What stimulus would separate them?

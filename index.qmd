@@ -1,0 +1,42 @@
+---
+title: "A slow read of *Neural Networks Are Already Clean*"
+---
+
+These are working notes on Nick Cammarata's essay
+[*Neural Networks Are Already Clean*](https://already-clean.goodfire.com/) (Goodfire, 2026).
+The audience is people with a physics background who are curious about interpretability but
+have not worked in it. The aim is to go through the essay slowly, one section at a time,
+filling in the background each section assumes and re-creating its claims in the smallest
+instructive setting that fits on a single consumer GPU.
+
+The essay itself is long (about 27,000 words with its appendix) and is written as a
+*working hypothesis* rather than a paper. Its central claim is that the famous examples of
+"polysemantic" neurons, the ones that seemed to respond to unrelated things and that motivated
+the superposition hypothesis, were misread. On the author's account the mess came from broken
+tools, weak architectures, incomplete explanations, and a growth pattern he calls
+*recursive generalization*, all of which are fixable or benign. True superposition, unrelated
+things folded into one neuron, should be the last hypothesis rather than the first.
+
+## How these notes are organised
+
+- **Preliminaries** fill in what a neuron, a feature, a residual stream, an attention head, a
+  sparse autoencoder, and feature visualisation are, in the sense the essay uses them.
+- **Background: Toy Models of Superposition** reproduces the Anthropic toy model that made
+  superposition precise, and the essay's modification of it. This comes *before* the essay's
+  own "Superposition" section because the essay is largely a critique of that framing.
+- **The essay, section by section** then follows the essay's own top-level headings. Each
+  page gives a summary, the background needed, what the claim would look like if false, and a
+  small reproduction where one is feasible. Appendix material is folded into the section it
+  supports.
+
+## Ground rules for the reproductions
+
+None of the essay's models, checkpoints, or datasets are public, so nothing here is a
+replication in the strict sense. Each experiment is a re-creation at the smallest scale
+that keeps the phenomenon, run on one 12 GB GPU in at most a day. Where we had to substitute
+(a smaller dataset than ImageNet, a smaller language model than Qwen3-32B) the page says so.
+
+## Source
+
+The plain-text version of the essay is kept in `source/essay.md` for reference. Quotations
+are from that file.

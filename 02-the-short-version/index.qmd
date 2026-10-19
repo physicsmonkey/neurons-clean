@@ -1,0 +1,117 @@
+---
+title: "The Short Version"
+subtitle: "Essay section 1: the thesis, the claims, and what would falsify each"
+---
+
+The opening section is the whole essay in miniature. This page lists what it claims, sorts
+the claims by how testable they are, and notes where in these notes each one is taken up.
+No experiments here; the section is a statement of position.
+
+## The argument in one paragraph
+
+The field found neurons that seemed to respond to unrelated things (polysemanticity), and
+explained them with superposition: a network short of neurons folds unrelated things together
+because they rarely co-occur. If true, the neurons are a knot with nothing to learn from, and
+the only route is to train a second model (a sparse autoencoder) that unfolds it. The essay
+says the canonical evidence for this was misread. The messy late layers of InceptionV1 were an
+architecture and tooling failure that modern architectures fixed by accident; the famous
+cat-and-car neuron and the car-into-dogs circuit were ordinary generalisation and composition;
+and the residual apparent polysemanticity is mostly **recursive generalisation**, a neuron
+sprouting related offshoots as it grows. That leaves one learning principle, generalisation,
+which happens to be fractal. So the network's own neurons and circuits can be studied directly,
+and this works in practice up to trillion-parameter models.
+
+## Two ways to do interpretability
+
+The essay frames everything around a choice.
+
+1. **Normal science on the network itself.** Look at neurons and circuits, watch data flow
+   through them, run experiments at agentic scale to test explanations. This is where the
+   field started (the Distill *Circuits* thread, 2020).
+2. **Start from a hypothesised feature list** and design reconstruction objectives to extract
+   it, "usually ignoring the original". This is the sparse-autoencoder programme the field
+   moved to after 2022.
+
+The essay's position is that the field fell back from the first to the second on the strength
+of evidence that does not hold up, and that the first approach now works. Note the rhetorical
+asymmetry: option 2 is described as ignoring the original network. Practitioners of SAEs would
+say they study the original through a better basis. Worth raising in discussion.
+
+## The claims, sorted
+
+### Empirical claims about specific models
+
+| Claim | Stated evidence | Testable here? | Where |
+|---|---|---|---|
+| InceptionV1's last layer looked ~5% interpretable in 2014-era tools; a same-size modern conv net is 99–100% interpretable in its last layer, with no change in data or size | Author's own ConvNeXt training runs and microscope | Partly: we can train a small conv net on a substitute dataset and audit last-layer neurons by eye | §08 |
+| Legibility holds across a 300× size range; smaller models get *coarser* neurons, not packed ones | Three ConvNeXts | Partly, same caveat | §08 |
+| The car-into-dogs circuit in *Zoom In* was composition through a shared pose neuron, not superposition, and "nothing reads that combination" | Reanalysis with better feature visualisation and attribution | Yes in principle: InceptionV1 weights are public | §03, §04 |
+| In Qwen3-32B about 90% of neuron poles have one main job, ~7% two related jobs, ~2–4% not understood | Agent-written "neuron papers", preliminary, small samples | Not at that scale; a small Qwen3 or GPT-2 XL audit is feasible | §10 |
+| Results are similar in MoE models and up to trillion parameters (Kimi K3) | Companion paper, forthcoming | No | — |
+| Recursive generalisation is visible when watching neurons over training checkpoints, in every case the author has looked | Retrained InceptionV1 and ConvNeXt checkpoints; LM examples ("iy" → "diy" → "do it yourself") | Yes, for a small conv net we train ourselves | §05 |
+| A SwiGLU "double-negative regime" exists and was found only because most of the network was already understood | Qwen3-32B | Yes, the regime itself is a one-afternoon check on any SwiGLU model | §10 |
+
+### Claims about method and history
+
+- Early explainer models could not run conjecture-and-test loops; metrics rewarded simulating
+  activations rather than being right; people looked for the wrong motifs (nouns rather than
+  feelings, social cues, punctuation summaries); most studies used small simplified models.
+- Understanding compounds like a crossword: once most of the map is filled in, each new neuron
+  is constrained by its neighbours, and the unexplained remainder points at broken tools.
+- Bigger models learn *narrower* neurons, so size helps rather than hurts.
+- "Understanding the whole network may be easier than understanding just the parts we care
+  about most."
+
+These are not falsifiable in a single experiment but they make predictions about how an
+auditing effort should scale, and we can at least check the narrowing-with-size claim on our
+own model sweep.
+
+### The four-step argument, and where its weight sits
+
+1. One learning principle, not two. *(The empirical heart. Everything in §03–§09 is evidence
+   for this.)*
+2. Normal science on modern models goes better than expected. *(Mostly testimony about
+   agent-scale auditing; §10.)*
+3. Understanding compounds. *(A claim about process; hard to test, easy to believe once 1 and
+   2 hold.)*
+4. Highly speculative: this might be most of what we need.
+
+The essay is careful to label step 4 as speculation. Steps 1 and 2 carry the argument.
+
+## Things to notice on a first read
+
+- **The author co-authored both hypotheses.** He found the original superposition circuit in
+  2019 and the "conjoined features" observation in 2021. The essay is a recantation of the
+  first in favour of the second. This matters for how to weigh the testimony: the evidence
+  that convinced him is mostly things he looked at, and the sample sizes he gives are
+  explicitly small.
+- **The headline percentages are soft.** Footnote 1 says the 90% figure moves with the
+  weak-activation threshold, depth, and what counts as one thing, and the author says he
+  included a number only because reviewers wanted one. The claim that matters is the
+  *qualitative* one: mixtures are related, not arbitrary.
+- **"Nothing reads that combination."** This is the sharpest sentence in the section. The
+  original superposition story required a downstream reader that unpacked the car from the
+  dog neurons. The essay's claim is that no such reader exists. That is checkable from the
+  weights.
+- **The bitter-lesson analogy** is doing argumentative work: "scaling ordinary investigation
+  beats engineering a clever new decomposition". It is an analogy, not evidence.
+
+## Questions for discussion
+
+1. Superposition and recursive generalisation make opposite predictions about what shares a
+   neuron. What would a decisive test look like in a model we can train ourselves, and what
+   confounds would make the two hard to tell apart in a *finished* model with no checkpoints?
+2. If a small model's neurons are merely *coarse* (one "car" neuron for all cars), is that
+   distinguishable in practice from superposition of many car types? What does "coarse" mean
+   operationally?
+3. The essay treats "the neuron basis is privileged" as settled by the elementwise
+   nonlinearity. For SwiGLU neurons with a gate and a value, is the neuron still the right
+   unit, or is the pair?
+4. Does "nothing reads that combination" generalise into a usable criterion: a representation
+   is only in superposition if some downstream weight reads the packed combination?
+
+## Where the notes go next
+
+The next three sections of the essay, *Cars and Animals*, *A History of Microscope Errors*,
+and *Recursive Generalization*, are the evidence for step 1 in vision models. The first two
+can be checked directly on the public InceptionV1 weights.

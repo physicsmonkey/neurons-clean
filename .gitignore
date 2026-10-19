@@ -9,3 +9,6 @@ checkpoints/
 _site/
 .quarto/
 /.venv/
+
+/.quarto/
+**/*.quarto_ipynb

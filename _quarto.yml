@@ -1,0 +1,58 @@
+project:
+  type: website
+  output-dir: _site
+  render:
+    - "*.qmd"
+    - "!source/"
+
+website:
+  title: "Neural Networks Are Already Clean — a slow read"
+  description: "Section-by-section notes and small reproductions, written for physicists curious about interpretability."
+  navbar:
+    left:
+      - href: index.qmd
+        text: Home
+      - href: https://already-clean.goodfire.com/
+        text: The essay
+  sidebar:
+    style: docked
+    search: true
+    contents:
+      - index.qmd
+      - section: "Preliminaries"
+        contents:
+          - 00-preliminaries/index.qmd
+      - section: "Background: Toy Models of Superposition"
+        contents:
+          - 01-toy-models-of-superposition/index.qmd
+      - section: "The essay, section by section"
+        contents:
+          - 02-the-short-version/index.qmd
+          - 03-cars-and-animals/index.qmd
+          - 04-microscope-errors/index.qmd
+          - 05-recursive-generalization/index.qmd
+          - 06-superposition/index.qmd
+          - 07-superposition-of-the-gaps/index.qmd
+          - 08-exploring-image-models/index.qmd
+          - 09-weak-activations/index.qmd
+          - 10-exploring-language-models/index.qmd
+          - 11-zooming-out/index.qmd
+
+format:
+  html:
+    theme: cosmo
+    toc: true
+    toc-depth: 3
+    number-sections: false
+    code-fold: true
+    code-tools: true
+    html-math-method: katex
+    fig-width: 7
+    fig-height: 4.5
+
+execute:
+  freeze: auto
+  echo: true
+  warning: false
+
+jupyter: python3
