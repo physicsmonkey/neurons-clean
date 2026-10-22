@@ -1,0 +1,27 @@
+/* Material that goes beyond the essay and the literature it cites */
+.beyond {
+  background: #fff7e0;
+  border-left: 5px solid #d99a00;
+  border-radius: 6px;
+  padding: 0.75rem 1.4rem 1rem 1.4rem;
+  margin: 1.75rem 0;
+}
+.beyond::before {
+  content: "Beyond the essay \2014 our own addition";
+  display: block;
+  font-size: 0.78rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: #8a6100;
+  margin-bottom: 0.4rem;
+}
+.beyond h2:first-of-type, .beyond h3:first-of-type { margin-top: 0.25rem; }
+.beyond-inline {
+  background: #fff7e0;
+  border-left: 5px solid #d99a00;
+  padding: 0.4rem 1rem;
+  margin: 1rem 0;
+  border-radius: 4px;
+  font-size: 0.95rem;
+}

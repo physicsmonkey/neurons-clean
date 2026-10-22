@@ -6,6 +6,7 @@
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
+<meta name="author" content="Mostly Claude and Brian Swingle">
 
 <title>Background: Toy Models of Superposition – Neural Networks Are Already Clean — a slow read</title>
 <style>
@@ -153,6 +154,7 @@ window.Quarto = {
 };
 </script>
 
+<link rel="stylesheet" href="../custom.css">
 </head>
 
 <body class="nav-sidebar docked nav-fixed quarto-light">
@@ -361,6 +363,12 @@ window.Quarto = {
 
 <div class="quarto-title-meta">
 
+    <div>
+    <div class="quarto-title-meta-heading">Author</div>
+    <div class="quarto-title-meta-contents">
+             <p>Mostly Claude and Brian Swingle </p>
+          </div>
+  </div>
     
   
     
@@ -387,7 +395,7 @@ h = W x \in \mathbb{R}^m, \qquad \hat x = \mathrm{ReLU}(W^{\mathsf T} h + b).
 <li>The <strong>superposition index</strong> <span class="math inline">\sum_{j\ne i} (\hat W_i\cdot W_j)^2</span>: how much other features overlap with feature <span class="math inline">i</span>’s direction. Zero means a private direction.</li>
 <li>The <strong>dimensionality</strong> <span class="math inline">D_i = \|W_i\|^2 / \sum_j (\hat W_i\cdot W_j)^2</span>. A feature with its own orthogonal direction has <span class="math inline">D_i = 1</span>; two features sharing a direction antipodally have <span class="math inline">D_i = \tfrac12</span>; the paper shows the values cluster at simple fractions.</li>
 </ul>
-<div id="f77562f3" class="cell" data-execution_count="1">
+<div id="fea08084" class="cell" data-execution_count="1">
 <details class="code-fold">
 <summary>Imports and helpers</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> sys, pathlib</span>
@@ -411,7 +419,7 @@ h = W x \in \mathbb{R}^m, \qquad \hat x = \mathrm{ReLU}(W^{\mathsf T} h + b).
 <section id="from-keep-the-top-m-to-packing-as-sparsity-rises" class="level2">
 <h2 class="anchored" data-anchor-id="from-keep-the-top-m-to-packing-as-sparsity-rises">2. From “keep the top <span class="math inline">m</span>” to packing, as sparsity rises</h2>
 <p>The paper’s headline figure: <span class="math inline">n=20</span> features in <span class="math inline">m=5</span> dimensions, trained at increasing sparsity. Each panel shows the Gram matrix <span class="math inline">W^{\mathsf T}W</span> (which features overlap with which) and, below it, each feature’s norm coloured by its superposition index.</p>
-<div id="3eec3bb1" class="cell" data-execution_count="2">
+<div id="a3ab53e9" class="cell" data-execution_count="2">
 <details class="code-fold">
 <summary>Train n=20, m=5 across sparsity</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>n, m <span class="op">=</span> <span class="dv">20</span>, <span class="dv">5</span></span>
@@ -448,7 +456,7 @@ h = W x \in \mathbb{R}^m, \qquad \hat x = \mathrm{ReLU}(W^{\mathsf T} h + b).
 <section id="the-geometry-of-packing" class="level2">
 <h2 class="anchored" data-anchor-id="the-geometry-of-packing">3. The geometry of packing</h2>
 <p>With <span class="math inline">m = 2</span> we can draw the columns <span class="math inline">W_i</span> directly.</p>
-<div id="654829f8" class="cell" data-execution_count="3">
+<div id="d36721b2" class="cell" data-execution_count="3">
 <details class="code-fold">
 <summary>Train n=5 and n=6 features into m=2 dims at high sparsity</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>fig, axes <span class="op">=</span> plt.subplots(<span class="dv">2</span>, <span class="dv">4</span>, figsize<span class="op">=</span>(<span class="dv">9</span>, <span class="fl">4.6</span>))</span>
@@ -479,7 +487,7 @@ h = W x \in \mathbb{R}^m, \qquad \hat x = \mathrm{ReLU}(W^{\mathsf T} h + b).
 <section id="dimensionality-per-feature-is-quantised" class="level2">
 <h2 class="anchored" data-anchor-id="dimensionality-per-feature-is-quantised">4. Dimensionality per feature is quantised</h2>
 <p>Scaling up the counts shows the paper’s most striking observation: the amount of bottleneck each feature gets, <span class="math inline">D_i</span>, does not vary continuously with sparsity but jumps between a few discrete values that correspond to regular geometric arrangements.</p>
-<div id="63c93f67" class="cell" data-execution_count="4">
+<div id="6db4c6b5" class="cell" data-execution_count="4">
 <details class="code-fold">
 <summary>Train n=80, m=20 across many sparsity values and scatter D_i</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>n, m <span class="op">=</span> <span class="dv">80</span>, <span class="dv">20</span></span>
@@ -518,7 +526,7 @@ h = W x \in \mathbb{R}^m, \qquad \hat x = \mathrm{ReLU}(W^{\mathsf T} h + b).
 </ol></li>
 <li><strong>A hidden layer.</strong> After the 5-dimensional bottleneck there is a layer of <span class="math inline">k</span> ReLU neurons before the output: <span class="math inline">a = \mathrm{ReLU}(V h + c)</span>, <span class="math inline">\hat x = U a + b</span>. These are the “neurons” whose cleanliness we can now ask about; the original toy has none.</li>
 </ol>
-<div id="c829c876" class="cell" data-execution_count="5">
+<div id="fb37fea3" class="cell" data-execution_count="5">
 <details class="code-fold">
 <summary>Train the grouped model, sparse and dense</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>n_groups, group_size, m, k <span class="op">=</span> <span class="dv">4</span>, <span class="dv">5</span>, <span class="dv">5</span>, <span class="dv">10</span></span>
@@ -539,7 +547,7 @@ h = W x \in \mathbb{R}^m, \qquad \hat x = \mathrm{ReLU}(W^{\mathsf T} h + b).
 </details>
 </div>
 <p>First, what the bottleneck does with correlated inputs. The cosine matrix between the 20 input directions <span class="math inline">W_i</span> shows whether the model gave each group a shared direction.</p>
-<div id="ec6050d6" class="cell" data-execution_count="6">
+<div id="24435515" class="cell" data-execution_count="6">
 <details class="code-fold">
 <summary>Cosine between input directions</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb6"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>fig, axes <span class="op">=</span> plt.subplots(<span class="dv">2</span>, <span class="dv">2</span>, figsize<span class="op">=</span>(<span class="fl">6.2</span>, <span class="dv">6</span>))</span>
@@ -566,7 +574,7 @@ h = W x \in \mathbb{R}^m, \qquad \hat x = \mathrm{ReLU}(W^{\mathsf T} h + b).
 </div>
 <p>Reading the figure. Without a hidden layer (left column) the toy behaves as the paper says: sparse groups are packed input by input, with no block structure, exactly as if the inputs were independent; dense groups get the “PCA-like” solution in which each group of five shares one direction. With a hidden layer (right column) the block structure appears <em>even in the sparse regime</em>: related inputs are written to a shared direction and the hidden neurons read that direction. That is the essay’s “related inputs grew onto the neurons”.</p>
 <p>Second, what the hidden neurons read. For each hidden neuron <span class="math inline">j</span> we take the cosine of its read direction <span class="math inline">V_j</span> with each of the four group directions, defined as the mean of each group’s <span class="math inline">W_i</span>. The sign matters: a neuron that is positive on one group and negative on another is a <em>contrast</em> between two things, which is what the essay calls a gate with two poles, not a mixture.</p>
-<div id="0d90547f" class="cell" data-execution_count="7">
+<div id="c43927ed" class="cell" data-execution_count="7">
 <details class="code-fold">
 <summary>Hidden neurons in the group basis</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb7"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> group_cosines(model):</span>
@@ -594,8 +602,11 @@ h = W x \in \mathbb{R}^m, \qquad \hat x = \mathrm{ReLU}(W^{\mathsf T} h + b).
 </div>
 </div>
 </div>
+<div class="beyond-inline">
+<p>The pole-by-pole audit of the hidden neurons that follows is our own analysis. The essay’s figure for this variant shows only the bottleneck’s cosine structure.</p>
+</div>
 <p>Because the output ReLU discards a neuron’s negative side, what the neuron <em>transmits</em> is its positive pole. So the fair question, in the essay’s own terms, is whether the positive pole is about one group. We count a neuron as “one group on the positive pole” if, among the groups it reads with positive sign, one carries more than 80% of the positive weight; we also record whether it has a strong negative pole on some other group.</p>
-<div id="9728df2a" class="cell" data-execution_count="8">
+<div id="77a5d242" class="cell" data-execution_count="8">
 <details class="code-fold">
 <summary>Summary over several seeds</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb8"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> classify(model):</span>
@@ -622,7 +633,7 @@ dense        50               22                  12           28</code></pre>
 <p>The result is intermediate, and worth stating plainly rather than rounding toward either side. Roughly three in five hidden neurons in the sparse regime, and about half in the dense regime, have a positive pole that is about one group; a third of those also carry a strong negative pole on another group, which is the “V versus O” structure the essay describes. The remaining neurons read a positive combination of two groups. No neuron reads all four. Widening the hidden layer to 20 neurons does not change the proportions. (Making the groups fire more often makes the <em>bottleneck</em> more PCA-like, as the essay says, but it does not make the hidden neurons cleaner in this count.)</p>
 <p>One caution on reading this. The groups here are independent of each other, so a neuron reading two groups <em>is</em> a mixture of unrelated things in the essay’s sense. Adding correlations and a hidden layer makes the bottleneck organise by group and gives many neurons a one-group positive pole, but it does not make mixed neurons disappear. Whether real networks are in a regime where two-group neurons are rare is exactly what the rest of the essay tries to show empirically, and it is not something a toy can settle.</p>
 </section>
-<section id="adding-the-missing-benefit-readers-instead-of-reconstruction" class="level2">
+<section id="adding-the-missing-benefit-readers-instead-of-reconstruction" class="level2 beyond">
 <h2 class="anchored" data-anchor-id="adding-the-missing-benefit-readers-instead-of-reconstruction">6. Adding the missing benefit: readers instead of reconstruction</h2>
 <p>Section 5 put the relatedness into the <em>data</em>. But in a toy with independent inputs there is nothing intrinsically related about any two of them: every partition into groups is a relabelling of every other. So any grouping we saw there could be credited to the input statistics. The essay’s argument is about something else: a representation matters only through what reads it, and sharing a direction between two inputs is a benefit when downstream readers want them together. The original toy has no readers, so that benefit is priced at zero. Here we put readers in and leave the inputs exactly as in the original toy: independent and sparse.</p>
 <p><strong>The setup.</strong> The bottleneck <span class="math inline">h = Wx</span> feeds a hidden ReLU layer, which feeds <span class="math inline">T = 12</span> output tasks. Every task has the same form: a rectified sum over five inputs, <span class="math inline">y_t = \mathrm{ReLU}\big(\sum_{i \in S_t} x_i - \theta_t\big)</span>, with <span class="math inline">\theta_t</span> cycling through three thresholds. The only thing we vary is <strong>how many distinct subsets <span class="math inline">S_t</span> the twelve tasks factor through</strong>, which we call <span class="math inline">J</span>:</p>
@@ -633,7 +644,7 @@ dense        50               22                  12           28</code></pre>
 </ul>
 <p>With <span class="math inline">J = 4</span> and only four tasks the two conditions would be identical, which is the relabelling point again; the difference appears only when several readers want the same combination. That is what the essay calls reuse, so <span class="math inline">J</span> is the quantity under test rather than a proxy for it.</p>
 <p><strong>What to measure</strong>, without reference to any grouping the data does not contain: the <strong>participation ratio</strong> of the singular values of <span class="math inline">W</span> (the effective number of bottleneck dimensions in use), the mean |cosine| between input directions for pairs that <strong>share a subset</strong> versus pairs that <strong>share none</strong>, the <strong>task loss</strong>, and the hidden-neuron poles scored against the task-defined subsets.</p>
-<div id="610001d6" class="cell" data-execution_count="9">
+<div id="15940084" class="cell" data-execution_count="9">
 <details class="code-fold">
 <summary>Train the reader toy across the reuse knob J</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb10"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> common.toy_models <span class="im">import</span> (ReaderToy, make_subsets, make_tasks, train_tasks,</span>
@@ -668,7 +679,7 @@ dense        50               22                  12           28</code></pre>
  12            2    0.388   4.61          0.42     0.25</code></pre>
 </div>
 </div>
-<div id="7ac4fcbb" class="cell" data-execution_count="10">
+<div id="6153511c" class="cell" data-execution_count="10">
 <details class="code-fold">
 <summary>Input directions, ordered by subset, at the two ends of the knob</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb12"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>fig, axes <span class="op">=</span> plt.subplots(<span class="dv">1</span>, <span class="dv">2</span>, figsize<span class="op">=</span>(<span class="fl">7.2</span>, <span class="fl">3.6</span>))</span>
@@ -697,7 +708,7 @@ dense        50               22                  12           28</code></pre>
 </div>
 <p>With maximal reuse the bottleneck becomes four coarse directions, one per shared sum, with the five inputs of each sum nearly parallel (|cosine| about 0.8 within, 0.2 between) and a participation ratio of 4. Nothing about the inputs asked for this; the readers did. With no reuse the same inputs are spread with no block structure, the participation ratio rises toward 5, and the task loss is seventy times larger: twelve independent sums do not fit in five dimensions, so the network packs them with interference. Intermediate <span class="math inline">J</span> gives intermediate values of everything.</p>
 <p>Two remarks on the control. First, it is the original toy’s situation transposed up one level: the quantities being packed are now the readers’ sums rather than the inputs, but the mechanism is the same. Second, the control is not a strawman. Each task still reads five inputs through the same function; it just reads a combination nobody else wants.</p>
-<div id="0c4271b7" class="cell" data-execution_count="11">
+<div id="ea8e3446" class="cell" data-execution_count="11">
 <details class="code-fold">
 <summary>Hidden-neuron poles against the task subsets</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb13"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> subset_cosines(model, subs):</span>
@@ -724,7 +735,7 @@ dense        50               22                  12           28</code></pre>
 </div>
 </div>
 </div>
-<div id="99512181" class="cell" data-execution_count="12">
+<div id="f1e5852d" class="cell" data-execution_count="12">
 <details class="code-fold">
 <summary>Does sparsity rescue the no-reuse control?</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb14"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a>S_list <span class="op">=</span> [<span class="fl">0.0</span>, <span class="fl">0.5</span>, <span class="fl">0.8</span>, <span class="fl">0.9</span>, <span class="fl">0.97</span>]</span>
@@ -758,7 +769,7 @@ dense        50               22                  12           28</code></pre>
 <section id="a-private-offshoot" class="level3">
 <h3 class="anchored" data-anchor-id="a-private-offshoot">A private offshoot</h3>
 <p>If reuse makes inputs coarse, what happens when one reader wants fine structure? We keep the <span class="math inline">J = 4</span> tasks and add a single extra task that reads one input alone, <span class="math inline">y = x_{i^\star}</span> for some <span class="math inline">i^\star</span> in the first subset. The prediction from the essay’s picture is that <span class="math inline">W_{i^\star}</span> stays aligned with its group direction and grows a private component that the rest of the group lacks.</p>
-<div id="d50091b4" class="cell" data-execution_count="13">
+<div id="af1a8d76" class="cell" data-execution_count="13">
 <details class="code-fold">
 <summary>One extra reader on a single input</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb15"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> offshoot_stats(extra, seeds<span class="op">=</span><span class="dv">3</span>):</span>
@@ -950,7 +961,7 @@ dense        50               22                  12           28</code></pre>
     }
       var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
       var mailtoRegex = new RegExp(/^mailto:/);
-        var filterRegex = new RegExp("https:\/\/physicsmonkey\.github\.io\/neurons-clean\/");
+        var filterRegex = new RegExp('/' + window.location.host + '/');
       var isInternal = (href) => {
           return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
       }
@@ -1535,276 +1546,285 @@ dense        50               22                  12           28</code></pre>
 <span id="cb17-270"><a href="#cb17-270" aria-hidden="true" tabindex="-1"></a>plt.colorbar(im, ax<span class="op">=</span>axes, shrink<span class="op">=</span><span class="fl">0.8</span>, label<span class="op">=</span><span class="st">"cos(V_j, group direction)"</span>)</span>
 <span id="cb17-271"><a href="#cb17-271" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
 <span id="cb17-272"><a href="#cb17-272" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb17-273"><a href="#cb17-273" aria-hidden="true" tabindex="-1"></a>Because the output ReLU discards a neuron's negative side, what the neuron *transmits* is its</span>
-<span id="cb17-274"><a href="#cb17-274" aria-hidden="true" tabindex="-1"></a>positive pole. So the fair question, in the essay's own terms, is whether the positive pole</span>
-<span id="cb17-275"><a href="#cb17-275" aria-hidden="true" tabindex="-1"></a>is about one group. We count a neuron as "one group on the positive pole" if, among the</span>
-<span id="cb17-276"><a href="#cb17-276" aria-hidden="true" tabindex="-1"></a>groups it reads with positive sign, one carries more than 80% of the positive weight; we</span>
-<span id="cb17-277"><a href="#cb17-277" aria-hidden="true" tabindex="-1"></a>also record whether it has a strong negative pole on some other group.</span>
-<span id="cb17-278"><a href="#cb17-278" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb17-281"><a href="#cb17-281" aria-hidden="true" tabindex="-1"></a><span class="in">```{python}</span></span>
-<span id="cb17-282"><a href="#cb17-282" aria-hidden="true" tabindex="-1"></a><span class="co">#| code-summary: "Summary over several seeds"</span></span>
-<span id="cb17-283"><a href="#cb17-283" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> classify(model):</span>
-<span id="cb17-284"><a href="#cb17-284" aria-hidden="true" tabindex="-1"></a>    cs <span class="op">=</span> group_cosines(model)<span class="op">;</span> V <span class="op">=</span> model.V.detach()</span>
-<span id="cb17-285"><a href="#cb17-285" aria-hidden="true" tabindex="-1"></a>    alive <span class="op">=</span> (V.norm(dim<span class="op">=</span><span class="dv">1</span>) <span class="op">&gt;</span> <span class="fl">1e-2</span>).numpy()</span>
-<span id="cb17-286"><a href="#cb17-286" aria-hidden="true" tabindex="-1"></a>    pos <span class="op">=</span> np.clip(cs, <span class="dv">0</span>, <span class="va">None</span>) <span class="op">**</span> <span class="dv">2</span></span>
-<span id="cb17-287"><a href="#cb17-287" aria-hidden="true" tabindex="-1"></a>    share <span class="op">=</span> pos.<span class="bu">max</span>(<span class="dv">1</span>) <span class="op">/</span> np.maximum(pos.<span class="bu">sum</span>(<span class="dv">1</span>), <span class="fl">1e-8</span>)</span>
-<span id="cb17-288"><a href="#cb17-288" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> alive, share <span class="op">&gt;</span> <span class="fl">0.8</span>, cs.<span class="bu">min</span>(<span class="dv">1</span>) <span class="op">&lt;</span> <span class="op">-</span><span class="fl">0.5</span></span>
-<span id="cb17-289"><a href="#cb17-289" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb17-290"><a href="#cb17-290" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"</span><span class="sc">{</span><span class="st">'regime'</span><span class="sc">:8s}</span><span class="ss"> </span><span class="sc">{</span><span class="st">'alive'</span><span class="sc">:&gt;6s}</span><span class="ss"> </span><span class="sc">{</span><span class="st">'one-group +pole'</span><span class="sc">:&gt;16s}</span><span class="ss"> </span><span class="sc">{</span><span class="st">'…with strong -pole'</span><span class="sc">:&gt;19s}</span><span class="ss"> </span><span class="sc">{</span><span class="st">'mixed +pole'</span><span class="sc">:&gt;12s}</span><span class="ss">   (5 seeds x </span><span class="sc">{</span>k<span class="sc">}</span><span class="ss"> neurons)"</span>)</span>
-<span id="cb17-291"><a href="#cb17-291" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> regime, p <span class="kw">in</span> [(<span class="st">"sparse"</span>, <span class="fl">0.05</span>), (<span class="st">"dense"</span>, <span class="fl">0.5</span>)]:</span>
-<span id="cb17-292"><a href="#cb17-292" aria-hidden="true" tabindex="-1"></a>    tot <span class="op">=</span> np.zeros(<span class="dv">4</span>)</span>
-<span id="cb17-293"><a href="#cb17-293" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> seed <span class="kw">in</span> <span class="bu">range</span>(<span class="dv">5</span>):</span>
-<span id="cb17-294"><a href="#cb17-294" aria-hidden="true" tabindex="-1"></a>        alive, one, neg <span class="op">=</span> classify(fit_grouped(p, <span class="va">True</span>, seed<span class="op">=</span>seed, steps<span class="op">=</span><span class="dv">4000</span>))</span>
-<span id="cb17-295"><a href="#cb17-295" aria-hidden="true" tabindex="-1"></a>        tot <span class="op">+=</span> [alive.<span class="bu">sum</span>(), (one <span class="op">&amp;</span> alive).<span class="bu">sum</span>(), (one <span class="op">&amp;</span> neg <span class="op">&amp;</span> alive).<span class="bu">sum</span>(), (<span class="op">~</span>one <span class="op">&amp;</span> alive).<span class="bu">sum</span>()]</span>
-<span id="cb17-296"><a href="#cb17-296" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(<span class="ss">f"</span><span class="sc">{</span>regime<span class="sc">:8s}</span><span class="ss"> </span><span class="sc">{</span>tot[<span class="dv">0</span>]<span class="sc">:6.0f}</span><span class="ss"> </span><span class="sc">{</span>tot[<span class="dv">1</span>]<span class="sc">:16.0f}</span><span class="ss"> </span><span class="sc">{</span>tot[<span class="dv">2</span>]<span class="sc">:19.0f}</span><span class="ss"> </span><span class="sc">{</span>tot[<span class="dv">3</span>]<span class="sc">:12.0f}</span><span class="ss">"</span>)</span>
-<span id="cb17-297"><a href="#cb17-297" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb17-298"><a href="#cb17-298" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb17-299"><a href="#cb17-299" aria-hidden="true" tabindex="-1"></a>The result is intermediate, and worth stating plainly rather than rounding toward either</span>
-<span id="cb17-300"><a href="#cb17-300" aria-hidden="true" tabindex="-1"></a>side. Roughly three in five hidden neurons in the sparse regime, and about half in the dense</span>
-<span id="cb17-301"><a href="#cb17-301" aria-hidden="true" tabindex="-1"></a>regime, have a positive pole that is about one group; a third of those also carry a strong</span>
-<span id="cb17-302"><a href="#cb17-302" aria-hidden="true" tabindex="-1"></a>negative pole on another group, which is the "V versus O" structure the essay describes. The</span>
-<span id="cb17-303"><a href="#cb17-303" aria-hidden="true" tabindex="-1"></a>remaining neurons read a positive combination of two groups. No neuron reads all four.</span>
-<span id="cb17-304"><a href="#cb17-304" aria-hidden="true" tabindex="-1"></a>Widening the hidden layer to 20 neurons does not change the proportions. (Making the groups</span>
-<span id="cb17-305"><a href="#cb17-305" aria-hidden="true" tabindex="-1"></a>fire more often makes the *bottleneck* more PCA-like, as the essay says, but it does not make</span>
-<span id="cb17-306"><a href="#cb17-306" aria-hidden="true" tabindex="-1"></a>the hidden neurons cleaner in this count.)</span>
-<span id="cb17-307"><a href="#cb17-307" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb17-308"><a href="#cb17-308" aria-hidden="true" tabindex="-1"></a>One caution on reading this. The groups here are independent of each other, so a neuron</span>
-<span id="cb17-309"><a href="#cb17-309" aria-hidden="true" tabindex="-1"></a>reading two groups *is* a mixture of unrelated things in the essay's sense. Adding</span>
-<span id="cb17-310"><a href="#cb17-310" aria-hidden="true" tabindex="-1"></a>correlations and a hidden layer makes the bottleneck organise by group and gives many</span>
-<span id="cb17-311"><a href="#cb17-311" aria-hidden="true" tabindex="-1"></a>neurons a one-group positive pole, but it does not make mixed neurons disappear. Whether real</span>
-<span id="cb17-312"><a href="#cb17-312" aria-hidden="true" tabindex="-1"></a>networks are in a regime where two-group neurons are rare is exactly what the rest of the</span>
-<span id="cb17-313"><a href="#cb17-313" aria-hidden="true" tabindex="-1"></a>essay tries to show empirically, and it is not something a toy can settle.</span>
-<span id="cb17-314"><a href="#cb17-314" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb17-315"><a href="#cb17-315" aria-hidden="true" tabindex="-1"></a><span class="fu">## 6. Adding the missing benefit: readers instead of reconstruction</span></span>
-<span id="cb17-316"><a href="#cb17-316" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb17-317"><a href="#cb17-317" aria-hidden="true" tabindex="-1"></a>Section 5 put the relatedness into the *data*. But in a toy with independent inputs there is</span>
-<span id="cb17-318"><a href="#cb17-318" aria-hidden="true" tabindex="-1"></a>nothing intrinsically related about any two of them: every partition into groups is a</span>
-<span id="cb17-319"><a href="#cb17-319" aria-hidden="true" tabindex="-1"></a>relabelling of every other. So any grouping we saw there could be credited to the input</span>
-<span id="cb17-320"><a href="#cb17-320" aria-hidden="true" tabindex="-1"></a>statistics. The essay's argument is about something else: a representation matters only</span>
-<span id="cb17-321"><a href="#cb17-321" aria-hidden="true" tabindex="-1"></a>through what reads it, and sharing a direction between two inputs is a benefit when</span>
-<span id="cb17-322"><a href="#cb17-322" aria-hidden="true" tabindex="-1"></a>downstream readers want them together. The original toy has no readers, so that benefit is</span>
-<span id="cb17-323"><a href="#cb17-323" aria-hidden="true" tabindex="-1"></a>priced at zero. Here we put readers in and leave the inputs exactly as in the original toy:</span>
-<span id="cb17-324"><a href="#cb17-324" aria-hidden="true" tabindex="-1"></a>independent and sparse.</span>
-<span id="cb17-325"><a href="#cb17-325" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb17-326"><a href="#cb17-326" aria-hidden="true" tabindex="-1"></a>**The setup.** The bottleneck $h = Wx$ feeds a hidden ReLU layer, which feeds $T = 12$ output</span>
-<span id="cb17-327"><a href="#cb17-327" aria-hidden="true" tabindex="-1"></a>tasks. Every task has the same form: a rectified sum over five inputs,</span>
-<span id="cb17-328"><a href="#cb17-328" aria-hidden="true" tabindex="-1"></a>$y_t = \mathrm{ReLU}\big(\sum_{i \in S_t} x_i - \theta_t\big)$, with $\theta_t$ cycling</span>
-<span id="cb17-329"><a href="#cb17-329" aria-hidden="true" tabindex="-1"></a>through three thresholds. The only thing we vary is **how many distinct subsets $S_t$ the</span>
-<span id="cb17-330"><a href="#cb17-330" aria-hidden="true" tabindex="-1"></a>twelve tasks factor through**, which we call $J$:</span>
-<span id="cb17-331"><a href="#cb17-331" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb17-332"><a href="#cb17-332" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>$J = 4$: four disjoint subsets, each read by three tasks. A four-dimensional intermediate</span>
-<span id="cb17-333"><a href="#cb17-333" aria-hidden="true" tabindex="-1"></a>  (the four sums) serves every reader. This is maximal reuse.</span>
-<span id="cb17-334"><a href="#cb17-334" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>$J = 12$: twelve subsets chosen to overlap as little as possible, each read by one task.</span>
-<span id="cb17-335"><a href="#cb17-335" aria-hidden="true" tabindex="-1"></a>  No shared intermediate helps anyone. This is the control.</span>
-<span id="cb17-336"><a href="#cb17-336" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>$J = 6, 8$ in between.</span>
-<span id="cb17-337"><a href="#cb17-337" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb17-338"><a href="#cb17-338" aria-hidden="true" tabindex="-1"></a>With $J = 4$ and only four tasks the two conditions would be identical, which is the</span>
-<span id="cb17-339"><a href="#cb17-339" aria-hidden="true" tabindex="-1"></a>relabelling point again; the difference appears only when several readers want the same</span>
-<span id="cb17-340"><a href="#cb17-340" aria-hidden="true" tabindex="-1"></a>combination. That is what the essay calls reuse, so $J$ is the quantity under test rather</span>
-<span id="cb17-341"><a href="#cb17-341" aria-hidden="true" tabindex="-1"></a>than a proxy for it.</span>
-<span id="cb17-342"><a href="#cb17-342" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb17-343"><a href="#cb17-343" aria-hidden="true" tabindex="-1"></a>**What to measure**, without reference to any grouping the data does not contain:</span>
-<span id="cb17-344"><a href="#cb17-344" aria-hidden="true" tabindex="-1"></a>the **participation ratio** of the singular values of $W$ (the effective number of bottleneck</span>
-<span id="cb17-345"><a href="#cb17-345" aria-hidden="true" tabindex="-1"></a>dimensions in use), the mean |cosine| between input directions for pairs that **share a</span>
-<span id="cb17-346"><a href="#cb17-346" aria-hidden="true" tabindex="-1"></a>subset** versus pairs that **share none**, the **task loss**, and the hidden-neuron poles</span>
-<span id="cb17-347"><a href="#cb17-347" aria-hidden="true" tabindex="-1"></a>scored against the task-defined subsets.</span>
-<span id="cb17-348"><a href="#cb17-348" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb17-351"><a href="#cb17-351" aria-hidden="true" tabindex="-1"></a><span class="in">```{python}</span></span>
-<span id="cb17-352"><a href="#cb17-352" aria-hidden="true" tabindex="-1"></a><span class="co">#| code-summary: "Train the reader toy across the reuse knob J"</span></span>
-<span id="cb17-353"><a href="#cb17-353" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> common.toy_models <span class="im">import</span> (ReaderToy, make_subsets, make_tasks, train_tasks,</span>
-<span id="cb17-354"><a href="#cb17-354" aria-hidden="true" tabindex="-1"></a>                               participation_ratio, within_between_cosine)</span>
-<span id="cb17-355"><a href="#cb17-355" aria-hidden="true" tabindex="-1"></a>n, m, k, T, fan, S_READ <span class="op">=</span> <span class="dv">20</span>, <span class="dv">5</span>, <span class="dv">20</span>, <span class="dv">12</span>, <span class="dv">5</span>, <span class="fl">0.9</span></span>
-<span id="cb17-356"><a href="#cb17-356" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb17-357"><a href="#cb17-357" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> fit_readers(J, S<span class="op">=</span>S_READ, seed<span class="op">=</span><span class="dv">0</span>, steps<span class="op">=</span><span class="dv">4000</span>, extra_tasks<span class="op">=</span>()):</span>
-<span id="cb17-358"><a href="#cb17-358" aria-hidden="true" tabindex="-1"></a>    subs <span class="op">=</span> make_subsets(n, J, fan, seed<span class="op">=</span>seed)</span>
-<span id="cb17-359"><a href="#cb17-359" aria-hidden="true" tabindex="-1"></a>    tasks <span class="op">=</span> make_tasks(subs, T) <span class="op">+</span> <span class="bu">list</span>(extra_tasks(subs) <span class="cf">if</span> <span class="bu">callable</span>(extra_tasks) <span class="cf">else</span> extra_tasks)</span>
-<span id="cb17-360"><a href="#cb17-360" aria-hidden="true" tabindex="-1"></a>    model <span class="op">=</span> ReaderToy(n, m, k, <span class="bu">len</span>(tasks), torch.Generator().manual_seed(seed))</span>
-<span id="cb17-361"><a href="#cb17-361" aria-hidden="true" tabindex="-1"></a>    L <span class="op">=</span> train_tasks(model, tasks, n, S, steps<span class="op">=</span>steps, seed<span class="op">=</span>seed)</span>
-<span id="cb17-362"><a href="#cb17-362" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> model, subs, tasks, L[<span class="op">-</span><span class="dv">200</span>:].mean()</span>
+<span id="cb17-273"><a href="#cb17-273" aria-hidden="true" tabindex="-1"></a>::: {.beyond-inline}</span>
+<span id="cb17-274"><a href="#cb17-274" aria-hidden="true" tabindex="-1"></a>The pole-by-pole audit of the hidden neurons that follows is our own analysis. The essay's</span>
+<span id="cb17-275"><a href="#cb17-275" aria-hidden="true" tabindex="-1"></a>figure for this variant shows only the bottleneck's cosine structure.</span>
+<span id="cb17-276"><a href="#cb17-276" aria-hidden="true" tabindex="-1"></a>:::</span>
+<span id="cb17-277"><a href="#cb17-277" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-278"><a href="#cb17-278" aria-hidden="true" tabindex="-1"></a>Because the output ReLU discards a neuron's negative side, what the neuron *transmits* is its</span>
+<span id="cb17-279"><a href="#cb17-279" aria-hidden="true" tabindex="-1"></a>positive pole. So the fair question, in the essay's own terms, is whether the positive pole</span>
+<span id="cb17-280"><a href="#cb17-280" aria-hidden="true" tabindex="-1"></a>is about one group. We count a neuron as "one group on the positive pole" if, among the</span>
+<span id="cb17-281"><a href="#cb17-281" aria-hidden="true" tabindex="-1"></a>groups it reads with positive sign, one carries more than 80% of the positive weight; we</span>
+<span id="cb17-282"><a href="#cb17-282" aria-hidden="true" tabindex="-1"></a>also record whether it has a strong negative pole on some other group.</span>
+<span id="cb17-283"><a href="#cb17-283" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-286"><a href="#cb17-286" aria-hidden="true" tabindex="-1"></a><span class="in">```{python}</span></span>
+<span id="cb17-287"><a href="#cb17-287" aria-hidden="true" tabindex="-1"></a><span class="co">#| code-summary: "Summary over several seeds"</span></span>
+<span id="cb17-288"><a href="#cb17-288" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> classify(model):</span>
+<span id="cb17-289"><a href="#cb17-289" aria-hidden="true" tabindex="-1"></a>    cs <span class="op">=</span> group_cosines(model)<span class="op">;</span> V <span class="op">=</span> model.V.detach()</span>
+<span id="cb17-290"><a href="#cb17-290" aria-hidden="true" tabindex="-1"></a>    alive <span class="op">=</span> (V.norm(dim<span class="op">=</span><span class="dv">1</span>) <span class="op">&gt;</span> <span class="fl">1e-2</span>).numpy()</span>
+<span id="cb17-291"><a href="#cb17-291" aria-hidden="true" tabindex="-1"></a>    pos <span class="op">=</span> np.clip(cs, <span class="dv">0</span>, <span class="va">None</span>) <span class="op">**</span> <span class="dv">2</span></span>
+<span id="cb17-292"><a href="#cb17-292" aria-hidden="true" tabindex="-1"></a>    share <span class="op">=</span> pos.<span class="bu">max</span>(<span class="dv">1</span>) <span class="op">/</span> np.maximum(pos.<span class="bu">sum</span>(<span class="dv">1</span>), <span class="fl">1e-8</span>)</span>
+<span id="cb17-293"><a href="#cb17-293" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> alive, share <span class="op">&gt;</span> <span class="fl">0.8</span>, cs.<span class="bu">min</span>(<span class="dv">1</span>) <span class="op">&lt;</span> <span class="op">-</span><span class="fl">0.5</span></span>
+<span id="cb17-294"><a href="#cb17-294" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-295"><a href="#cb17-295" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"</span><span class="sc">{</span><span class="st">'regime'</span><span class="sc">:8s}</span><span class="ss"> </span><span class="sc">{</span><span class="st">'alive'</span><span class="sc">:&gt;6s}</span><span class="ss"> </span><span class="sc">{</span><span class="st">'one-group +pole'</span><span class="sc">:&gt;16s}</span><span class="ss"> </span><span class="sc">{</span><span class="st">'…with strong -pole'</span><span class="sc">:&gt;19s}</span><span class="ss"> </span><span class="sc">{</span><span class="st">'mixed +pole'</span><span class="sc">:&gt;12s}</span><span class="ss">   (5 seeds x </span><span class="sc">{</span>k<span class="sc">}</span><span class="ss"> neurons)"</span>)</span>
+<span id="cb17-296"><a href="#cb17-296" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> regime, p <span class="kw">in</span> [(<span class="st">"sparse"</span>, <span class="fl">0.05</span>), (<span class="st">"dense"</span>, <span class="fl">0.5</span>)]:</span>
+<span id="cb17-297"><a href="#cb17-297" aria-hidden="true" tabindex="-1"></a>    tot <span class="op">=</span> np.zeros(<span class="dv">4</span>)</span>
+<span id="cb17-298"><a href="#cb17-298" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> seed <span class="kw">in</span> <span class="bu">range</span>(<span class="dv">5</span>):</span>
+<span id="cb17-299"><a href="#cb17-299" aria-hidden="true" tabindex="-1"></a>        alive, one, neg <span class="op">=</span> classify(fit_grouped(p, <span class="va">True</span>, seed<span class="op">=</span>seed, steps<span class="op">=</span><span class="dv">4000</span>))</span>
+<span id="cb17-300"><a href="#cb17-300" aria-hidden="true" tabindex="-1"></a>        tot <span class="op">+=</span> [alive.<span class="bu">sum</span>(), (one <span class="op">&amp;</span> alive).<span class="bu">sum</span>(), (one <span class="op">&amp;</span> neg <span class="op">&amp;</span> alive).<span class="bu">sum</span>(), (<span class="op">~</span>one <span class="op">&amp;</span> alive).<span class="bu">sum</span>()]</span>
+<span id="cb17-301"><a href="#cb17-301" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(<span class="ss">f"</span><span class="sc">{</span>regime<span class="sc">:8s}</span><span class="ss"> </span><span class="sc">{</span>tot[<span class="dv">0</span>]<span class="sc">:6.0f}</span><span class="ss"> </span><span class="sc">{</span>tot[<span class="dv">1</span>]<span class="sc">:16.0f}</span><span class="ss"> </span><span class="sc">{</span>tot[<span class="dv">2</span>]<span class="sc">:19.0f}</span><span class="ss"> </span><span class="sc">{</span>tot[<span class="dv">3</span>]<span class="sc">:12.0f}</span><span class="ss">"</span>)</span>
+<span id="cb17-302"><a href="#cb17-302" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb17-303"><a href="#cb17-303" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-304"><a href="#cb17-304" aria-hidden="true" tabindex="-1"></a>The result is intermediate, and worth stating plainly rather than rounding toward either</span>
+<span id="cb17-305"><a href="#cb17-305" aria-hidden="true" tabindex="-1"></a>side. Roughly three in five hidden neurons in the sparse regime, and about half in the dense</span>
+<span id="cb17-306"><a href="#cb17-306" aria-hidden="true" tabindex="-1"></a>regime, have a positive pole that is about one group; a third of those also carry a strong</span>
+<span id="cb17-307"><a href="#cb17-307" aria-hidden="true" tabindex="-1"></a>negative pole on another group, which is the "V versus O" structure the essay describes. The</span>
+<span id="cb17-308"><a href="#cb17-308" aria-hidden="true" tabindex="-1"></a>remaining neurons read a positive combination of two groups. No neuron reads all four.</span>
+<span id="cb17-309"><a href="#cb17-309" aria-hidden="true" tabindex="-1"></a>Widening the hidden layer to 20 neurons does not change the proportions. (Making the groups</span>
+<span id="cb17-310"><a href="#cb17-310" aria-hidden="true" tabindex="-1"></a>fire more often makes the *bottleneck* more PCA-like, as the essay says, but it does not make</span>
+<span id="cb17-311"><a href="#cb17-311" aria-hidden="true" tabindex="-1"></a>the hidden neurons cleaner in this count.)</span>
+<span id="cb17-312"><a href="#cb17-312" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-313"><a href="#cb17-313" aria-hidden="true" tabindex="-1"></a>One caution on reading this. The groups here are independent of each other, so a neuron</span>
+<span id="cb17-314"><a href="#cb17-314" aria-hidden="true" tabindex="-1"></a>reading two groups *is* a mixture of unrelated things in the essay's sense. Adding</span>
+<span id="cb17-315"><a href="#cb17-315" aria-hidden="true" tabindex="-1"></a>correlations and a hidden layer makes the bottleneck organise by group and gives many</span>
+<span id="cb17-316"><a href="#cb17-316" aria-hidden="true" tabindex="-1"></a>neurons a one-group positive pole, but it does not make mixed neurons disappear. Whether real</span>
+<span id="cb17-317"><a href="#cb17-317" aria-hidden="true" tabindex="-1"></a>networks are in a regime where two-group neurons are rare is exactly what the rest of the</span>
+<span id="cb17-318"><a href="#cb17-318" aria-hidden="true" tabindex="-1"></a>essay tries to show empirically, and it is not something a toy can settle.</span>
+<span id="cb17-319"><a href="#cb17-319" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-320"><a href="#cb17-320" aria-hidden="true" tabindex="-1"></a>::: {.beyond}</span>
+<span id="cb17-321"><a href="#cb17-321" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-322"><a href="#cb17-322" aria-hidden="true" tabindex="-1"></a><span class="fu">## 6. Adding the missing benefit: readers instead of reconstruction</span></span>
+<span id="cb17-323"><a href="#cb17-323" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-324"><a href="#cb17-324" aria-hidden="true" tabindex="-1"></a>Section 5 put the relatedness into the *data*. But in a toy with independent inputs there is</span>
+<span id="cb17-325"><a href="#cb17-325" aria-hidden="true" tabindex="-1"></a>nothing intrinsically related about any two of them: every partition into groups is a</span>
+<span id="cb17-326"><a href="#cb17-326" aria-hidden="true" tabindex="-1"></a>relabelling of every other. So any grouping we saw there could be credited to the input</span>
+<span id="cb17-327"><a href="#cb17-327" aria-hidden="true" tabindex="-1"></a>statistics. The essay's argument is about something else: a representation matters only</span>
+<span id="cb17-328"><a href="#cb17-328" aria-hidden="true" tabindex="-1"></a>through what reads it, and sharing a direction between two inputs is a benefit when</span>
+<span id="cb17-329"><a href="#cb17-329" aria-hidden="true" tabindex="-1"></a>downstream readers want them together. The original toy has no readers, so that benefit is</span>
+<span id="cb17-330"><a href="#cb17-330" aria-hidden="true" tabindex="-1"></a>priced at zero. Here we put readers in and leave the inputs exactly as in the original toy:</span>
+<span id="cb17-331"><a href="#cb17-331" aria-hidden="true" tabindex="-1"></a>independent and sparse.</span>
+<span id="cb17-332"><a href="#cb17-332" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-333"><a href="#cb17-333" aria-hidden="true" tabindex="-1"></a>**The setup.** The bottleneck $h = Wx$ feeds a hidden ReLU layer, which feeds $T = 12$ output</span>
+<span id="cb17-334"><a href="#cb17-334" aria-hidden="true" tabindex="-1"></a>tasks. Every task has the same form: a rectified sum over five inputs,</span>
+<span id="cb17-335"><a href="#cb17-335" aria-hidden="true" tabindex="-1"></a>$y_t = \mathrm{ReLU}\big(\sum_{i \in S_t} x_i - \theta_t\big)$, with $\theta_t$ cycling</span>
+<span id="cb17-336"><a href="#cb17-336" aria-hidden="true" tabindex="-1"></a>through three thresholds. The only thing we vary is **how many distinct subsets $S_t$ the</span>
+<span id="cb17-337"><a href="#cb17-337" aria-hidden="true" tabindex="-1"></a>twelve tasks factor through**, which we call $J$:</span>
+<span id="cb17-338"><a href="#cb17-338" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-339"><a href="#cb17-339" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>$J = 4$: four disjoint subsets, each read by three tasks. A four-dimensional intermediate</span>
+<span id="cb17-340"><a href="#cb17-340" aria-hidden="true" tabindex="-1"></a>  (the four sums) serves every reader. This is maximal reuse.</span>
+<span id="cb17-341"><a href="#cb17-341" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>$J = 12$: twelve subsets chosen to overlap as little as possible, each read by one task.</span>
+<span id="cb17-342"><a href="#cb17-342" aria-hidden="true" tabindex="-1"></a>  No shared intermediate helps anyone. This is the control.</span>
+<span id="cb17-343"><a href="#cb17-343" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>$J = 6, 8$ in between.</span>
+<span id="cb17-344"><a href="#cb17-344" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-345"><a href="#cb17-345" aria-hidden="true" tabindex="-1"></a>With $J = 4$ and only four tasks the two conditions would be identical, which is the</span>
+<span id="cb17-346"><a href="#cb17-346" aria-hidden="true" tabindex="-1"></a>relabelling point again; the difference appears only when several readers want the same</span>
+<span id="cb17-347"><a href="#cb17-347" aria-hidden="true" tabindex="-1"></a>combination. That is what the essay calls reuse, so $J$ is the quantity under test rather</span>
+<span id="cb17-348"><a href="#cb17-348" aria-hidden="true" tabindex="-1"></a>than a proxy for it.</span>
+<span id="cb17-349"><a href="#cb17-349" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-350"><a href="#cb17-350" aria-hidden="true" tabindex="-1"></a>**What to measure**, without reference to any grouping the data does not contain:</span>
+<span id="cb17-351"><a href="#cb17-351" aria-hidden="true" tabindex="-1"></a>the **participation ratio** of the singular values of $W$ (the effective number of bottleneck</span>
+<span id="cb17-352"><a href="#cb17-352" aria-hidden="true" tabindex="-1"></a>dimensions in use), the mean |cosine| between input directions for pairs that **share a</span>
+<span id="cb17-353"><a href="#cb17-353" aria-hidden="true" tabindex="-1"></a>subset** versus pairs that **share none**, the **task loss**, and the hidden-neuron poles</span>
+<span id="cb17-354"><a href="#cb17-354" aria-hidden="true" tabindex="-1"></a>scored against the task-defined subsets.</span>
+<span id="cb17-355"><a href="#cb17-355" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-358"><a href="#cb17-358" aria-hidden="true" tabindex="-1"></a><span class="in">```{python}</span></span>
+<span id="cb17-359"><a href="#cb17-359" aria-hidden="true" tabindex="-1"></a><span class="co">#| code-summary: "Train the reader toy across the reuse knob J"</span></span>
+<span id="cb17-360"><a href="#cb17-360" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> common.toy_models <span class="im">import</span> (ReaderToy, make_subsets, make_tasks, train_tasks,</span>
+<span id="cb17-361"><a href="#cb17-361" aria-hidden="true" tabindex="-1"></a>                               participation_ratio, within_between_cosine)</span>
+<span id="cb17-362"><a href="#cb17-362" aria-hidden="true" tabindex="-1"></a>n, m, k, T, fan, S_READ <span class="op">=</span> <span class="dv">20</span>, <span class="dv">5</span>, <span class="dv">20</span>, <span class="dv">12</span>, <span class="dv">5</span>, <span class="fl">0.9</span></span>
 <span id="cb17-363"><a href="#cb17-363" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb17-364"><a href="#cb17-364" aria-hidden="true" tabindex="-1"></a>Js <span class="op">=</span> [<span class="dv">4</span>, <span class="dv">6</span>, <span class="dv">8</span>, <span class="dv">12</span>]</span>
-<span id="cb17-365"><a href="#cb17-365" aria-hidden="true" tabindex="-1"></a>reader_runs <span class="op">=</span> {J: [fit_readers(J, seed<span class="op">=</span>s) <span class="cf">for</span> s <span class="kw">in</span> <span class="bu">range</span>(<span class="dv">2</span>)] <span class="cf">for</span> J <span class="kw">in</span> Js}</span>
-<span id="cb17-366"><a href="#cb17-366" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"</span><span class="sc">{</span><span class="st">'J'</span><span class="sc">:&gt;3s}</span><span class="ss"> </span><span class="sc">{</span><span class="st">'max overlap'</span><span class="sc">:&gt;12s}</span><span class="ss"> </span><span class="sc">{</span><span class="st">'loss'</span><span class="sc">:&gt;8s}</span><span class="ss"> </span><span class="sc">{</span><span class="st">'PR'</span><span class="sc">:&gt;6s}</span><span class="ss"> </span><span class="sc">{</span><span class="st">'|cos| within'</span><span class="sc">:&gt;13s}</span><span class="ss"> </span><span class="sc">{</span><span class="st">'between'</span><span class="sc">:&gt;8s}</span><span class="ss">   (S = </span><span class="sc">{</span>S_READ<span class="sc">}</span><span class="ss">, 2 seeds)"</span>)</span>
-<span id="cb17-367"><a href="#cb17-367" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> J <span class="kw">in</span> Js:</span>
-<span id="cb17-368"><a href="#cb17-368" aria-hidden="true" tabindex="-1"></a>    rows <span class="op">=</span> []</span>
-<span id="cb17-369"><a href="#cb17-369" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> model, subs, _, loss <span class="kw">in</span> reader_runs[J]:</span>
-<span id="cb17-370"><a href="#cb17-370" aria-hidden="true" tabindex="-1"></a>        w, b <span class="op">=</span> within_between_cosine(model.W, subs)</span>
-<span id="cb17-371"><a href="#cb17-371" aria-hidden="true" tabindex="-1"></a>        rows.append((loss, participation_ratio(model.W), w, b))</span>
-<span id="cb17-372"><a href="#cb17-372" aria-hidden="true" tabindex="-1"></a>    r <span class="op">=</span> np.mean(rows, <span class="dv">0</span>)</span>
-<span id="cb17-373"><a href="#cb17-373" aria-hidden="true" tabindex="-1"></a>    subs <span class="op">=</span> reader_runs[J][<span class="dv">0</span>][<span class="dv">1</span>]</span>
-<span id="cb17-374"><a href="#cb17-374" aria-hidden="true" tabindex="-1"></a>    ov <span class="op">=</span> <span class="bu">max</span>(<span class="bu">len</span>(<span class="bu">set</span>(a) <span class="op">&amp;</span> <span class="bu">set</span>(b)) <span class="cf">for</span> i, a <span class="kw">in</span> <span class="bu">enumerate</span>(subs) <span class="cf">for</span> b <span class="kw">in</span> subs[i<span class="op">+</span><span class="dv">1</span>:])</span>
-<span id="cb17-375"><a href="#cb17-375" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(<span class="ss">f"</span><span class="sc">{</span>J<span class="sc">:3d}</span><span class="ss"> </span><span class="sc">{</span>ov<span class="sc">:12d}</span><span class="ss"> </span><span class="sc">{</span>r[<span class="dv">0</span>]<span class="sc">:8.3f}</span><span class="ss"> </span><span class="sc">{</span>r[<span class="dv">1</span>]<span class="sc">:6.2f}</span><span class="ss"> </span><span class="sc">{</span>r[<span class="dv">2</span>]<span class="sc">:13.2f}</span><span class="ss"> </span><span class="sc">{</span>r[<span class="dv">3</span>]<span class="sc">:8.2f}</span><span class="ss">"</span>)</span>
-<span id="cb17-376"><a href="#cb17-376" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb17-377"><a href="#cb17-377" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb17-380"><a href="#cb17-380" aria-hidden="true" tabindex="-1"></a><span class="in">```{python}</span></span>
-<span id="cb17-381"><a href="#cb17-381" aria-hidden="true" tabindex="-1"></a><span class="co">#| code-summary: "Input directions, ordered by subset, at the two ends of the knob"</span></span>
-<span id="cb17-382"><a href="#cb17-382" aria-hidden="true" tabindex="-1"></a><span class="co">#| fig-cap: "Cosine between the bottleneck directions $W_i$ of the 20 independent inputs, ordered by the task subsets (boundaries drawn), for maximal reuse ($J=4$, left) and no reuse ($J=12$, right; inputs ordered by their first subset). The inputs are statistically identical in both panels; only the readers differ."</span></span>
-<span id="cb17-383"><a href="#cb17-383" aria-hidden="true" tabindex="-1"></a>fig, axes <span class="op">=</span> plt.subplots(<span class="dv">1</span>, <span class="dv">2</span>, figsize<span class="op">=</span>(<span class="fl">7.2</span>, <span class="fl">3.6</span>))</span>
-<span id="cb17-384"><a href="#cb17-384" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> ax, J <span class="kw">in</span> <span class="bu">zip</span>(axes, [<span class="dv">4</span>, <span class="dv">12</span>]):</span>
-<span id="cb17-385"><a href="#cb17-385" aria-hidden="true" tabindex="-1"></a>    model, subs, _, _ <span class="op">=</span> reader_runs[J][<span class="dv">0</span>]</span>
-<span id="cb17-386"><a href="#cb17-386" aria-hidden="true" tabindex="-1"></a>    first <span class="op">=</span> {}</span>
-<span id="cb17-387"><a href="#cb17-387" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> j, s <span class="kw">in</span> <span class="bu">enumerate</span>(subs):</span>
-<span id="cb17-388"><a href="#cb17-388" aria-hidden="true" tabindex="-1"></a>        <span class="cf">for</span> i <span class="kw">in</span> s: first.setdefault(i, j)</span>
-<span id="cb17-389"><a href="#cb17-389" aria-hidden="true" tabindex="-1"></a>    order <span class="op">=</span> <span class="bu">sorted</span>(<span class="bu">range</span>(n), key<span class="op">=</span><span class="kw">lambda</span> i: (first.get(i, <span class="dv">99</span>), i))</span>
-<span id="cb17-390"><a href="#cb17-390" aria-hidden="true" tabindex="-1"></a>    C <span class="op">=</span> cosine_matrix(model.W)[np.ix_(order, order)]</span>
-<span id="cb17-391"><a href="#cb17-391" aria-hidden="true" tabindex="-1"></a>    ax.imshow(C, cmap<span class="op">=</span><span class="st">"RdBu_r"</span>, vmin<span class="op">=-</span><span class="dv">1</span>, vmax<span class="op">=</span><span class="dv">1</span>)</span>
-<span id="cb17-392"><a href="#cb17-392" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> J <span class="op">==</span> <span class="dv">4</span>:</span>
-<span id="cb17-393"><a href="#cb17-393" aria-hidden="true" tabindex="-1"></a>        <span class="cf">for</span> gb <span class="kw">in</span> <span class="bu">range</span>(fan, n, fan):</span>
-<span id="cb17-394"><a href="#cb17-394" aria-hidden="true" tabindex="-1"></a>            ax.axhline(gb<span class="op">-</span><span class="fl">0.5</span>, color<span class="op">=</span><span class="st">"k"</span>, lw<span class="op">=</span><span class="fl">0.6</span>)<span class="op">;</span> ax.axvline(gb<span class="op">-</span><span class="fl">0.5</span>, color<span class="op">=</span><span class="st">"k"</span>, lw<span class="op">=</span><span class="fl">0.6</span>)</span>
-<span id="cb17-395"><a href="#cb17-395" aria-hidden="true" tabindex="-1"></a>    ax.set_xticks([])<span class="op">;</span> ax.set_yticks([])<span class="op">;</span> ax.set_title(<span class="ss">f"J = </span><span class="sc">{</span>J<span class="sc">}</span><span class="ss">"</span>)</span>
-<span id="cb17-396"><a href="#cb17-396" aria-hidden="true" tabindex="-1"></a>plt.tight_layout()</span>
-<span id="cb17-397"><a href="#cb17-397" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb17-398"><a href="#cb17-398" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb17-399"><a href="#cb17-399" aria-hidden="true" tabindex="-1"></a>With maximal reuse the bottleneck becomes four coarse directions, one per shared sum, with</span>
-<span id="cb17-400"><a href="#cb17-400" aria-hidden="true" tabindex="-1"></a>the five inputs of each sum nearly parallel (|cosine| about 0.8 within, 0.2 between) and a</span>
-<span id="cb17-401"><a href="#cb17-401" aria-hidden="true" tabindex="-1"></a>participation ratio of 4. Nothing about the inputs asked for this; the readers did. With no</span>
-<span id="cb17-402"><a href="#cb17-402" aria-hidden="true" tabindex="-1"></a>reuse the same inputs are spread with no block structure, the participation ratio rises</span>
-<span id="cb17-403"><a href="#cb17-403" aria-hidden="true" tabindex="-1"></a>toward 5, and the task loss is seventy times larger: twelve independent sums do not fit in</span>
-<span id="cb17-404"><a href="#cb17-404" aria-hidden="true" tabindex="-1"></a>five dimensions, so the network packs them with interference. Intermediate $J$ gives</span>
-<span id="cb17-405"><a href="#cb17-405" aria-hidden="true" tabindex="-1"></a>intermediate values of everything.</span>
-<span id="cb17-406"><a href="#cb17-406" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb17-407"><a href="#cb17-407" aria-hidden="true" tabindex="-1"></a>Two remarks on the control. First, it is the original toy's situation transposed up one</span>
-<span id="cb17-408"><a href="#cb17-408" aria-hidden="true" tabindex="-1"></a>level: the quantities being packed are now the readers' sums rather than the inputs, but the</span>
-<span id="cb17-409"><a href="#cb17-409" aria-hidden="true" tabindex="-1"></a>mechanism is the same. Second, the control is not a strawman. Each task still reads five</span>
-<span id="cb17-410"><a href="#cb17-410" aria-hidden="true" tabindex="-1"></a>inputs through the same function; it just reads a combination nobody else wants.</span>
-<span id="cb17-411"><a href="#cb17-411" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb17-414"><a href="#cb17-414" aria-hidden="true" tabindex="-1"></a><span class="in">```{python}</span></span>
-<span id="cb17-415"><a href="#cb17-415" aria-hidden="true" tabindex="-1"></a><span class="co">#| code-summary: "Hidden-neuron poles against the task subsets"</span></span>
-<span id="cb17-416"><a href="#cb17-416" aria-hidden="true" tabindex="-1"></a><span class="co">#| fig-cap: "Cosine between each hidden neuron's read direction and each subset's shared direction (the mean of its five $W_i$). Left: $J=4$, four subsets. Right: $J=12$, twelve subsets. With reuse, neurons are about one sum, some with a contrasting negative pole; without, they read many overlapping sums."</span></span>
-<span id="cb17-417"><a href="#cb17-417" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> subset_cosines(model, subs):</span>
-<span id="cb17-418"><a href="#cb17-418" aria-hidden="true" tabindex="-1"></a>    W <span class="op">=</span> model.W.detach()<span class="op">;</span> V <span class="op">=</span> model.V.detach()</span>
-<span id="cb17-419"><a href="#cb17-419" aria-hidden="true" tabindex="-1"></a>    G <span class="op">=</span> torch.stack([W[:, s].mean(<span class="dv">1</span>) <span class="cf">for</span> s <span class="kw">in</span> subs], <span class="dv">1</span>)<span class="op">;</span> G <span class="op">=</span> G <span class="op">/</span> G.norm(dim<span class="op">=</span><span class="dv">0</span>, keepdim<span class="op">=</span><span class="va">True</span>)</span>
-<span id="cb17-420"><a href="#cb17-420" aria-hidden="true" tabindex="-1"></a>    Vn <span class="op">=</span> V <span class="op">/</span> V.norm(dim<span class="op">=</span><span class="dv">1</span>, keepdim<span class="op">=</span><span class="va">True</span>).clamp_min(<span class="fl">1e-8</span>)</span>
-<span id="cb17-421"><a href="#cb17-421" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> (Vn <span class="op">@</span> G).numpy()</span>
-<span id="cb17-422"><a href="#cb17-422" aria-hidden="true" tabindex="-1"></a>fig, axes <span class="op">=</span> plt.subplots(<span class="dv">1</span>, <span class="dv">2</span>, figsize<span class="op">=</span>(<span class="dv">8</span>, <span class="fl">3.6</span>), gridspec_kw<span class="op">=</span>{<span class="st">"width_ratios"</span>: [<span class="dv">4</span>, <span class="dv">12</span>]})</span>
-<span id="cb17-423"><a href="#cb17-423" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> ax, J <span class="kw">in</span> <span class="bu">zip</span>(axes, [<span class="dv">4</span>, <span class="dv">12</span>]):</span>
-<span id="cb17-424"><a href="#cb17-424" aria-hidden="true" tabindex="-1"></a>    model, subs, _, _ <span class="op">=</span> reader_runs[J][<span class="dv">0</span>]</span>
-<span id="cb17-425"><a href="#cb17-425" aria-hidden="true" tabindex="-1"></a>    cs <span class="op">=</span> subset_cosines(model, subs)</span>
-<span id="cb17-426"><a href="#cb17-426" aria-hidden="true" tabindex="-1"></a>    order <span class="op">=</span> np.lexsort((<span class="op">-</span>np.<span class="bu">abs</span>(cs).<span class="bu">max</span>(<span class="dv">1</span>), np.<span class="bu">abs</span>(cs).argmax(<span class="dv">1</span>)))</span>
-<span id="cb17-427"><a href="#cb17-427" aria-hidden="true" tabindex="-1"></a>    im <span class="op">=</span> ax.imshow(cs[order], cmap<span class="op">=</span><span class="st">"RdBu_r"</span>, vmin<span class="op">=-</span><span class="dv">1</span>, vmax<span class="op">=</span><span class="dv">1</span>, aspect<span class="op">=</span><span class="st">"auto"</span>)</span>
-<span id="cb17-428"><a href="#cb17-428" aria-hidden="true" tabindex="-1"></a>    ax.set_xlabel(<span class="st">"task subset"</span>)<span class="op">;</span> ax.set_title(<span class="ss">f"J = </span><span class="sc">{</span>J<span class="sc">}</span><span class="ss">"</span>)</span>
-<span id="cb17-429"><a href="#cb17-429" aria-hidden="true" tabindex="-1"></a>axes[<span class="dv">0</span>].set_ylabel(<span class="st">"hidden neuron"</span>)</span>
-<span id="cb17-430"><a href="#cb17-430" aria-hidden="true" tabindex="-1"></a>plt.colorbar(im, ax<span class="op">=</span>axes, shrink<span class="op">=</span><span class="fl">0.8</span>, label<span class="op">=</span><span class="st">"cos(V_j, subset direction)"</span>)</span>
-<span id="cb17-431"><a href="#cb17-431" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb17-432"><a href="#cb17-432" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb17-435"><a href="#cb17-435" aria-hidden="true" tabindex="-1"></a><span class="in">```{python}</span></span>
-<span id="cb17-436"><a href="#cb17-436" aria-hidden="true" tabindex="-1"></a><span class="co">#| code-summary: "Does sparsity rescue the no-reuse control?"</span></span>
-<span id="cb17-437"><a href="#cb17-437" aria-hidden="true" tabindex="-1"></a><span class="co">#| fig-cap: "Task loss (left) and the gap between within-subset and between-subset |cosine| (right) as a function of input sparsity, for maximal reuse and no reuse. Two seeds each."</span></span>
-<span id="cb17-438"><a href="#cb17-438" aria-hidden="true" tabindex="-1"></a>S_list <span class="op">=</span> [<span class="fl">0.0</span>, <span class="fl">0.5</span>, <span class="fl">0.8</span>, <span class="fl">0.9</span>, <span class="fl">0.97</span>]</span>
-<span id="cb17-439"><a href="#cb17-439" aria-hidden="true" tabindex="-1"></a>curves <span class="op">=</span> {J: [] <span class="cf">for</span> J <span class="kw">in</span> (<span class="dv">4</span>, <span class="dv">12</span>)}</span>
-<span id="cb17-440"><a href="#cb17-440" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> Sp <span class="kw">in</span> S_list:</span>
-<span id="cb17-441"><a href="#cb17-441" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> J <span class="kw">in</span> (<span class="dv">4</span>, <span class="dv">12</span>):</span>
-<span id="cb17-442"><a href="#cb17-442" aria-hidden="true" tabindex="-1"></a>        rows <span class="op">=</span> []</span>
-<span id="cb17-443"><a href="#cb17-443" aria-hidden="true" tabindex="-1"></a>        <span class="cf">for</span> s <span class="kw">in</span> <span class="bu">range</span>(<span class="dv">2</span>):</span>
-<span id="cb17-444"><a href="#cb17-444" aria-hidden="true" tabindex="-1"></a>            model, subs, _, loss <span class="op">=</span> fit_readers(J, S<span class="op">=</span>Sp, seed<span class="op">=</span>s)</span>
-<span id="cb17-445"><a href="#cb17-445" aria-hidden="true" tabindex="-1"></a>            w, b <span class="op">=</span> within_between_cosine(model.W, subs)</span>
-<span id="cb17-446"><a href="#cb17-446" aria-hidden="true" tabindex="-1"></a>            rows.append((loss, w <span class="op">-</span> b))</span>
-<span id="cb17-447"><a href="#cb17-447" aria-hidden="true" tabindex="-1"></a>        curves[J].append(np.mean(rows, <span class="dv">0</span>))</span>
-<span id="cb17-448"><a href="#cb17-448" aria-hidden="true" tabindex="-1"></a>fig, axes <span class="op">=</span> plt.subplots(<span class="dv">1</span>, <span class="dv">2</span>, figsize<span class="op">=</span>(<span class="dv">8</span>, <span class="fl">3.2</span>))</span>
-<span id="cb17-449"><a href="#cb17-449" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> J, lab <span class="kw">in</span> [(<span class="dv">4</span>, <span class="st">"J = 4 (reuse)"</span>), (<span class="dv">12</span>, <span class="st">"J = 12 (no reuse)"</span>)]:</span>
-<span id="cb17-450"><a href="#cb17-450" aria-hidden="true" tabindex="-1"></a>    c <span class="op">=</span> np.array(curves[J])</span>
-<span id="cb17-451"><a href="#cb17-451" aria-hidden="true" tabindex="-1"></a>    axes[<span class="dv">0</span>].plot(S_list, c[:, <span class="dv">0</span>], <span class="st">"o-"</span>, label<span class="op">=</span>lab)<span class="op">;</span> axes[<span class="dv">1</span>].plot(S_list, c[:, <span class="dv">1</span>], <span class="st">"o-"</span>, label<span class="op">=</span>lab)</span>
-<span id="cb17-452"><a href="#cb17-452" aria-hidden="true" tabindex="-1"></a>axes[<span class="dv">0</span>].set_yscale(<span class="st">"log"</span>)<span class="op">;</span> axes[<span class="dv">0</span>].set_xlabel(<span class="st">"sparsity S"</span>)<span class="op">;</span> axes[<span class="dv">0</span>].set_ylabel(<span class="st">"task loss"</span>)<span class="op">;</span> axes[<span class="dv">0</span>].legend(fontsize<span class="op">=</span><span class="dv">8</span>)</span>
-<span id="cb17-453"><a href="#cb17-453" aria-hidden="true" tabindex="-1"></a>axes[<span class="dv">1</span>].set_xlabel(<span class="st">"sparsity S"</span>)<span class="op">;</span> axes[<span class="dv">1</span>].set_ylabel(<span class="st">"|cos| within − between"</span>)</span>
-<span id="cb17-454"><a href="#cb17-454" aria-hidden="true" tabindex="-1"></a>plt.tight_layout()</span>
-<span id="cb17-455"><a href="#cb17-455" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb17-456"><a href="#cb17-456" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb17-457"><a href="#cb17-457" aria-hidden="true" tabindex="-1"></a>The reuse condition is clean and nearly lossless at every sparsity. The no-reuse condition</span>
-<span id="cb17-458"><a href="#cb17-458" aria-hidden="true" tabindex="-1"></a>is simply infeasible when inputs are dense, and only approaches a low loss at very high</span>
-<span id="cb17-459"><a href="#cb17-459" aria-hidden="true" tabindex="-1"></a>sparsity, where packing with interference becomes cheap. This is the original toy's</span>
-<span id="cb17-460"><a href="#cb17-460" aria-hidden="true" tabindex="-1"></a>phase diagram again, now driven by the readers: superposition is what a network does when</span>
-<span id="cb17-461"><a href="#cb17-461" aria-hidden="true" tabindex="-1"></a>the things it must represent are unrelated *to its readers* and rare enough to pack.</span>
-<span id="cb17-462"><a href="#cb17-462" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb17-463"><a href="#cb17-463" aria-hidden="true" tabindex="-1"></a><span class="fu">### A private offshoot</span></span>
-<span id="cb17-464"><a href="#cb17-464" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb17-465"><a href="#cb17-465" aria-hidden="true" tabindex="-1"></a>If reuse makes inputs coarse, what happens when one reader wants fine structure? We keep the</span>
-<span id="cb17-466"><a href="#cb17-466" aria-hidden="true" tabindex="-1"></a>$J = 4$ tasks and add a single extra task that reads one input alone, $y = x_{i^\star}$ for</span>
-<span id="cb17-467"><a href="#cb17-467" aria-hidden="true" tabindex="-1"></a>some $i^\star$ in the first subset. The prediction from the essay's picture is that</span>
-<span id="cb17-468"><a href="#cb17-468" aria-hidden="true" tabindex="-1"></a>$W_{i^\star}$ stays aligned with its group direction and grows a private component that the</span>
-<span id="cb17-469"><a href="#cb17-469" aria-hidden="true" tabindex="-1"></a>rest of the group lacks.</span>
-<span id="cb17-470"><a href="#cb17-470" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb17-473"><a href="#cb17-473" aria-hidden="true" tabindex="-1"></a><span class="in">```{python}</span></span>
-<span id="cb17-474"><a href="#cb17-474" aria-hidden="true" tabindex="-1"></a><span class="co">#| code-summary: "One extra reader on a single input"</span></span>
-<span id="cb17-475"><a href="#cb17-475" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> offshoot_stats(extra, seeds<span class="op">=</span><span class="dv">3</span>):</span>
-<span id="cb17-476"><a href="#cb17-476" aria-hidden="true" tabindex="-1"></a>    out <span class="op">=</span> []</span>
-<span id="cb17-477"><a href="#cb17-477" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> s <span class="kw">in</span> <span class="bu">range</span>(seeds):</span>
-<span id="cb17-478"><a href="#cb17-478" aria-hidden="true" tabindex="-1"></a>        ex <span class="op">=</span> (<span class="kw">lambda</span> subs: [([subs[<span class="dv">0</span>][<span class="dv">0</span>]], <span class="fl">0.0</span>)]) <span class="cf">if</span> extra <span class="cf">else</span> ()</span>
-<span id="cb17-479"><a href="#cb17-479" aria-hidden="true" tabindex="-1"></a>        model, subs, _, loss <span class="op">=</span> fit_readers(<span class="dv">4</span>, seed<span class="op">=</span>s, extra_tasks<span class="op">=</span>ex)</span>
-<span id="cb17-480"><a href="#cb17-480" aria-hidden="true" tabindex="-1"></a>        W <span class="op">=</span> model.W.detach()<span class="op">;</span> g <span class="op">=</span> W[:, subs[<span class="dv">0</span>]].mean(<span class="dv">1</span>)<span class="op">;</span> g <span class="op">=</span> g <span class="op">/</span> g.norm()</span>
-<span id="cb17-481"><a href="#cb17-481" aria-hidden="true" tabindex="-1"></a>        <span class="kw">def</span> split(i):</span>
-<span id="cb17-482"><a href="#cb17-482" aria-hidden="true" tabindex="-1"></a>            w <span class="op">=</span> W[:, i]<span class="op">;</span> par <span class="op">=</span> <span class="bu">float</span>(w <span class="op">@</span> g)<span class="op">;</span> <span class="cf">return</span> par, <span class="bu">float</span>((w <span class="op">-</span> par <span class="op">*</span> g).norm())</span>
-<span id="cb17-483"><a href="#cb17-483" aria-hidden="true" tabindex="-1"></a>        t <span class="op">=</span> split(subs[<span class="dv">0</span>][<span class="dv">0</span>])<span class="op">;</span> o <span class="op">=</span> np.mean([split(i) <span class="cf">for</span> i <span class="kw">in</span> subs[<span class="dv">0</span>][<span class="dv">1</span>:]], <span class="dv">0</span>)</span>
-<span id="cb17-484"><a href="#cb17-484" aria-hidden="true" tabindex="-1"></a>        out.append((loss, t[<span class="dv">0</span>], t[<span class="dv">1</span>], o[<span class="dv">0</span>], o[<span class="dv">1</span>]))</span>
-<span id="cb17-485"><a href="#cb17-485" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> np.mean(out, <span class="dv">0</span>)</span>
-<span id="cb17-486"><a href="#cb17-486" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"</span><span class="sc">{</span><span class="st">'extra reader'</span><span class="sc">:&gt;13s}</span><span class="ss"> </span><span class="sc">{</span><span class="st">'loss'</span><span class="sc">:&gt;7s}</span><span class="ss"> </span><span class="sc">{</span><span class="st">'target ∥ group'</span><span class="sc">:&gt;15s}</span><span class="ss"> </span><span class="sc">{</span><span class="st">'target ⊥'</span><span class="sc">:&gt;9s}</span><span class="ss"> </span><span class="sc">{</span><span class="st">'others ∥ group'</span><span class="sc">:&gt;15s}</span><span class="ss"> </span><span class="sc">{</span><span class="st">'others ⊥'</span><span class="sc">:&gt;9s}</span><span class="ss">"</span>)</span>
-<span id="cb17-487"><a href="#cb17-487" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> extra <span class="kw">in</span> (<span class="va">False</span>, <span class="va">True</span>):</span>
-<span id="cb17-488"><a href="#cb17-488" aria-hidden="true" tabindex="-1"></a>    r <span class="op">=</span> offshoot_stats(extra)</span>
-<span id="cb17-489"><a href="#cb17-489" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(<span class="ss">f"</span><span class="sc">{</span><span class="bu">str</span>(extra)<span class="sc">:&gt;13s}</span><span class="ss"> </span><span class="sc">{</span>r[<span class="dv">0</span>]<span class="sc">:7.3f}</span><span class="ss"> </span><span class="sc">{</span>r[<span class="dv">1</span>]<span class="sc">:15.2f}</span><span class="ss"> </span><span class="sc">{</span>r[<span class="dv">2</span>]<span class="sc">:9.2f}</span><span class="ss"> </span><span class="sc">{</span>r[<span class="dv">3</span>]<span class="sc">:15.2f}</span><span class="ss"> </span><span class="sc">{</span>r[<span class="dv">4</span>]<span class="sc">:9.2f}</span><span class="ss">"</span>)</span>
-<span id="cb17-490"><a href="#cb17-490" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb17-491"><a href="#cb17-491" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb17-492"><a href="#cb17-492" aria-hidden="true" tabindex="-1"></a>The single extra reader makes the target input's private component more than six times</span>
-<span id="cb17-493"><a href="#cb17-493" aria-hidden="true" tabindex="-1"></a>larger while leaving its alignment with the group untouched, and leaves the other four members of the group as they</span>
-<span id="cb17-494"><a href="#cb17-494" aria-hidden="true" tabindex="-1"></a>were. In the essay's language, the input has a group direction and an offshoot, and the</span>
-<span id="cb17-495"><a href="#cb17-495" aria-hidden="true" tabindex="-1"></a>offshoot exists because something reads it. This is the smallest possible model of</span>
-<span id="cb17-496"><a href="#cb17-496" aria-hidden="true" tabindex="-1"></a>"recursive generalisation": a coarse representation that grows a finer branch exactly where</span>
-<span id="cb17-497"><a href="#cb17-497" aria-hidden="true" tabindex="-1"></a>a downstream reader needs one.</span>
+<span id="cb17-364"><a href="#cb17-364" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> fit_readers(J, S<span class="op">=</span>S_READ, seed<span class="op">=</span><span class="dv">0</span>, steps<span class="op">=</span><span class="dv">4000</span>, extra_tasks<span class="op">=</span>()):</span>
+<span id="cb17-365"><a href="#cb17-365" aria-hidden="true" tabindex="-1"></a>    subs <span class="op">=</span> make_subsets(n, J, fan, seed<span class="op">=</span>seed)</span>
+<span id="cb17-366"><a href="#cb17-366" aria-hidden="true" tabindex="-1"></a>    tasks <span class="op">=</span> make_tasks(subs, T) <span class="op">+</span> <span class="bu">list</span>(extra_tasks(subs) <span class="cf">if</span> <span class="bu">callable</span>(extra_tasks) <span class="cf">else</span> extra_tasks)</span>
+<span id="cb17-367"><a href="#cb17-367" aria-hidden="true" tabindex="-1"></a>    model <span class="op">=</span> ReaderToy(n, m, k, <span class="bu">len</span>(tasks), torch.Generator().manual_seed(seed))</span>
+<span id="cb17-368"><a href="#cb17-368" aria-hidden="true" tabindex="-1"></a>    L <span class="op">=</span> train_tasks(model, tasks, n, S, steps<span class="op">=</span>steps, seed<span class="op">=</span>seed)</span>
+<span id="cb17-369"><a href="#cb17-369" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> model, subs, tasks, L[<span class="op">-</span><span class="dv">200</span>:].mean()</span>
+<span id="cb17-370"><a href="#cb17-370" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-371"><a href="#cb17-371" aria-hidden="true" tabindex="-1"></a>Js <span class="op">=</span> [<span class="dv">4</span>, <span class="dv">6</span>, <span class="dv">8</span>, <span class="dv">12</span>]</span>
+<span id="cb17-372"><a href="#cb17-372" aria-hidden="true" tabindex="-1"></a>reader_runs <span class="op">=</span> {J: [fit_readers(J, seed<span class="op">=</span>s) <span class="cf">for</span> s <span class="kw">in</span> <span class="bu">range</span>(<span class="dv">2</span>)] <span class="cf">for</span> J <span class="kw">in</span> Js}</span>
+<span id="cb17-373"><a href="#cb17-373" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"</span><span class="sc">{</span><span class="st">'J'</span><span class="sc">:&gt;3s}</span><span class="ss"> </span><span class="sc">{</span><span class="st">'max overlap'</span><span class="sc">:&gt;12s}</span><span class="ss"> </span><span class="sc">{</span><span class="st">'loss'</span><span class="sc">:&gt;8s}</span><span class="ss"> </span><span class="sc">{</span><span class="st">'PR'</span><span class="sc">:&gt;6s}</span><span class="ss"> </span><span class="sc">{</span><span class="st">'|cos| within'</span><span class="sc">:&gt;13s}</span><span class="ss"> </span><span class="sc">{</span><span class="st">'between'</span><span class="sc">:&gt;8s}</span><span class="ss">   (S = </span><span class="sc">{</span>S_READ<span class="sc">}</span><span class="ss">, 2 seeds)"</span>)</span>
+<span id="cb17-374"><a href="#cb17-374" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> J <span class="kw">in</span> Js:</span>
+<span id="cb17-375"><a href="#cb17-375" aria-hidden="true" tabindex="-1"></a>    rows <span class="op">=</span> []</span>
+<span id="cb17-376"><a href="#cb17-376" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> model, subs, _, loss <span class="kw">in</span> reader_runs[J]:</span>
+<span id="cb17-377"><a href="#cb17-377" aria-hidden="true" tabindex="-1"></a>        w, b <span class="op">=</span> within_between_cosine(model.W, subs)</span>
+<span id="cb17-378"><a href="#cb17-378" aria-hidden="true" tabindex="-1"></a>        rows.append((loss, participation_ratio(model.W), w, b))</span>
+<span id="cb17-379"><a href="#cb17-379" aria-hidden="true" tabindex="-1"></a>    r <span class="op">=</span> np.mean(rows, <span class="dv">0</span>)</span>
+<span id="cb17-380"><a href="#cb17-380" aria-hidden="true" tabindex="-1"></a>    subs <span class="op">=</span> reader_runs[J][<span class="dv">0</span>][<span class="dv">1</span>]</span>
+<span id="cb17-381"><a href="#cb17-381" aria-hidden="true" tabindex="-1"></a>    ov <span class="op">=</span> <span class="bu">max</span>(<span class="bu">len</span>(<span class="bu">set</span>(a) <span class="op">&amp;</span> <span class="bu">set</span>(b)) <span class="cf">for</span> i, a <span class="kw">in</span> <span class="bu">enumerate</span>(subs) <span class="cf">for</span> b <span class="kw">in</span> subs[i<span class="op">+</span><span class="dv">1</span>:])</span>
+<span id="cb17-382"><a href="#cb17-382" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(<span class="ss">f"</span><span class="sc">{</span>J<span class="sc">:3d}</span><span class="ss"> </span><span class="sc">{</span>ov<span class="sc">:12d}</span><span class="ss"> </span><span class="sc">{</span>r[<span class="dv">0</span>]<span class="sc">:8.3f}</span><span class="ss"> </span><span class="sc">{</span>r[<span class="dv">1</span>]<span class="sc">:6.2f}</span><span class="ss"> </span><span class="sc">{</span>r[<span class="dv">2</span>]<span class="sc">:13.2f}</span><span class="ss"> </span><span class="sc">{</span>r[<span class="dv">3</span>]<span class="sc">:8.2f}</span><span class="ss">"</span>)</span>
+<span id="cb17-383"><a href="#cb17-383" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb17-384"><a href="#cb17-384" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-387"><a href="#cb17-387" aria-hidden="true" tabindex="-1"></a><span class="in">```{python}</span></span>
+<span id="cb17-388"><a href="#cb17-388" aria-hidden="true" tabindex="-1"></a><span class="co">#| code-summary: "Input directions, ordered by subset, at the two ends of the knob"</span></span>
+<span id="cb17-389"><a href="#cb17-389" aria-hidden="true" tabindex="-1"></a><span class="co">#| fig-cap: "Cosine between the bottleneck directions $W_i$ of the 20 independent inputs, ordered by the task subsets (boundaries drawn), for maximal reuse ($J=4$, left) and no reuse ($J=12$, right; inputs ordered by their first subset). The inputs are statistically identical in both panels; only the readers differ."</span></span>
+<span id="cb17-390"><a href="#cb17-390" aria-hidden="true" tabindex="-1"></a>fig, axes <span class="op">=</span> plt.subplots(<span class="dv">1</span>, <span class="dv">2</span>, figsize<span class="op">=</span>(<span class="fl">7.2</span>, <span class="fl">3.6</span>))</span>
+<span id="cb17-391"><a href="#cb17-391" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> ax, J <span class="kw">in</span> <span class="bu">zip</span>(axes, [<span class="dv">4</span>, <span class="dv">12</span>]):</span>
+<span id="cb17-392"><a href="#cb17-392" aria-hidden="true" tabindex="-1"></a>    model, subs, _, _ <span class="op">=</span> reader_runs[J][<span class="dv">0</span>]</span>
+<span id="cb17-393"><a href="#cb17-393" aria-hidden="true" tabindex="-1"></a>    first <span class="op">=</span> {}</span>
+<span id="cb17-394"><a href="#cb17-394" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> j, s <span class="kw">in</span> <span class="bu">enumerate</span>(subs):</span>
+<span id="cb17-395"><a href="#cb17-395" aria-hidden="true" tabindex="-1"></a>        <span class="cf">for</span> i <span class="kw">in</span> s: first.setdefault(i, j)</span>
+<span id="cb17-396"><a href="#cb17-396" aria-hidden="true" tabindex="-1"></a>    order <span class="op">=</span> <span class="bu">sorted</span>(<span class="bu">range</span>(n), key<span class="op">=</span><span class="kw">lambda</span> i: (first.get(i, <span class="dv">99</span>), i))</span>
+<span id="cb17-397"><a href="#cb17-397" aria-hidden="true" tabindex="-1"></a>    C <span class="op">=</span> cosine_matrix(model.W)[np.ix_(order, order)]</span>
+<span id="cb17-398"><a href="#cb17-398" aria-hidden="true" tabindex="-1"></a>    ax.imshow(C, cmap<span class="op">=</span><span class="st">"RdBu_r"</span>, vmin<span class="op">=-</span><span class="dv">1</span>, vmax<span class="op">=</span><span class="dv">1</span>)</span>
+<span id="cb17-399"><a href="#cb17-399" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> J <span class="op">==</span> <span class="dv">4</span>:</span>
+<span id="cb17-400"><a href="#cb17-400" aria-hidden="true" tabindex="-1"></a>        <span class="cf">for</span> gb <span class="kw">in</span> <span class="bu">range</span>(fan, n, fan):</span>
+<span id="cb17-401"><a href="#cb17-401" aria-hidden="true" tabindex="-1"></a>            ax.axhline(gb<span class="op">-</span><span class="fl">0.5</span>, color<span class="op">=</span><span class="st">"k"</span>, lw<span class="op">=</span><span class="fl">0.6</span>)<span class="op">;</span> ax.axvline(gb<span class="op">-</span><span class="fl">0.5</span>, color<span class="op">=</span><span class="st">"k"</span>, lw<span class="op">=</span><span class="fl">0.6</span>)</span>
+<span id="cb17-402"><a href="#cb17-402" aria-hidden="true" tabindex="-1"></a>    ax.set_xticks([])<span class="op">;</span> ax.set_yticks([])<span class="op">;</span> ax.set_title(<span class="ss">f"J = </span><span class="sc">{</span>J<span class="sc">}</span><span class="ss">"</span>)</span>
+<span id="cb17-403"><a href="#cb17-403" aria-hidden="true" tabindex="-1"></a>plt.tight_layout()</span>
+<span id="cb17-404"><a href="#cb17-404" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb17-405"><a href="#cb17-405" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-406"><a href="#cb17-406" aria-hidden="true" tabindex="-1"></a>With maximal reuse the bottleneck becomes four coarse directions, one per shared sum, with</span>
+<span id="cb17-407"><a href="#cb17-407" aria-hidden="true" tabindex="-1"></a>the five inputs of each sum nearly parallel (|cosine| about 0.8 within, 0.2 between) and a</span>
+<span id="cb17-408"><a href="#cb17-408" aria-hidden="true" tabindex="-1"></a>participation ratio of 4. Nothing about the inputs asked for this; the readers did. With no</span>
+<span id="cb17-409"><a href="#cb17-409" aria-hidden="true" tabindex="-1"></a>reuse the same inputs are spread with no block structure, the participation ratio rises</span>
+<span id="cb17-410"><a href="#cb17-410" aria-hidden="true" tabindex="-1"></a>toward 5, and the task loss is seventy times larger: twelve independent sums do not fit in</span>
+<span id="cb17-411"><a href="#cb17-411" aria-hidden="true" tabindex="-1"></a>five dimensions, so the network packs them with interference. Intermediate $J$ gives</span>
+<span id="cb17-412"><a href="#cb17-412" aria-hidden="true" tabindex="-1"></a>intermediate values of everything.</span>
+<span id="cb17-413"><a href="#cb17-413" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-414"><a href="#cb17-414" aria-hidden="true" tabindex="-1"></a>Two remarks on the control. First, it is the original toy's situation transposed up one</span>
+<span id="cb17-415"><a href="#cb17-415" aria-hidden="true" tabindex="-1"></a>level: the quantities being packed are now the readers' sums rather than the inputs, but the</span>
+<span id="cb17-416"><a href="#cb17-416" aria-hidden="true" tabindex="-1"></a>mechanism is the same. Second, the control is not a strawman. Each task still reads five</span>
+<span id="cb17-417"><a href="#cb17-417" aria-hidden="true" tabindex="-1"></a>inputs through the same function; it just reads a combination nobody else wants.</span>
+<span id="cb17-418"><a href="#cb17-418" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-421"><a href="#cb17-421" aria-hidden="true" tabindex="-1"></a><span class="in">```{python}</span></span>
+<span id="cb17-422"><a href="#cb17-422" aria-hidden="true" tabindex="-1"></a><span class="co">#| code-summary: "Hidden-neuron poles against the task subsets"</span></span>
+<span id="cb17-423"><a href="#cb17-423" aria-hidden="true" tabindex="-1"></a><span class="co">#| fig-cap: "Cosine between each hidden neuron's read direction and each subset's shared direction (the mean of its five $W_i$). Left: $J=4$, four subsets. Right: $J=12$, twelve subsets. With reuse, neurons are about one sum, some with a contrasting negative pole; without, they read many overlapping sums."</span></span>
+<span id="cb17-424"><a href="#cb17-424" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> subset_cosines(model, subs):</span>
+<span id="cb17-425"><a href="#cb17-425" aria-hidden="true" tabindex="-1"></a>    W <span class="op">=</span> model.W.detach()<span class="op">;</span> V <span class="op">=</span> model.V.detach()</span>
+<span id="cb17-426"><a href="#cb17-426" aria-hidden="true" tabindex="-1"></a>    G <span class="op">=</span> torch.stack([W[:, s].mean(<span class="dv">1</span>) <span class="cf">for</span> s <span class="kw">in</span> subs], <span class="dv">1</span>)<span class="op">;</span> G <span class="op">=</span> G <span class="op">/</span> G.norm(dim<span class="op">=</span><span class="dv">0</span>, keepdim<span class="op">=</span><span class="va">True</span>)</span>
+<span id="cb17-427"><a href="#cb17-427" aria-hidden="true" tabindex="-1"></a>    Vn <span class="op">=</span> V <span class="op">/</span> V.norm(dim<span class="op">=</span><span class="dv">1</span>, keepdim<span class="op">=</span><span class="va">True</span>).clamp_min(<span class="fl">1e-8</span>)</span>
+<span id="cb17-428"><a href="#cb17-428" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> (Vn <span class="op">@</span> G).numpy()</span>
+<span id="cb17-429"><a href="#cb17-429" aria-hidden="true" tabindex="-1"></a>fig, axes <span class="op">=</span> plt.subplots(<span class="dv">1</span>, <span class="dv">2</span>, figsize<span class="op">=</span>(<span class="dv">8</span>, <span class="fl">3.6</span>), gridspec_kw<span class="op">=</span>{<span class="st">"width_ratios"</span>: [<span class="dv">4</span>, <span class="dv">12</span>]})</span>
+<span id="cb17-430"><a href="#cb17-430" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> ax, J <span class="kw">in</span> <span class="bu">zip</span>(axes, [<span class="dv">4</span>, <span class="dv">12</span>]):</span>
+<span id="cb17-431"><a href="#cb17-431" aria-hidden="true" tabindex="-1"></a>    model, subs, _, _ <span class="op">=</span> reader_runs[J][<span class="dv">0</span>]</span>
+<span id="cb17-432"><a href="#cb17-432" aria-hidden="true" tabindex="-1"></a>    cs <span class="op">=</span> subset_cosines(model, subs)</span>
+<span id="cb17-433"><a href="#cb17-433" aria-hidden="true" tabindex="-1"></a>    order <span class="op">=</span> np.lexsort((<span class="op">-</span>np.<span class="bu">abs</span>(cs).<span class="bu">max</span>(<span class="dv">1</span>), np.<span class="bu">abs</span>(cs).argmax(<span class="dv">1</span>)))</span>
+<span id="cb17-434"><a href="#cb17-434" aria-hidden="true" tabindex="-1"></a>    im <span class="op">=</span> ax.imshow(cs[order], cmap<span class="op">=</span><span class="st">"RdBu_r"</span>, vmin<span class="op">=-</span><span class="dv">1</span>, vmax<span class="op">=</span><span class="dv">1</span>, aspect<span class="op">=</span><span class="st">"auto"</span>)</span>
+<span id="cb17-435"><a href="#cb17-435" aria-hidden="true" tabindex="-1"></a>    ax.set_xlabel(<span class="st">"task subset"</span>)<span class="op">;</span> ax.set_title(<span class="ss">f"J = </span><span class="sc">{</span>J<span class="sc">}</span><span class="ss">"</span>)</span>
+<span id="cb17-436"><a href="#cb17-436" aria-hidden="true" tabindex="-1"></a>axes[<span class="dv">0</span>].set_ylabel(<span class="st">"hidden neuron"</span>)</span>
+<span id="cb17-437"><a href="#cb17-437" aria-hidden="true" tabindex="-1"></a>plt.colorbar(im, ax<span class="op">=</span>axes, shrink<span class="op">=</span><span class="fl">0.8</span>, label<span class="op">=</span><span class="st">"cos(V_j, subset direction)"</span>)</span>
+<span id="cb17-438"><a href="#cb17-438" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb17-439"><a href="#cb17-439" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-442"><a href="#cb17-442" aria-hidden="true" tabindex="-1"></a><span class="in">```{python}</span></span>
+<span id="cb17-443"><a href="#cb17-443" aria-hidden="true" tabindex="-1"></a><span class="co">#| code-summary: "Does sparsity rescue the no-reuse control?"</span></span>
+<span id="cb17-444"><a href="#cb17-444" aria-hidden="true" tabindex="-1"></a><span class="co">#| fig-cap: "Task loss (left) and the gap between within-subset and between-subset |cosine| (right) as a function of input sparsity, for maximal reuse and no reuse. Two seeds each."</span></span>
+<span id="cb17-445"><a href="#cb17-445" aria-hidden="true" tabindex="-1"></a>S_list <span class="op">=</span> [<span class="fl">0.0</span>, <span class="fl">0.5</span>, <span class="fl">0.8</span>, <span class="fl">0.9</span>, <span class="fl">0.97</span>]</span>
+<span id="cb17-446"><a href="#cb17-446" aria-hidden="true" tabindex="-1"></a>curves <span class="op">=</span> {J: [] <span class="cf">for</span> J <span class="kw">in</span> (<span class="dv">4</span>, <span class="dv">12</span>)}</span>
+<span id="cb17-447"><a href="#cb17-447" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> Sp <span class="kw">in</span> S_list:</span>
+<span id="cb17-448"><a href="#cb17-448" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> J <span class="kw">in</span> (<span class="dv">4</span>, <span class="dv">12</span>):</span>
+<span id="cb17-449"><a href="#cb17-449" aria-hidden="true" tabindex="-1"></a>        rows <span class="op">=</span> []</span>
+<span id="cb17-450"><a href="#cb17-450" aria-hidden="true" tabindex="-1"></a>        <span class="cf">for</span> s <span class="kw">in</span> <span class="bu">range</span>(<span class="dv">2</span>):</span>
+<span id="cb17-451"><a href="#cb17-451" aria-hidden="true" tabindex="-1"></a>            model, subs, _, loss <span class="op">=</span> fit_readers(J, S<span class="op">=</span>Sp, seed<span class="op">=</span>s)</span>
+<span id="cb17-452"><a href="#cb17-452" aria-hidden="true" tabindex="-1"></a>            w, b <span class="op">=</span> within_between_cosine(model.W, subs)</span>
+<span id="cb17-453"><a href="#cb17-453" aria-hidden="true" tabindex="-1"></a>            rows.append((loss, w <span class="op">-</span> b))</span>
+<span id="cb17-454"><a href="#cb17-454" aria-hidden="true" tabindex="-1"></a>        curves[J].append(np.mean(rows, <span class="dv">0</span>))</span>
+<span id="cb17-455"><a href="#cb17-455" aria-hidden="true" tabindex="-1"></a>fig, axes <span class="op">=</span> plt.subplots(<span class="dv">1</span>, <span class="dv">2</span>, figsize<span class="op">=</span>(<span class="dv">8</span>, <span class="fl">3.2</span>))</span>
+<span id="cb17-456"><a href="#cb17-456" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> J, lab <span class="kw">in</span> [(<span class="dv">4</span>, <span class="st">"J = 4 (reuse)"</span>), (<span class="dv">12</span>, <span class="st">"J = 12 (no reuse)"</span>)]:</span>
+<span id="cb17-457"><a href="#cb17-457" aria-hidden="true" tabindex="-1"></a>    c <span class="op">=</span> np.array(curves[J])</span>
+<span id="cb17-458"><a href="#cb17-458" aria-hidden="true" tabindex="-1"></a>    axes[<span class="dv">0</span>].plot(S_list, c[:, <span class="dv">0</span>], <span class="st">"o-"</span>, label<span class="op">=</span>lab)<span class="op">;</span> axes[<span class="dv">1</span>].plot(S_list, c[:, <span class="dv">1</span>], <span class="st">"o-"</span>, label<span class="op">=</span>lab)</span>
+<span id="cb17-459"><a href="#cb17-459" aria-hidden="true" tabindex="-1"></a>axes[<span class="dv">0</span>].set_yscale(<span class="st">"log"</span>)<span class="op">;</span> axes[<span class="dv">0</span>].set_xlabel(<span class="st">"sparsity S"</span>)<span class="op">;</span> axes[<span class="dv">0</span>].set_ylabel(<span class="st">"task loss"</span>)<span class="op">;</span> axes[<span class="dv">0</span>].legend(fontsize<span class="op">=</span><span class="dv">8</span>)</span>
+<span id="cb17-460"><a href="#cb17-460" aria-hidden="true" tabindex="-1"></a>axes[<span class="dv">1</span>].set_xlabel(<span class="st">"sparsity S"</span>)<span class="op">;</span> axes[<span class="dv">1</span>].set_ylabel(<span class="st">"|cos| within − between"</span>)</span>
+<span id="cb17-461"><a href="#cb17-461" aria-hidden="true" tabindex="-1"></a>plt.tight_layout()</span>
+<span id="cb17-462"><a href="#cb17-462" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb17-463"><a href="#cb17-463" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-464"><a href="#cb17-464" aria-hidden="true" tabindex="-1"></a>The reuse condition is clean and nearly lossless at every sparsity. The no-reuse condition</span>
+<span id="cb17-465"><a href="#cb17-465" aria-hidden="true" tabindex="-1"></a>is simply infeasible when inputs are dense, and only approaches a low loss at very high</span>
+<span id="cb17-466"><a href="#cb17-466" aria-hidden="true" tabindex="-1"></a>sparsity, where packing with interference becomes cheap. This is the original toy's</span>
+<span id="cb17-467"><a href="#cb17-467" aria-hidden="true" tabindex="-1"></a>phase diagram again, now driven by the readers: superposition is what a network does when</span>
+<span id="cb17-468"><a href="#cb17-468" aria-hidden="true" tabindex="-1"></a>the things it must represent are unrelated *to its readers* and rare enough to pack.</span>
+<span id="cb17-469"><a href="#cb17-469" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-470"><a href="#cb17-470" aria-hidden="true" tabindex="-1"></a><span class="fu">### A private offshoot</span></span>
+<span id="cb17-471"><a href="#cb17-471" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-472"><a href="#cb17-472" aria-hidden="true" tabindex="-1"></a>If reuse makes inputs coarse, what happens when one reader wants fine structure? We keep the</span>
+<span id="cb17-473"><a href="#cb17-473" aria-hidden="true" tabindex="-1"></a>$J = 4$ tasks and add a single extra task that reads one input alone, $y = x_{i^\star}$ for</span>
+<span id="cb17-474"><a href="#cb17-474" aria-hidden="true" tabindex="-1"></a>some $i^\star$ in the first subset. The prediction from the essay's picture is that</span>
+<span id="cb17-475"><a href="#cb17-475" aria-hidden="true" tabindex="-1"></a>$W_{i^\star}$ stays aligned with its group direction and grows a private component that the</span>
+<span id="cb17-476"><a href="#cb17-476" aria-hidden="true" tabindex="-1"></a>rest of the group lacks.</span>
+<span id="cb17-477"><a href="#cb17-477" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-480"><a href="#cb17-480" aria-hidden="true" tabindex="-1"></a><span class="in">```{python}</span></span>
+<span id="cb17-481"><a href="#cb17-481" aria-hidden="true" tabindex="-1"></a><span class="co">#| code-summary: "One extra reader on a single input"</span></span>
+<span id="cb17-482"><a href="#cb17-482" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> offshoot_stats(extra, seeds<span class="op">=</span><span class="dv">3</span>):</span>
+<span id="cb17-483"><a href="#cb17-483" aria-hidden="true" tabindex="-1"></a>    out <span class="op">=</span> []</span>
+<span id="cb17-484"><a href="#cb17-484" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> s <span class="kw">in</span> <span class="bu">range</span>(seeds):</span>
+<span id="cb17-485"><a href="#cb17-485" aria-hidden="true" tabindex="-1"></a>        ex <span class="op">=</span> (<span class="kw">lambda</span> subs: [([subs[<span class="dv">0</span>][<span class="dv">0</span>]], <span class="fl">0.0</span>)]) <span class="cf">if</span> extra <span class="cf">else</span> ()</span>
+<span id="cb17-486"><a href="#cb17-486" aria-hidden="true" tabindex="-1"></a>        model, subs, _, loss <span class="op">=</span> fit_readers(<span class="dv">4</span>, seed<span class="op">=</span>s, extra_tasks<span class="op">=</span>ex)</span>
+<span id="cb17-487"><a href="#cb17-487" aria-hidden="true" tabindex="-1"></a>        W <span class="op">=</span> model.W.detach()<span class="op">;</span> g <span class="op">=</span> W[:, subs[<span class="dv">0</span>]].mean(<span class="dv">1</span>)<span class="op">;</span> g <span class="op">=</span> g <span class="op">/</span> g.norm()</span>
+<span id="cb17-488"><a href="#cb17-488" aria-hidden="true" tabindex="-1"></a>        <span class="kw">def</span> split(i):</span>
+<span id="cb17-489"><a href="#cb17-489" aria-hidden="true" tabindex="-1"></a>            w <span class="op">=</span> W[:, i]<span class="op">;</span> par <span class="op">=</span> <span class="bu">float</span>(w <span class="op">@</span> g)<span class="op">;</span> <span class="cf">return</span> par, <span class="bu">float</span>((w <span class="op">-</span> par <span class="op">*</span> g).norm())</span>
+<span id="cb17-490"><a href="#cb17-490" aria-hidden="true" tabindex="-1"></a>        t <span class="op">=</span> split(subs[<span class="dv">0</span>][<span class="dv">0</span>])<span class="op">;</span> o <span class="op">=</span> np.mean([split(i) <span class="cf">for</span> i <span class="kw">in</span> subs[<span class="dv">0</span>][<span class="dv">1</span>:]], <span class="dv">0</span>)</span>
+<span id="cb17-491"><a href="#cb17-491" aria-hidden="true" tabindex="-1"></a>        out.append((loss, t[<span class="dv">0</span>], t[<span class="dv">1</span>], o[<span class="dv">0</span>], o[<span class="dv">1</span>]))</span>
+<span id="cb17-492"><a href="#cb17-492" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> np.mean(out, <span class="dv">0</span>)</span>
+<span id="cb17-493"><a href="#cb17-493" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"</span><span class="sc">{</span><span class="st">'extra reader'</span><span class="sc">:&gt;13s}</span><span class="ss"> </span><span class="sc">{</span><span class="st">'loss'</span><span class="sc">:&gt;7s}</span><span class="ss"> </span><span class="sc">{</span><span class="st">'target ∥ group'</span><span class="sc">:&gt;15s}</span><span class="ss"> </span><span class="sc">{</span><span class="st">'target ⊥'</span><span class="sc">:&gt;9s}</span><span class="ss"> </span><span class="sc">{</span><span class="st">'others ∥ group'</span><span class="sc">:&gt;15s}</span><span class="ss"> </span><span class="sc">{</span><span class="st">'others ⊥'</span><span class="sc">:&gt;9s}</span><span class="ss">"</span>)</span>
+<span id="cb17-494"><a href="#cb17-494" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> extra <span class="kw">in</span> (<span class="va">False</span>, <span class="va">True</span>):</span>
+<span id="cb17-495"><a href="#cb17-495" aria-hidden="true" tabindex="-1"></a>    r <span class="op">=</span> offshoot_stats(extra)</span>
+<span id="cb17-496"><a href="#cb17-496" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(<span class="ss">f"</span><span class="sc">{</span><span class="bu">str</span>(extra)<span class="sc">:&gt;13s}</span><span class="ss"> </span><span class="sc">{</span>r[<span class="dv">0</span>]<span class="sc">:7.3f}</span><span class="ss"> </span><span class="sc">{</span>r[<span class="dv">1</span>]<span class="sc">:15.2f}</span><span class="ss"> </span><span class="sc">{</span>r[<span class="dv">2</span>]<span class="sc">:9.2f}</span><span class="ss"> </span><span class="sc">{</span>r[<span class="dv">3</span>]<span class="sc">:15.2f}</span><span class="ss"> </span><span class="sc">{</span>r[<span class="dv">4</span>]<span class="sc">:9.2f}</span><span class="ss">"</span>)</span>
+<span id="cb17-497"><a href="#cb17-497" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
 <span id="cb17-498"><a href="#cb17-498" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb17-499"><a href="#cb17-499" aria-hidden="true" tabindex="-1"></a><span class="fu">### What this adds to the picture</span></span>
-<span id="cb17-500"><a href="#cb17-500" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb17-501"><a href="#cb17-501" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>The relatedness that makes a network group things is not in the inputs. It is in the</span>
-<span id="cb17-502"><a href="#cb17-502" aria-hidden="true" tabindex="-1"></a>  readers. Identical input statistics give clean coarse directions under shared readers and</span>
-<span id="cb17-503"><a href="#cb17-503" aria-hidden="true" tabindex="-1"></a>  packing under unshared ones.</span>
-<span id="cb17-504"><a href="#cb17-504" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>Superposition and generalisation are not two learning principles here; they are what one</span>
-<span id="cb17-505"><a href="#cb17-505" aria-hidden="true" tabindex="-1"></a>  objective does in two regimes of reader structure. Packing wins only when the quantities</span>
-<span id="cb17-506"><a href="#cb17-506" aria-hidden="true" tabindex="-1"></a>  readers need are unrelated to each other and sparse enough to overlap cheaply.</span>
-<span id="cb17-507"><a href="#cb17-507" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>What the toy cannot tell us is which regime a real network's readers are in. The essay's</span>
-<span id="cb17-508"><a href="#cb17-508" aria-hidden="true" tabindex="-1"></a>  bet is that in real data "almost nothing is related to nothing", so real readers are</span>
-<span id="cb17-509"><a href="#cb17-509" aria-hidden="true" tabindex="-1"></a>  overwhelmingly of the shared kind. That is the empirical claim the rest of the essay has</span>
-<span id="cb17-510"><a href="#cb17-510" aria-hidden="true" tabindex="-1"></a>  to carry.</span>
-<span id="cb17-511"><a href="#cb17-511" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb17-512"><a href="#cb17-512" aria-hidden="true" tabindex="-1"></a><span class="fu">## 7. What to carry into the essay</span></span>
-<span id="cb17-513"><a href="#cb17-513" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb17-514"><a href="#cb17-514" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>**Packing is real and robust in the toy's world.** Independent sparse features in a narrow</span>
-<span id="cb17-515"><a href="#cb17-515" aria-hidden="true" tabindex="-1"></a>  bottleneck with nothing downstream get packed into polytopes, with discrete phase changes.</span>
-<span id="cb17-516"><a href="#cb17-516" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>**Correlation plus a hidden layer changes the picture, partly.** Related inputs share</span>
-<span id="cb17-517"><a href="#cb17-517" aria-hidden="true" tabindex="-1"></a>  directions in the bottleneck, and about half to two thirds of hidden neurons have a</span>
-<span id="cb17-518"><a href="#cb17-518" aria-hidden="true" tabindex="-1"></a>  one-group positive pole, some with a contrasting negative pole. This is the mechanism the</span>
-<span id="cb17-519"><a href="#cb17-519" aria-hidden="true" tabindex="-1"></a>  essay calls generalisation, and it appears as soon as the toy has somewhere for related</span>
-<span id="cb17-520"><a href="#cb17-520" aria-hidden="true" tabindex="-1"></a>  things to grow. But a sizeable minority of neurons still read two unrelated groups, so the</span>
-<span id="cb17-521"><a href="#cb17-521" aria-hidden="true" tabindex="-1"></a>  toy supports the essay's mechanism without supporting its strong claim.</span>
-<span id="cb17-522"><a href="#cb17-522" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>**The toy cannot say which regime real networks are in.** That is an empirical question and</span>
-<span id="cb17-523"><a href="#cb17-523" aria-hidden="true" tabindex="-1"></a>  it is what the essay's vision and language experiments are for.</span>
-<span id="cb17-524"><a href="#cb17-524" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb17-525"><a href="#cb17-525" aria-hidden="true" tabindex="-1"></a><span class="fu">## 8. What the toy does and does not say</span></span>
-<span id="cb17-526"><a href="#cb17-526" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb17-527"><a href="#cb17-527" aria-hidden="true" tabindex="-1"></a>The toy's results are robust and the essay accepts them: when independent, sparse features</span>
-<span id="cb17-528"><a href="#cb17-528" aria-hidden="true" tabindex="-1"></a>must be squeezed through a narrow linear bottleneck and reconstructed, the optimum packs</span>
-<span id="cb17-529"><a href="#cb17-529" aria-hidden="true" tabindex="-1"></a>them into non-orthogonal polytopes, with discrete phase changes as sparsity varies.</span>
-<span id="cb17-530"><a href="#cb17-530" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb17-531"><a href="#cb17-531" aria-hidden="true" tabindex="-1"></a>The essay's objection is to three modelling choices that it argues do not hold in real</span>
-<span id="cb17-532"><a href="#cb17-532" aria-hidden="true" tabindex="-1"></a>networks:</span>
+<span id="cb17-499"><a href="#cb17-499" aria-hidden="true" tabindex="-1"></a>The single extra reader makes the target input's private component more than six times</span>
+<span id="cb17-500"><a href="#cb17-500" aria-hidden="true" tabindex="-1"></a>larger while leaving its alignment with the group untouched, and leaves the other four members of the group as they</span>
+<span id="cb17-501"><a href="#cb17-501" aria-hidden="true" tabindex="-1"></a>were. In the essay's language, the input has a group direction and an offshoot, and the</span>
+<span id="cb17-502"><a href="#cb17-502" aria-hidden="true" tabindex="-1"></a>offshoot exists because something reads it. This is the smallest possible model of</span>
+<span id="cb17-503"><a href="#cb17-503" aria-hidden="true" tabindex="-1"></a>"recursive generalisation": a coarse representation that grows a finer branch exactly where</span>
+<span id="cb17-504"><a href="#cb17-504" aria-hidden="true" tabindex="-1"></a>a downstream reader needs one.</span>
+<span id="cb17-505"><a href="#cb17-505" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-506"><a href="#cb17-506" aria-hidden="true" tabindex="-1"></a><span class="fu">### What this adds to the picture</span></span>
+<span id="cb17-507"><a href="#cb17-507" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-508"><a href="#cb17-508" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>The relatedness that makes a network group things is not in the inputs. It is in the</span>
+<span id="cb17-509"><a href="#cb17-509" aria-hidden="true" tabindex="-1"></a>  readers. Identical input statistics give clean coarse directions under shared readers and</span>
+<span id="cb17-510"><a href="#cb17-510" aria-hidden="true" tabindex="-1"></a>  packing under unshared ones.</span>
+<span id="cb17-511"><a href="#cb17-511" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>Superposition and generalisation are not two learning principles here; they are what one</span>
+<span id="cb17-512"><a href="#cb17-512" aria-hidden="true" tabindex="-1"></a>  objective does in two regimes of reader structure. Packing wins only when the quantities</span>
+<span id="cb17-513"><a href="#cb17-513" aria-hidden="true" tabindex="-1"></a>  readers need are unrelated to each other and sparse enough to overlap cheaply.</span>
+<span id="cb17-514"><a href="#cb17-514" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>What the toy cannot tell us is which regime a real network's readers are in. The essay's</span>
+<span id="cb17-515"><a href="#cb17-515" aria-hidden="true" tabindex="-1"></a>  bet is that in real data "almost nothing is related to nothing", so real readers are</span>
+<span id="cb17-516"><a href="#cb17-516" aria-hidden="true" tabindex="-1"></a>  overwhelmingly of the shared kind. That is the empirical claim the rest of the essay has</span>
+<span id="cb17-517"><a href="#cb17-517" aria-hidden="true" tabindex="-1"></a>  to carry.</span>
+<span id="cb17-518"><a href="#cb17-518" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-519"><a href="#cb17-519" aria-hidden="true" tabindex="-1"></a>:::</span>
+<span id="cb17-520"><a href="#cb17-520" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-521"><a href="#cb17-521" aria-hidden="true" tabindex="-1"></a><span class="fu">## 7. What to carry into the essay</span></span>
+<span id="cb17-522"><a href="#cb17-522" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-523"><a href="#cb17-523" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>**Packing is real and robust in the toy's world.** Independent sparse features in a narrow</span>
+<span id="cb17-524"><a href="#cb17-524" aria-hidden="true" tabindex="-1"></a>  bottleneck with nothing downstream get packed into polytopes, with discrete phase changes.</span>
+<span id="cb17-525"><a href="#cb17-525" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>**Correlation plus a hidden layer changes the picture, partly.** Related inputs share</span>
+<span id="cb17-526"><a href="#cb17-526" aria-hidden="true" tabindex="-1"></a>  directions in the bottleneck, and about half to two thirds of hidden neurons have a</span>
+<span id="cb17-527"><a href="#cb17-527" aria-hidden="true" tabindex="-1"></a>  one-group positive pole, some with a contrasting negative pole. This is the mechanism the</span>
+<span id="cb17-528"><a href="#cb17-528" aria-hidden="true" tabindex="-1"></a>  essay calls generalisation, and it appears as soon as the toy has somewhere for related</span>
+<span id="cb17-529"><a href="#cb17-529" aria-hidden="true" tabindex="-1"></a>  things to grow. But a sizeable minority of neurons still read two unrelated groups, so the</span>
+<span id="cb17-530"><a href="#cb17-530" aria-hidden="true" tabindex="-1"></a>  toy supports the essay's mechanism without supporting its strong claim.</span>
+<span id="cb17-531"><a href="#cb17-531" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>**The toy cannot say which regime real networks are in.** That is an empirical question and</span>
+<span id="cb17-532"><a href="#cb17-532" aria-hidden="true" tabindex="-1"></a>  it is what the essay's vision and language experiments are for.</span>
 <span id="cb17-533"><a href="#cb17-533" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb17-534"><a href="#cb17-534" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>**Features are given in advance** and independent. In a real network nothing is defined in</span>
-<span id="cb17-535"><a href="#cb17-535" aria-hidden="true" tabindex="-1"></a>  advance; everything is grown, and real data has structure at every scale ("a rare person</span>
-<span id="cb17-536"><a href="#cb17-536" aria-hidden="true" tabindex="-1"></a>  still has a country, a job and a name").</span>
-<span id="cb17-537"><a href="#cb17-537" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>**Nothing reads the representation.** The loss is reconstruction, so each feature is an end</span>
-<span id="cb17-538"><a href="#cb17-538" aria-hidden="true" tabindex="-1"></a>  in itself. In a real network a representation only matters through what downstream reads</span>
-<span id="cb17-539"><a href="#cb17-539" aria-hidden="true" tabindex="-1"></a>  it, and sharing a direction between *related* things is a benefit (reuse), not a cost.</span>
-<span id="cb17-540"><a href="#cb17-540" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>**There are no hidden neurons** in the main experiments. Superposition in the toy is about</span>
-<span id="cb17-541"><a href="#cb17-541" aria-hidden="true" tabindex="-1"></a>  directions in a bottleneck; reports of polysemanticity in real networks are about</span>
-<span id="cb17-542"><a href="#cb17-542" aria-hidden="true" tabindex="-1"></a>  mixtures in neurons. The paper itself studies hidden neurons and correlated features, but</span>
-<span id="cb17-543"><a href="#cb17-543" aria-hidden="true" tabindex="-1"></a>  separately.</span>
-<span id="cb17-544"><a href="#cb17-544" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb17-545"><a href="#cb17-545" aria-hidden="true" tabindex="-1"></a>The toy therefore predicts where to *expect* packing: memories that are ends in themselves</span>
-<span id="cb17-546"><a href="#cb17-546" aria-hidden="true" tabindex="-1"></a>and related to nothing else. The essay's claim is that real networks are rarely in that</span>
-<span id="cb17-547"><a href="#cb17-547" aria-hidden="true" tabindex="-1"></a>regime, and the rest of the essay is an attempt to show this empirically in vision and</span>
-<span id="cb17-548"><a href="#cb17-548" aria-hidden="true" tabindex="-1"></a>language models.</span>
-<span id="cb17-549"><a href="#cb17-549" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb17-550"><a href="#cb17-550" aria-hidden="true" tabindex="-1"></a><span class="fu">## Further reading</span></span>
-<span id="cb17-551"><a href="#cb17-551" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb17-552"><a href="#cb17-552" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>Elhage et al., *Toy Models of Superposition* (2022), especially the sections on feature</span>
-<span id="cb17-553"><a href="#cb17-553" aria-hidden="true" tabindex="-1"></a>  geometry, phase diagrams, and correlated features.</span>
-<span id="cb17-554"><a href="#cb17-554" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>The essay's appendix sections "Toy Models" and "A Note on Features and Definitions".</span>
+<span id="cb17-534"><a href="#cb17-534" aria-hidden="true" tabindex="-1"></a><span class="fu">## 8. What the toy does and does not say</span></span>
+<span id="cb17-535"><a href="#cb17-535" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-536"><a href="#cb17-536" aria-hidden="true" tabindex="-1"></a>The toy's results are robust and the essay accepts them: when independent, sparse features</span>
+<span id="cb17-537"><a href="#cb17-537" aria-hidden="true" tabindex="-1"></a>must be squeezed through a narrow linear bottleneck and reconstructed, the optimum packs</span>
+<span id="cb17-538"><a href="#cb17-538" aria-hidden="true" tabindex="-1"></a>them into non-orthogonal polytopes, with discrete phase changes as sparsity varies.</span>
+<span id="cb17-539"><a href="#cb17-539" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-540"><a href="#cb17-540" aria-hidden="true" tabindex="-1"></a>The essay's objection is to three modelling choices that it argues do not hold in real</span>
+<span id="cb17-541"><a href="#cb17-541" aria-hidden="true" tabindex="-1"></a>networks:</span>
+<span id="cb17-542"><a href="#cb17-542" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-543"><a href="#cb17-543" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>**Features are given in advance** and independent. In a real network nothing is defined in</span>
+<span id="cb17-544"><a href="#cb17-544" aria-hidden="true" tabindex="-1"></a>  advance; everything is grown, and real data has structure at every scale ("a rare person</span>
+<span id="cb17-545"><a href="#cb17-545" aria-hidden="true" tabindex="-1"></a>  still has a country, a job and a name").</span>
+<span id="cb17-546"><a href="#cb17-546" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>**Nothing reads the representation.** The loss is reconstruction, so each feature is an end</span>
+<span id="cb17-547"><a href="#cb17-547" aria-hidden="true" tabindex="-1"></a>  in itself. In a real network a representation only matters through what downstream reads</span>
+<span id="cb17-548"><a href="#cb17-548" aria-hidden="true" tabindex="-1"></a>  it, and sharing a direction between *related* things is a benefit (reuse), not a cost.</span>
+<span id="cb17-549"><a href="#cb17-549" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>**There are no hidden neurons** in the main experiments. Superposition in the toy is about</span>
+<span id="cb17-550"><a href="#cb17-550" aria-hidden="true" tabindex="-1"></a>  directions in a bottleneck; reports of polysemanticity in real networks are about</span>
+<span id="cb17-551"><a href="#cb17-551" aria-hidden="true" tabindex="-1"></a>  mixtures in neurons. The paper itself studies hidden neurons and correlated features, but</span>
+<span id="cb17-552"><a href="#cb17-552" aria-hidden="true" tabindex="-1"></a>  separately.</span>
+<span id="cb17-553"><a href="#cb17-553" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-554"><a href="#cb17-554" aria-hidden="true" tabindex="-1"></a>The toy therefore predicts where to *expect* packing: memories that are ends in themselves</span>
+<span id="cb17-555"><a href="#cb17-555" aria-hidden="true" tabindex="-1"></a>and related to nothing else. The essay's claim is that real networks are rarely in that</span>
+<span id="cb17-556"><a href="#cb17-556" aria-hidden="true" tabindex="-1"></a>regime, and the rest of the essay is an attempt to show this empirically in vision and</span>
+<span id="cb17-557"><a href="#cb17-557" aria-hidden="true" tabindex="-1"></a>language models.</span>
+<span id="cb17-558"><a href="#cb17-558" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-559"><a href="#cb17-559" aria-hidden="true" tabindex="-1"></a><span class="fu">## Further reading</span></span>
+<span id="cb17-560"><a href="#cb17-560" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-561"><a href="#cb17-561" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>Elhage et al., *Toy Models of Superposition* (2022), especially the sections on feature</span>
+<span id="cb17-562"><a href="#cb17-562" aria-hidden="true" tabindex="-1"></a>  geometry, phase diagrams, and correlated features.</span>
+<span id="cb17-563"><a href="#cb17-563" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>The essay's appendix sections "Toy Models" and "A Note on Features and Definitions".</span>
 </code></pre></div><button title="Copy to Clipboard" class="code-copy-button" data-in-quarto-modal=""><i class="bi"></i></button></div>
 </div></div></div></div></div>
 </div> <!-- /content -->

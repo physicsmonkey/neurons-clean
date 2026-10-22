@@ -6,6 +6,7 @@
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
+<meta name="author" content="Mostly Claude and Brian Swingle">
 
 <title>A slow read of Neural Networks Are Already Clean – Neural Networks Are Already Clean — a slow read</title>
 <style>
@@ -110,6 +111,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 }</script>
 
 
+<link rel="stylesheet" href="custom.css">
 </head>
 
 <body class="nav-sidebar docked nav-fixed quarto-light">
@@ -290,6 +292,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
    
   <ul>
   <li><a href="#how-these-notes-are-organised" id="toc-how-these-notes-are-organised" class="nav-link active" data-scroll-target="#how-these-notes-are-organised">How these notes are organised</a></li>
+  <li><a href="#what-is-the-essays-and-what-is-ours" id="toc-what-is-the-essays-and-what-is-ours" class="nav-link" data-scroll-target="#what-is-the-essays-and-what-is-ours">What is the essay’s and what is ours</a></li>
   <li><a href="#ground-rules-for-the-reproductions" id="toc-ground-rules-for-the-reproductions" class="nav-link" data-scroll-target="#ground-rules-for-the-reproductions">Ground rules for the reproductions</a></li>
   <li><a href="#source" id="toc-source" class="nav-link" data-scroll-target="#source">Source</a></li>
   </ul>
@@ -307,6 +310,12 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 
 <div class="quarto-title-meta">
 
+    <div>
+    <div class="quarto-title-meta-heading">Author</div>
+    <div class="quarto-title-meta-contents">
+             <p>Mostly Claude and Brian Swingle </p>
+          </div>
+  </div>
     
   
     
@@ -326,6 +335,13 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <li><strong>Background: Toy Models of Superposition</strong> reproduces the Anthropic toy model that made superposition precise, and the essay’s modification of it. This comes <em>before</em> the essay’s own “Superposition” section because the essay is largely a critique of that framing.</li>
 <li><strong>The essay, section by section</strong> then follows the essay’s own top-level headings. Each page gives a summary, the background needed, what the claim would look like if false, and a small reproduction where one is feasible. Appendix material is folded into the section it supports.</li>
 </ul>
+</section>
+<section id="what-is-the-essays-and-what-is-ours" class="level2">
+<h2 class="anchored" data-anchor-id="what-is-the-essays-and-what-is-ours">What is the essay’s and what is ours</h2>
+<p>Most of each page summarises or re-creates something the essay or the papers it cites actually say. Where we go further, running an experiment of our own or drawing a conclusion the essay does not draw, the material sits in a tinted box labelled <strong>Beyond the essay</strong>. Those boxes make no claim beyond what the experiment in them shows; they are there so the reader can tell what comes from the literature and what we added.</p>
+<div class="beyond-inline">
+<p>This is what the marker looks like. Anything inside a box like this is our own addition.</p>
+</div>
 </section>
 <section id="ground-rules-for-the-reproductions" class="level2">
 <h2 class="anchored" data-anchor-id="ground-rules-for-the-reproductions">Ground rules for the reproductions</h2>
@@ -465,7 +481,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     }
       var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
       var mailtoRegex = new RegExp(/^mailto:/);
-        var filterRegex = new RegExp("https:\/\/physicsmonkey\.github\.io\/neurons-clean\/");
+        var filterRegex = new RegExp('/' + window.location.host + '/');
       var isInternal = (href) => {
           return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
       }
@@ -823,17 +839,29 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb1-29"><a href="#cb1-29" aria-hidden="true" tabindex="-1"></a>  small reproduction where one is feasible. Appendix material is folded into the section it</span>
 <span id="cb1-30"><a href="#cb1-30" aria-hidden="true" tabindex="-1"></a>  supports.</span>
 <span id="cb1-31"><a href="#cb1-31" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-32"><a href="#cb1-32" aria-hidden="true" tabindex="-1"></a><span class="fu">## Ground rules for the reproductions</span></span>
+<span id="cb1-32"><a href="#cb1-32" aria-hidden="true" tabindex="-1"></a><span class="fu">## What is the essay's and what is ours</span></span>
 <span id="cb1-33"><a href="#cb1-33" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-34"><a href="#cb1-34" aria-hidden="true" tabindex="-1"></a>None of the essay's models, checkpoints, or datasets are public, so nothing here is a</span>
-<span id="cb1-35"><a href="#cb1-35" aria-hidden="true" tabindex="-1"></a>replication in the strict sense. Each experiment is a re-creation at the smallest scale</span>
-<span id="cb1-36"><a href="#cb1-36" aria-hidden="true" tabindex="-1"></a>that keeps the phenomenon, run on one 12 GB GPU in at most a day. Where we had to substitute</span>
-<span id="cb1-37"><a href="#cb1-37" aria-hidden="true" tabindex="-1"></a>(a smaller dataset than ImageNet, a smaller language model than Qwen3-32B) the page says so.</span>
-<span id="cb1-38"><a href="#cb1-38" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-39"><a href="#cb1-39" aria-hidden="true" tabindex="-1"></a><span class="fu">## Source</span></span>
-<span id="cb1-40"><a href="#cb1-40" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-41"><a href="#cb1-41" aria-hidden="true" tabindex="-1"></a>The plain-text version of the essay is kept in <span class="in">`source/essay.md`</span> for reference. Quotations</span>
-<span id="cb1-42"><a href="#cb1-42" aria-hidden="true" tabindex="-1"></a>are from that file.</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button" data-in-quarto-modal=""><i class="bi"></i></button></div>
+<span id="cb1-34"><a href="#cb1-34" aria-hidden="true" tabindex="-1"></a>Most of each page summarises or re-creates something the essay or the papers it cites</span>
+<span id="cb1-35"><a href="#cb1-35" aria-hidden="true" tabindex="-1"></a>actually say. Where we go further, running an experiment of our own or drawing a conclusion</span>
+<span id="cb1-36"><a href="#cb1-36" aria-hidden="true" tabindex="-1"></a>the essay does not draw, the material sits in a tinted box labelled **Beyond the essay**.</span>
+<span id="cb1-37"><a href="#cb1-37" aria-hidden="true" tabindex="-1"></a>Those boxes make no claim beyond what the experiment in them shows; they are there so the</span>
+<span id="cb1-38"><a href="#cb1-38" aria-hidden="true" tabindex="-1"></a>reader can tell what comes from the literature and what we added.</span>
+<span id="cb1-39"><a href="#cb1-39" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-40"><a href="#cb1-40" aria-hidden="true" tabindex="-1"></a>::: {.beyond-inline}</span>
+<span id="cb1-41"><a href="#cb1-41" aria-hidden="true" tabindex="-1"></a>This is what the marker looks like. Anything inside a box like this is our own addition.</span>
+<span id="cb1-42"><a href="#cb1-42" aria-hidden="true" tabindex="-1"></a>:::</span>
+<span id="cb1-43"><a href="#cb1-43" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-44"><a href="#cb1-44" aria-hidden="true" tabindex="-1"></a><span class="fu">## Ground rules for the reproductions</span></span>
+<span id="cb1-45"><a href="#cb1-45" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-46"><a href="#cb1-46" aria-hidden="true" tabindex="-1"></a>None of the essay's models, checkpoints, or datasets are public, so nothing here is a</span>
+<span id="cb1-47"><a href="#cb1-47" aria-hidden="true" tabindex="-1"></a>replication in the strict sense. Each experiment is a re-creation at the smallest scale</span>
+<span id="cb1-48"><a href="#cb1-48" aria-hidden="true" tabindex="-1"></a>that keeps the phenomenon, run on one 12 GB GPU in at most a day. Where we had to substitute</span>
+<span id="cb1-49"><a href="#cb1-49" aria-hidden="true" tabindex="-1"></a>(a smaller dataset than ImageNet, a smaller language model than Qwen3-32B) the page says so.</span>
+<span id="cb1-50"><a href="#cb1-50" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-51"><a href="#cb1-51" aria-hidden="true" tabindex="-1"></a><span class="fu">## Source</span></span>
+<span id="cb1-52"><a href="#cb1-52" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-53"><a href="#cb1-53" aria-hidden="true" tabindex="-1"></a>The plain-text version of the essay is kept in <span class="in">`source/essay.md`</span> for reference. Quotations</span>
+<span id="cb1-54"><a href="#cb1-54" aria-hidden="true" tabindex="-1"></a>are from that file.</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button" data-in-quarto-modal=""><i class="bi"></i></button></div>
 </div></div></div></div></div>
 </div> <!-- /content -->
 

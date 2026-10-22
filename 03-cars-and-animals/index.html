@@ -6,6 +6,7 @@
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
+<meta name="author" content="Mostly Claude and Brian Swingle">
 
 <title>Cars and Animals – Neural Networks Are Already Clean — a slow read</title>
 <style>
@@ -110,6 +111,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 }</script>
 
 
+<link rel="stylesheet" href="../custom.css">
 </head>
 
 <body class="nav-sidebar docked nav-fixed quarto-light">
@@ -312,6 +314,12 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 
 <div class="quarto-title-meta">
 
+    <div>
+    <div class="quarto-title-meta-heading">Author</div>
+    <div class="quarto-title-meta-contents">
+             <p>Mostly Claude and Brian Swingle </p>
+          </div>
+  </div>
     
   
     
@@ -333,7 +341,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <li>Therefore the right description is a <em>shared pattern</em> (a verb, “pointed versus round”), not a <em>list of nouns</em> (cats OR cars).</li>
 </ol>
 <p>Claims 1 and 2 are checkable from the weights and from any photo collection. Claim 3 we can check partially with COCO’s labels. Claim 4 is an interpretation, and the last section discusses how much the evidence supports it.</p>
-<div id="e15a89be" class="cell" data-execution_count="1">
+<div id="f4719f85" class="cell" data-execution_count="1">
 <details class="code-fold">
 <summary>Setup: load the original InceptionV1 and scan COCO (cached after the first run)</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> sys, pathlib, json, numpy <span class="im">as</span> np, torch, matplotlib.pyplot <span class="im">as</span> plt</span>
@@ -365,7 +373,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </section>
 <section id="the-two-poles-on-5000-photographs" class="level2">
 <h2 class="anchored" data-anchor-id="the-two-poles-on-5000-photographs">The two poles on 5,000 photographs</h2>
-<div id="d2d02db8" class="cell" data-execution_count="2">
+<div id="2ac73f7c" class="cell" data-execution_count="2">
 <details class="code-fold">
 <summary>Contact sheets of the strongest positive and negative responses</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> sheet(order, locs, n<span class="op">=</span><span class="dv">40</span>, ncol<span class="op">=</span><span class="dv">8</span>, size<span class="op">=</span><span class="dv">96</span>):</span>
@@ -394,7 +402,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <section id="is-it-really-just-cats-and-cars-using-the-labels" class="level2">
 <h2 class="anchored" data-anchor-id="is-it-really-just-cats-and-cars-using-the-labels">Is it really just cats and cars? Using the labels</h2>
 <p>COCO’s instance annotations tell us what is in each image. If the neuron were an OR of cat and car, images with neither should not reach the top. If it is a V-shape detector, some should, and they should be pointed things.</p>
-<div id="b545adc8" class="cell" data-execution_count="3">
+<div id="6823bd20" class="cell" data-execution_count="3">
 <details class="code-fold">
 <summary>Label statistics of the top images</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>ann <span class="op">=</span> json.load(<span class="bu">open</span>(ROOT <span class="op">/</span> <span class="st">"data/coco/annotations/instances_val2017.json"</span>))</span>
@@ -422,7 +430,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
    500   0.14           0.38   0.06           0.44</code></pre>
 </div>
 </div>
-<div id="3b9cad29" class="cell" data-execution_count="4">
+<div id="5da73095" class="cell" data-execution_count="4">
 <details class="code-fold">
 <summary>The strongest responses among images with no cat, dog, car, truck or bus</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb6"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>rest <span class="op">=</span> [i <span class="cf">for</span> i <span class="kw">in</span> order <span class="cf">if</span> <span class="kw">not</span> has(i, [<span class="st">"cat"</span>, <span class="st">"dog"</span>] <span class="op">+</span> vehicles)]</span>
@@ -452,7 +460,7 @@ most common labels in the top 60 of these: [('person', 21), ('chair', 14), ('bot
 <section id="the-circuit-inputs-and-readers-from-the-weights" class="level2">
 <h2 class="anchored" data-anchor-id="the-circuit-inputs-and-readers-from-the-weights">The circuit: inputs and readers from the weights</h2>
 <p>The essay names specific neighbours. Because <code>mixed4e</code>’s 1×1 branch is a 1×1 convolution, its weight matrix is directly the vector of votes each <code>mixed4d</code> channel casts for 4e:55, and the <code>mixed5a</code> convolutions give the votes 4e:55 casts for each <code>mixed5a</code> channel.</p>
-<div id="b4bf0fd1" class="cell" data-execution_count="5">
+<div id="a80ae176" class="cell" data-execution_count="5">
 <details class="code-fold">
 <summary>Rank the essay’s named inputs and reader by weight</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb8"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>w_in <span class="op">=</span> model.mixed4e_1x1_pre_relu_conv.weight[CH, :, <span class="dv">0</span>, <span class="dv">0</span>].detach().cpu()</span>
@@ -475,10 +483,10 @@ strongest readers in mixed5a 1x1 branch: [(94, 0.1), (240, 0.058), (81, 0.057), 
 </div>
 <p>The essay’s named input 4d:493 is the single strongest weight into the neuron, by a factor of more than two over the next, and its named reader 5a:94 is the single strongest reader in that branch. The other two named inputs are in the top fifteen of 528. These are raw weights rather than data-weighted attributions, so the agreement is if anything stronger than the essay needed. (We have not visualised 4d:493 or 5a:94 ourselves; the labels “fox snout” and “V-shaped flames” are the essay’s.)</p>
 </section>
-<section id="a-synthetic-probe-does-a-bare-v-excite-it" class="level2">
+<section id="a-synthetic-probe-does-a-bare-v-excite-it" class="level2 beyond">
 <h2 class="anchored" data-anchor-id="a-synthetic-probe-does-a-bare-v-excite-it">A synthetic probe: does a bare V excite it?</h2>
 <p>If the neuron were a geometric V detector in the way an early-layer curve detector is a curve detector, a line drawing of a V should drive it. We draw simple shapes on a grey background and record the pre-ReLU maximum and minimum.</p>
-<div id="ecfd7b35" class="cell" data-execution_count="6">
+<div id="3689bc9c" class="cell" data-execution_count="6">
 <details class="code-fold">
 <summary>Line-drawn shapes on grey</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb10"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> PIL <span class="im">import</span> ImageDraw</span>
@@ -675,7 +683,7 @@ blank            -0       -76</code></pre>
     }
       var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
       var mailtoRegex = new RegExp(/^mailto:/);
-        var filterRegex = new RegExp("https:\/\/physicsmonkey\.github\.io\/neurons-clean\/");
+        var filterRegex = new RegExp('/' + window.location.host + '/');
       var isInternal = (href) => {
           return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
       }
@@ -1159,83 +1167,87 @@ blank            -0       -76</code></pre>
 <span id="cb12-165"><a href="#cb12-165" aria-hidden="true" tabindex="-1"></a>needed. (We have not visualised 4d:493 or 5a:94 ourselves; the labels "fox snout" and</span>
 <span id="cb12-166"><a href="#cb12-166" aria-hidden="true" tabindex="-1"></a>"V-shaped flames" are the essay's.)</span>
 <span id="cb12-167"><a href="#cb12-167" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb12-168"><a href="#cb12-168" aria-hidden="true" tabindex="-1"></a><span class="fu">## A synthetic probe: does a bare V excite it?</span></span>
+<span id="cb12-168"><a href="#cb12-168" aria-hidden="true" tabindex="-1"></a>::: {.beyond}</span>
 <span id="cb12-169"><a href="#cb12-169" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb12-170"><a href="#cb12-170" aria-hidden="true" tabindex="-1"></a>If the neuron were a geometric V detector in the way an early-layer curve detector is a curve</span>
-<span id="cb12-171"><a href="#cb12-171" aria-hidden="true" tabindex="-1"></a>detector, a line drawing of a V should drive it. We draw simple shapes on a grey background and</span>
-<span id="cb12-172"><a href="#cb12-172" aria-hidden="true" tabindex="-1"></a>record the pre-ReLU maximum and minimum.</span>
-<span id="cb12-173"><a href="#cb12-173" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb12-176"><a href="#cb12-176" aria-hidden="true" tabindex="-1"></a><span class="in">```{python}</span></span>
-<span id="cb12-177"><a href="#cb12-177" aria-hidden="true" tabindex="-1"></a><span class="co">#| code-summary: "Line-drawn shapes on grey"</span></span>
-<span id="cb12-178"><a href="#cb12-178" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> PIL <span class="im">import</span> ImageDraw</span>
-<span id="cb12-179"><a href="#cb12-179" aria-hidden="true" tabindex="-1"></a>feats <span class="op">=</span> {}</span>
-<span id="cb12-180"><a href="#cb12-180" aria-hidden="true" tabindex="-1"></a>hook <span class="op">=</span> <span class="bu">dict</span>(model.named_modules())[<span class="st">"mixed4e_1x1_pre_relu_conv"</span>].register_forward_hook(</span>
-<span id="cb12-181"><a href="#cb12-181" aria-hidden="true" tabindex="-1"></a>    <span class="kw">lambda</span> m, i, o: feats.<span class="fu">__setitem__</span>(<span class="st">"x"</span>, o))</span>
-<span id="cb12-182"><a href="#cb12-182" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> canvas(): <span class="cf">return</span> Image.new(<span class="st">"RGB"</span>, (<span class="dv">224</span>, <span class="dv">224</span>), (<span class="dv">128</span>, <span class="dv">128</span>, <span class="dv">128</span>))</span>
-<span id="cb12-183"><a href="#cb12-183" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> shape(kind, size<span class="op">=</span><span class="dv">90</span>, width<span class="op">=</span><span class="dv">10</span>, angle<span class="op">=</span><span class="fl">0.0</span>, color<span class="op">=</span>(<span class="dv">0</span>, <span class="dv">0</span>, <span class="dv">0</span>), cx<span class="op">=</span><span class="dv">112</span>, cy<span class="op">=</span><span class="dv">112</span>):</span>
-<span id="cb12-184"><a href="#cb12-184" aria-hidden="true" tabindex="-1"></a>    im <span class="op">=</span> canvas()<span class="op">;</span> d <span class="op">=</span> ImageDraw.Draw(im)</span>
-<span id="cb12-185"><a href="#cb12-185" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> kind <span class="op">==</span> <span class="st">"V"</span>:</span>
-<span id="cb12-186"><a href="#cb12-186" aria-hidden="true" tabindex="-1"></a>        a <span class="op">=</span> np.deg2rad(angle)<span class="op">;</span> half <span class="op">=</span> np.deg2rad(<span class="dv">35</span>)</span>
-<span id="cb12-187"><a href="#cb12-187" aria-hidden="true" tabindex="-1"></a>        apex <span class="op">=</span> np.array([cx, cy]) <span class="op">+</span> size<span class="op">*</span><span class="fl">0.5</span><span class="op">*</span>np.array([np.sin(a), np.cos(a)])</span>
-<span id="cb12-188"><a href="#cb12-188" aria-hidden="true" tabindex="-1"></a>        <span class="cf">for</span> s <span class="kw">in</span> (<span class="op">+</span><span class="dv">1</span>, <span class="op">-</span><span class="dv">1</span>):</span>
-<span id="cb12-189"><a href="#cb12-189" aria-hidden="true" tabindex="-1"></a>            end <span class="op">=</span> apex <span class="op">-</span> size<span class="op">*</span>np.array([np.sin(a<span class="op">+</span>s<span class="op">*</span>half), np.cos(a<span class="op">+</span>s<span class="op">*</span>half)])</span>
-<span id="cb12-190"><a href="#cb12-190" aria-hidden="true" tabindex="-1"></a>            d.line([<span class="bu">tuple</span>(apex), <span class="bu">tuple</span>(end)], fill<span class="op">=</span>color, width<span class="op">=</span>width)</span>
-<span id="cb12-191"><a href="#cb12-191" aria-hidden="true" tabindex="-1"></a>    <span class="cf">elif</span> kind <span class="op">==</span> <span class="st">"O"</span>: d.ellipse([cx<span class="op">-</span>size<span class="op">/</span><span class="dv">2</span>, cy<span class="op">-</span>size<span class="op">/</span><span class="dv">2</span>, cx<span class="op">+</span>size<span class="op">/</span><span class="dv">2</span>, cy<span class="op">+</span>size<span class="op">/</span><span class="dv">2</span>], outline<span class="op">=</span>color, width<span class="op">=</span>width)</span>
-<span id="cb12-192"><a href="#cb12-192" aria-hidden="true" tabindex="-1"></a>    <span class="cf">elif</span> kind <span class="op">==</span> <span class="st">"disc"</span>: d.ellipse([cx<span class="op">-</span>size<span class="op">/</span><span class="dv">2</span>, cy<span class="op">-</span>size<span class="op">/</span><span class="dv">2</span>, cx<span class="op">+</span>size<span class="op">/</span><span class="dv">2</span>, cy<span class="op">+</span>size<span class="op">/</span><span class="dv">2</span>], fill<span class="op">=</span>color)</span>
-<span id="cb12-193"><a href="#cb12-193" aria-hidden="true" tabindex="-1"></a>    <span class="cf">elif</span> kind <span class="op">==</span> <span class="st">"square"</span>: d.rectangle([cx<span class="op">-</span>size<span class="op">/</span><span class="dv">2</span>, cy<span class="op">-</span>size<span class="op">/</span><span class="dv">2</span>, cx<span class="op">+</span>size<span class="op">/</span><span class="dv">2</span>, cy<span class="op">+</span>size<span class="op">/</span><span class="dv">2</span>], outline<span class="op">=</span>color, width<span class="op">=</span>width)</span>
-<span id="cb12-194"><a href="#cb12-194" aria-hidden="true" tabindex="-1"></a>    <span class="cf">elif</span> kind <span class="op">==</span> <span class="st">"X"</span>:</span>
-<span id="cb12-195"><a href="#cb12-195" aria-hidden="true" tabindex="-1"></a>        d.line([(cx<span class="op">-</span>size<span class="op">/</span><span class="dv">2</span>, cy<span class="op">-</span>size<span class="op">/</span><span class="dv">2</span>), (cx<span class="op">+</span>size<span class="op">/</span><span class="dv">2</span>, cy<span class="op">+</span>size<span class="op">/</span><span class="dv">2</span>)], fill<span class="op">=</span>color, width<span class="op">=</span>width)</span>
-<span id="cb12-196"><a href="#cb12-196" aria-hidden="true" tabindex="-1"></a>        d.line([(cx<span class="op">-</span>size<span class="op">/</span><span class="dv">2</span>, cy<span class="op">+</span>size<span class="op">/</span><span class="dv">2</span>), (cx<span class="op">+</span>size<span class="op">/</span><span class="dv">2</span>, cy<span class="op">-</span>size<span class="op">/</span><span class="dv">2</span>)], fill<span class="op">=</span>color, width<span class="op">=</span>width)</span>
-<span id="cb12-197"><a href="#cb12-197" aria-hidden="true" tabindex="-1"></a>    <span class="cf">elif</span> kind <span class="op">==</span> <span class="st">"triangle"</span>:</span>
-<span id="cb12-198"><a href="#cb12-198" aria-hidden="true" tabindex="-1"></a>        d.polygon([(cx, cy<span class="op">+</span>size<span class="op">/</span><span class="dv">2</span>), (cx<span class="op">-</span>size<span class="op">/</span><span class="dv">2</span>, cy<span class="op">-</span>size<span class="op">/</span><span class="dv">2</span>), (cx<span class="op">+</span>size<span class="op">/</span><span class="dv">2</span>, cy<span class="op">-</span>size<span class="op">/</span><span class="dv">2</span>)], outline<span class="op">=</span>color, width<span class="op">=</span>width)</span>
-<span id="cb12-199"><a href="#cb12-199" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> im</span>
-<span id="cb12-200"><a href="#cb12-200" aria-hidden="true" tabindex="-1"></a><span class="at">@torch.no_grad</span>()</span>
-<span id="cb12-201"><a href="#cb12-201" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> run(imgs):</span>
-<span id="cb12-202"><a href="#cb12-202" aria-hidden="true" tabindex="-1"></a>    x <span class="op">=</span> torch.stack([torch.from_numpy(np.asarray(im, dtype<span class="op">=</span>np.float32) <span class="op">-</span> <span class="dv">117</span>).permute(<span class="dv">2</span>, <span class="dv">0</span>, <span class="dv">1</span>) <span class="cf">for</span> im <span class="kw">in</span> imgs]).to(DEV)</span>
-<span id="cb12-203"><a href="#cb12-203" aria-hidden="true" tabindex="-1"></a>    model(x)<span class="op">;</span> fm <span class="op">=</span> feats[<span class="st">"x"</span>][:, CH]</span>
-<span id="cb12-204"><a href="#cb12-204" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> fm.flatten(<span class="dv">1</span>).<span class="bu">max</span>(<span class="dv">1</span>).values.cpu().numpy(), fm.flatten(<span class="dv">1</span>).<span class="bu">min</span>(<span class="dv">1</span>).values.cpu().numpy()</span>
-<span id="cb12-205"><a href="#cb12-205" aria-hidden="true" tabindex="-1"></a>kinds <span class="op">=</span> [<span class="st">"V"</span>, <span class="st">"triangle"</span>, <span class="st">"X"</span>, <span class="st">"square"</span>, <span class="st">"O"</span>, <span class="st">"disc"</span>, <span class="st">"blank"</span>]</span>
-<span id="cb12-206"><a href="#cb12-206" aria-hidden="true" tabindex="-1"></a>sizes, widths, colours <span class="op">=</span> [<span class="dv">60</span>, <span class="dv">90</span>, <span class="dv">120</span>, <span class="dv">150</span>], [<span class="dv">6</span>, <span class="dv">12</span>], [(<span class="dv">0</span>, <span class="dv">0</span>, <span class="dv">0</span>), (<span class="dv">255</span>, <span class="dv">255</span>, <span class="dv">255</span>)]</span>
-<span id="cb12-207"><a href="#cb12-207" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"</span><span class="sc">{</span><span class="st">'shape'</span><span class="sc">:9s}</span><span class="ss"> </span><span class="sc">{</span><span class="st">'mean max'</span><span class="sc">:&gt;9s}</span><span class="ss"> </span><span class="sc">{</span><span class="st">'mean min'</span><span class="sc">:&gt;9s}</span><span class="ss">    (over 4 sizes x 2 widths x 2 colours; photo scale: 99th pct max = </span><span class="sc">{</span>np<span class="sc">.</span>percentile(mx,<span class="dv">99</span>)<span class="sc">:.0f}</span><span class="ss">)"</span>)</span>
-<span id="cb12-208"><a href="#cb12-208" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> kind <span class="kw">in</span> kinds:</span>
-<span id="cb12-209"><a href="#cb12-209" aria-hidden="true" tabindex="-1"></a>    imgs <span class="op">=</span> [canvas() <span class="cf">if</span> kind <span class="op">==</span> <span class="st">"blank"</span> <span class="cf">else</span> shape(kind, s, w, color<span class="op">=</span>c) <span class="cf">for</span> s <span class="kw">in</span> sizes <span class="cf">for</span> w <span class="kw">in</span> widths <span class="cf">for</span> c <span class="kw">in</span> colours]</span>
-<span id="cb12-210"><a href="#cb12-210" aria-hidden="true" tabindex="-1"></a>    a, b <span class="op">=</span> run(imgs)<span class="op">;</span> <span class="bu">print</span>(<span class="ss">f"</span><span class="sc">{</span>kind<span class="sc">:9s}</span><span class="ss"> </span><span class="sc">{</span>a<span class="sc">.</span>mean()<span class="sc">:9.0f}</span><span class="ss"> </span><span class="sc">{</span>b<span class="sc">.</span>mean()<span class="sc">:9.0f}</span><span class="ss">"</span>)</span>
-<span id="cb12-211"><a href="#cb12-211" aria-hidden="true" tabindex="-1"></a>hook.remove()</span>
-<span id="cb12-212"><a href="#cb12-212" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb12-213"><a href="#cb12-213" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb12-214"><a href="#cb12-214" aria-hidden="true" tabindex="-1"></a>Two things come out. The round shapes (an outline O and a filled disc) give the most negative</span>
-<span id="cb12-215"><a href="#cb12-215" aria-hidden="true" tabindex="-1"></a>responses of any stimulus, a good deal below a blank grey field, so "round pushes it negative"</span>
-<span id="cb12-216"><a href="#cb12-216" aria-hidden="true" tabindex="-1"></a>survives even in line drawings. But a bare V does *not* excite the neuron much: its positive</span>
-<span id="cb12-217"><a href="#cb12-217" aria-hidden="true" tabindex="-1"></a>response is about a tenth of what a real cat face produces and no larger than a square's.</span>
-<span id="cb12-218"><a href="#cb12-218" aria-hidden="true" tabindex="-1"></a>Whatever "V" means for this neuron, it is a pattern inside high-level structure (a face, a car</span>
-<span id="cb12-219"><a href="#cb12-219" aria-hidden="true" tabindex="-1"></a>front, a converging road) rather than a geometric primitive. The essay says as much in its</span>
-<span id="cb12-220"><a href="#cb12-220" aria-hidden="true" tabindex="-1"></a>footnote: "generalization happens inside high-level patterns", and the V neuron "really does</span>
-<span id="cb12-221"><a href="#cb12-221" aria-hidden="true" tabindex="-1"></a>take in cat circuitry". A mid-network neuron's inputs are already fairly abstract, so this is</span>
-<span id="cb12-222"><a href="#cb12-222" aria-hidden="true" tabindex="-1"></a>not a surprise, but it is a limit on how literally to take the word "V".</span>
-<span id="cb12-223"><a href="#cb12-223" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb12-224"><a href="#cb12-224" aria-hidden="true" tabindex="-1"></a><span class="fu">## Assessment</span></span>
+<span id="cb12-170"><a href="#cb12-170" aria-hidden="true" tabindex="-1"></a><span class="fu">## A synthetic probe: does a bare V excite it?</span></span>
+<span id="cb12-171"><a href="#cb12-171" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-172"><a href="#cb12-172" aria-hidden="true" tabindex="-1"></a>If the neuron were a geometric V detector in the way an early-layer curve detector is a curve</span>
+<span id="cb12-173"><a href="#cb12-173" aria-hidden="true" tabindex="-1"></a>detector, a line drawing of a V should drive it. We draw simple shapes on a grey background and</span>
+<span id="cb12-174"><a href="#cb12-174" aria-hidden="true" tabindex="-1"></a>record the pre-ReLU maximum and minimum.</span>
+<span id="cb12-175"><a href="#cb12-175" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-178"><a href="#cb12-178" aria-hidden="true" tabindex="-1"></a><span class="in">```{python}</span></span>
+<span id="cb12-179"><a href="#cb12-179" aria-hidden="true" tabindex="-1"></a><span class="co">#| code-summary: "Line-drawn shapes on grey"</span></span>
+<span id="cb12-180"><a href="#cb12-180" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> PIL <span class="im">import</span> ImageDraw</span>
+<span id="cb12-181"><a href="#cb12-181" aria-hidden="true" tabindex="-1"></a>feats <span class="op">=</span> {}</span>
+<span id="cb12-182"><a href="#cb12-182" aria-hidden="true" tabindex="-1"></a>hook <span class="op">=</span> <span class="bu">dict</span>(model.named_modules())[<span class="st">"mixed4e_1x1_pre_relu_conv"</span>].register_forward_hook(</span>
+<span id="cb12-183"><a href="#cb12-183" aria-hidden="true" tabindex="-1"></a>    <span class="kw">lambda</span> m, i, o: feats.<span class="fu">__setitem__</span>(<span class="st">"x"</span>, o))</span>
+<span id="cb12-184"><a href="#cb12-184" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> canvas(): <span class="cf">return</span> Image.new(<span class="st">"RGB"</span>, (<span class="dv">224</span>, <span class="dv">224</span>), (<span class="dv">128</span>, <span class="dv">128</span>, <span class="dv">128</span>))</span>
+<span id="cb12-185"><a href="#cb12-185" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> shape(kind, size<span class="op">=</span><span class="dv">90</span>, width<span class="op">=</span><span class="dv">10</span>, angle<span class="op">=</span><span class="fl">0.0</span>, color<span class="op">=</span>(<span class="dv">0</span>, <span class="dv">0</span>, <span class="dv">0</span>), cx<span class="op">=</span><span class="dv">112</span>, cy<span class="op">=</span><span class="dv">112</span>):</span>
+<span id="cb12-186"><a href="#cb12-186" aria-hidden="true" tabindex="-1"></a>    im <span class="op">=</span> canvas()<span class="op">;</span> d <span class="op">=</span> ImageDraw.Draw(im)</span>
+<span id="cb12-187"><a href="#cb12-187" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> kind <span class="op">==</span> <span class="st">"V"</span>:</span>
+<span id="cb12-188"><a href="#cb12-188" aria-hidden="true" tabindex="-1"></a>        a <span class="op">=</span> np.deg2rad(angle)<span class="op">;</span> half <span class="op">=</span> np.deg2rad(<span class="dv">35</span>)</span>
+<span id="cb12-189"><a href="#cb12-189" aria-hidden="true" tabindex="-1"></a>        apex <span class="op">=</span> np.array([cx, cy]) <span class="op">+</span> size<span class="op">*</span><span class="fl">0.5</span><span class="op">*</span>np.array([np.sin(a), np.cos(a)])</span>
+<span id="cb12-190"><a href="#cb12-190" aria-hidden="true" tabindex="-1"></a>        <span class="cf">for</span> s <span class="kw">in</span> (<span class="op">+</span><span class="dv">1</span>, <span class="op">-</span><span class="dv">1</span>):</span>
+<span id="cb12-191"><a href="#cb12-191" aria-hidden="true" tabindex="-1"></a>            end <span class="op">=</span> apex <span class="op">-</span> size<span class="op">*</span>np.array([np.sin(a<span class="op">+</span>s<span class="op">*</span>half), np.cos(a<span class="op">+</span>s<span class="op">*</span>half)])</span>
+<span id="cb12-192"><a href="#cb12-192" aria-hidden="true" tabindex="-1"></a>            d.line([<span class="bu">tuple</span>(apex), <span class="bu">tuple</span>(end)], fill<span class="op">=</span>color, width<span class="op">=</span>width)</span>
+<span id="cb12-193"><a href="#cb12-193" aria-hidden="true" tabindex="-1"></a>    <span class="cf">elif</span> kind <span class="op">==</span> <span class="st">"O"</span>: d.ellipse([cx<span class="op">-</span>size<span class="op">/</span><span class="dv">2</span>, cy<span class="op">-</span>size<span class="op">/</span><span class="dv">2</span>, cx<span class="op">+</span>size<span class="op">/</span><span class="dv">2</span>, cy<span class="op">+</span>size<span class="op">/</span><span class="dv">2</span>], outline<span class="op">=</span>color, width<span class="op">=</span>width)</span>
+<span id="cb12-194"><a href="#cb12-194" aria-hidden="true" tabindex="-1"></a>    <span class="cf">elif</span> kind <span class="op">==</span> <span class="st">"disc"</span>: d.ellipse([cx<span class="op">-</span>size<span class="op">/</span><span class="dv">2</span>, cy<span class="op">-</span>size<span class="op">/</span><span class="dv">2</span>, cx<span class="op">+</span>size<span class="op">/</span><span class="dv">2</span>, cy<span class="op">+</span>size<span class="op">/</span><span class="dv">2</span>], fill<span class="op">=</span>color)</span>
+<span id="cb12-195"><a href="#cb12-195" aria-hidden="true" tabindex="-1"></a>    <span class="cf">elif</span> kind <span class="op">==</span> <span class="st">"square"</span>: d.rectangle([cx<span class="op">-</span>size<span class="op">/</span><span class="dv">2</span>, cy<span class="op">-</span>size<span class="op">/</span><span class="dv">2</span>, cx<span class="op">+</span>size<span class="op">/</span><span class="dv">2</span>, cy<span class="op">+</span>size<span class="op">/</span><span class="dv">2</span>], outline<span class="op">=</span>color, width<span class="op">=</span>width)</span>
+<span id="cb12-196"><a href="#cb12-196" aria-hidden="true" tabindex="-1"></a>    <span class="cf">elif</span> kind <span class="op">==</span> <span class="st">"X"</span>:</span>
+<span id="cb12-197"><a href="#cb12-197" aria-hidden="true" tabindex="-1"></a>        d.line([(cx<span class="op">-</span>size<span class="op">/</span><span class="dv">2</span>, cy<span class="op">-</span>size<span class="op">/</span><span class="dv">2</span>), (cx<span class="op">+</span>size<span class="op">/</span><span class="dv">2</span>, cy<span class="op">+</span>size<span class="op">/</span><span class="dv">2</span>)], fill<span class="op">=</span>color, width<span class="op">=</span>width)</span>
+<span id="cb12-198"><a href="#cb12-198" aria-hidden="true" tabindex="-1"></a>        d.line([(cx<span class="op">-</span>size<span class="op">/</span><span class="dv">2</span>, cy<span class="op">+</span>size<span class="op">/</span><span class="dv">2</span>), (cx<span class="op">+</span>size<span class="op">/</span><span class="dv">2</span>, cy<span class="op">-</span>size<span class="op">/</span><span class="dv">2</span>)], fill<span class="op">=</span>color, width<span class="op">=</span>width)</span>
+<span id="cb12-199"><a href="#cb12-199" aria-hidden="true" tabindex="-1"></a>    <span class="cf">elif</span> kind <span class="op">==</span> <span class="st">"triangle"</span>:</span>
+<span id="cb12-200"><a href="#cb12-200" aria-hidden="true" tabindex="-1"></a>        d.polygon([(cx, cy<span class="op">+</span>size<span class="op">/</span><span class="dv">2</span>), (cx<span class="op">-</span>size<span class="op">/</span><span class="dv">2</span>, cy<span class="op">-</span>size<span class="op">/</span><span class="dv">2</span>), (cx<span class="op">+</span>size<span class="op">/</span><span class="dv">2</span>, cy<span class="op">-</span>size<span class="op">/</span><span class="dv">2</span>)], outline<span class="op">=</span>color, width<span class="op">=</span>width)</span>
+<span id="cb12-201"><a href="#cb12-201" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> im</span>
+<span id="cb12-202"><a href="#cb12-202" aria-hidden="true" tabindex="-1"></a><span class="at">@torch.no_grad</span>()</span>
+<span id="cb12-203"><a href="#cb12-203" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> run(imgs):</span>
+<span id="cb12-204"><a href="#cb12-204" aria-hidden="true" tabindex="-1"></a>    x <span class="op">=</span> torch.stack([torch.from_numpy(np.asarray(im, dtype<span class="op">=</span>np.float32) <span class="op">-</span> <span class="dv">117</span>).permute(<span class="dv">2</span>, <span class="dv">0</span>, <span class="dv">1</span>) <span class="cf">for</span> im <span class="kw">in</span> imgs]).to(DEV)</span>
+<span id="cb12-205"><a href="#cb12-205" aria-hidden="true" tabindex="-1"></a>    model(x)<span class="op">;</span> fm <span class="op">=</span> feats[<span class="st">"x"</span>][:, CH]</span>
+<span id="cb12-206"><a href="#cb12-206" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> fm.flatten(<span class="dv">1</span>).<span class="bu">max</span>(<span class="dv">1</span>).values.cpu().numpy(), fm.flatten(<span class="dv">1</span>).<span class="bu">min</span>(<span class="dv">1</span>).values.cpu().numpy()</span>
+<span id="cb12-207"><a href="#cb12-207" aria-hidden="true" tabindex="-1"></a>kinds <span class="op">=</span> [<span class="st">"V"</span>, <span class="st">"triangle"</span>, <span class="st">"X"</span>, <span class="st">"square"</span>, <span class="st">"O"</span>, <span class="st">"disc"</span>, <span class="st">"blank"</span>]</span>
+<span id="cb12-208"><a href="#cb12-208" aria-hidden="true" tabindex="-1"></a>sizes, widths, colours <span class="op">=</span> [<span class="dv">60</span>, <span class="dv">90</span>, <span class="dv">120</span>, <span class="dv">150</span>], [<span class="dv">6</span>, <span class="dv">12</span>], [(<span class="dv">0</span>, <span class="dv">0</span>, <span class="dv">0</span>), (<span class="dv">255</span>, <span class="dv">255</span>, <span class="dv">255</span>)]</span>
+<span id="cb12-209"><a href="#cb12-209" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"</span><span class="sc">{</span><span class="st">'shape'</span><span class="sc">:9s}</span><span class="ss"> </span><span class="sc">{</span><span class="st">'mean max'</span><span class="sc">:&gt;9s}</span><span class="ss"> </span><span class="sc">{</span><span class="st">'mean min'</span><span class="sc">:&gt;9s}</span><span class="ss">    (over 4 sizes x 2 widths x 2 colours; photo scale: 99th pct max = </span><span class="sc">{</span>np<span class="sc">.</span>percentile(mx,<span class="dv">99</span>)<span class="sc">:.0f}</span><span class="ss">)"</span>)</span>
+<span id="cb12-210"><a href="#cb12-210" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> kind <span class="kw">in</span> kinds:</span>
+<span id="cb12-211"><a href="#cb12-211" aria-hidden="true" tabindex="-1"></a>    imgs <span class="op">=</span> [canvas() <span class="cf">if</span> kind <span class="op">==</span> <span class="st">"blank"</span> <span class="cf">else</span> shape(kind, s, w, color<span class="op">=</span>c) <span class="cf">for</span> s <span class="kw">in</span> sizes <span class="cf">for</span> w <span class="kw">in</span> widths <span class="cf">for</span> c <span class="kw">in</span> colours]</span>
+<span id="cb12-212"><a href="#cb12-212" aria-hidden="true" tabindex="-1"></a>    a, b <span class="op">=</span> run(imgs)<span class="op">;</span> <span class="bu">print</span>(<span class="ss">f"</span><span class="sc">{</span>kind<span class="sc">:9s}</span><span class="ss"> </span><span class="sc">{</span>a<span class="sc">.</span>mean()<span class="sc">:9.0f}</span><span class="ss"> </span><span class="sc">{</span>b<span class="sc">.</span>mean()<span class="sc">:9.0f}</span><span class="ss">"</span>)</span>
+<span id="cb12-213"><a href="#cb12-213" aria-hidden="true" tabindex="-1"></a>hook.remove()</span>
+<span id="cb12-214"><a href="#cb12-214" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb12-215"><a href="#cb12-215" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-216"><a href="#cb12-216" aria-hidden="true" tabindex="-1"></a>Two things come out. The round shapes (an outline O and a filled disc) give the most negative</span>
+<span id="cb12-217"><a href="#cb12-217" aria-hidden="true" tabindex="-1"></a>responses of any stimulus, a good deal below a blank grey field, so "round pushes it negative"</span>
+<span id="cb12-218"><a href="#cb12-218" aria-hidden="true" tabindex="-1"></a>survives even in line drawings. But a bare V does *not* excite the neuron much: its positive</span>
+<span id="cb12-219"><a href="#cb12-219" aria-hidden="true" tabindex="-1"></a>response is about a tenth of what a real cat face produces and no larger than a square's.</span>
+<span id="cb12-220"><a href="#cb12-220" aria-hidden="true" tabindex="-1"></a>Whatever "V" means for this neuron, it is a pattern inside high-level structure (a face, a car</span>
+<span id="cb12-221"><a href="#cb12-221" aria-hidden="true" tabindex="-1"></a>front, a converging road) rather than a geometric primitive. The essay says as much in its</span>
+<span id="cb12-222"><a href="#cb12-222" aria-hidden="true" tabindex="-1"></a>footnote: "generalization happens inside high-level patterns", and the V neuron "really does</span>
+<span id="cb12-223"><a href="#cb12-223" aria-hidden="true" tabindex="-1"></a>take in cat circuitry". A mid-network neuron's inputs are already fairly abstract, so this is</span>
+<span id="cb12-224"><a href="#cb12-224" aria-hidden="true" tabindex="-1"></a>not a surprise, but it is a limit on how literally to take the word "V".</span>
 <span id="cb12-225"><a href="#cb12-225" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb12-226"><a href="#cb12-226" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>**Confirmed on public weights:** the named inputs and reader are the strongest by weight;</span>
-<span id="cb12-227"><a href="#cb12-227" aria-hidden="true" tabindex="-1"></a>  the negative pole is round things; the positive pole extends beyond cats and cars to frontal</span>
-<span id="cb12-228"><a href="#cb12-228" aria-hidden="true" tabindex="-1"></a>  animal faces, vehicle noses and converging lines.</span>
-<span id="cb12-229"><a href="#cb12-229" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>**Supported but not proven:** that "pointed versus round" is the *right* one-line</span>
-<span id="cb12-230"><a href="#cb12-230" aria-hidden="true" tabindex="-1"></a>  description. It fits everything we saw, and it fits better than OR(cat, car), which cannot</span>
-<span id="cb12-231"><a href="#cb12-231" aria-hidden="true" tabindex="-1"></a>  explain the goats, trains and tennis courts. A line-drawn V alone is not enough, so the</span>
-<span id="cb12-232"><a href="#cb12-232" aria-hidden="true" tabindex="-1"></a>  description is of a high-level shape cue, not a contour.</span>
-<span id="cb12-233"><a href="#cb12-233" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>**Not addressed here:** the second half of the essay's section, the car-into-dogs circuit</span>
-<span id="cb12-234"><a href="#cb12-234" aria-hidden="true" tabindex="-1"></a>  and the "generalised pose neurons". That needs feature visualisation with and without the</span>
-<span id="cb12-235"><a href="#cb12-235" aria-hidden="true" tabindex="-1"></a>  bias toward natural paths, which is the subject of the next section.</span>
-<span id="cb12-236"><a href="#cb12-236" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb12-237"><a href="#cb12-237" aria-hidden="true" tabindex="-1"></a><span class="fu">## Discussion questions</span></span>
-<span id="cb12-238"><a href="#cb12-238" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb12-239"><a href="#cb12-239" aria-hidden="true" tabindex="-1"></a><span class="ss">1. </span>The neuron fires on cat faces far more strongly than on anything else in COCO. Is a neuron</span>
-<span id="cb12-240"><a href="#cb12-240" aria-hidden="true" tabindex="-1"></a>   whose top of the distribution is 85% cats, but whose tail is "pointed things", best</span>
-<span id="cb12-241"><a href="#cb12-241" aria-hidden="true" tabindex="-1"></a>   called a cat neuron, a V neuron, or something else? Does the answer depend on what reads</span>
-<span id="cb12-242"><a href="#cb12-242" aria-hidden="true" tabindex="-1"></a>   it?</span>
-<span id="cb12-243"><a href="#cb12-243" aria-hidden="true" tabindex="-1"></a><span class="ss">2. </span>The essay's recommended trick is to describe a neuron without nouns. Try it on the</span>
-<span id="cb12-244"><a href="#cb12-244" aria-hidden="true" tabindex="-1"></a>   negative-pole sheet above. Is "round" the only candidate?</span>
-<span id="cb12-245"><a href="#cb12-245" aria-hidden="true" tabindex="-1"></a><span class="ss">3. </span>How would one tell a "V-shape" neuron from a "frontal face or front of object" neuron?</span>
-<span id="cb12-246"><a href="#cb12-246" aria-hidden="true" tabindex="-1"></a>   What stimulus would separate them?</span>
+<span id="cb12-226"><a href="#cb12-226" aria-hidden="true" tabindex="-1"></a>:::</span>
+<span id="cb12-227"><a href="#cb12-227" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-228"><a href="#cb12-228" aria-hidden="true" tabindex="-1"></a><span class="fu">## Assessment</span></span>
+<span id="cb12-229"><a href="#cb12-229" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-230"><a href="#cb12-230" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>**Confirmed on public weights:** the named inputs and reader are the strongest by weight;</span>
+<span id="cb12-231"><a href="#cb12-231" aria-hidden="true" tabindex="-1"></a>  the negative pole is round things; the positive pole extends beyond cats and cars to frontal</span>
+<span id="cb12-232"><a href="#cb12-232" aria-hidden="true" tabindex="-1"></a>  animal faces, vehicle noses and converging lines.</span>
+<span id="cb12-233"><a href="#cb12-233" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>**Supported but not proven:** that "pointed versus round" is the *right* one-line</span>
+<span id="cb12-234"><a href="#cb12-234" aria-hidden="true" tabindex="-1"></a>  description. It fits everything we saw, and it fits better than OR(cat, car), which cannot</span>
+<span id="cb12-235"><a href="#cb12-235" aria-hidden="true" tabindex="-1"></a>  explain the goats, trains and tennis courts. A line-drawn V alone is not enough, so the</span>
+<span id="cb12-236"><a href="#cb12-236" aria-hidden="true" tabindex="-1"></a>  description is of a high-level shape cue, not a contour.</span>
+<span id="cb12-237"><a href="#cb12-237" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>**Not addressed here:** the second half of the essay's section, the car-into-dogs circuit</span>
+<span id="cb12-238"><a href="#cb12-238" aria-hidden="true" tabindex="-1"></a>  and the "generalised pose neurons". That needs feature visualisation with and without the</span>
+<span id="cb12-239"><a href="#cb12-239" aria-hidden="true" tabindex="-1"></a>  bias toward natural paths, which is the subject of the next section.</span>
+<span id="cb12-240"><a href="#cb12-240" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-241"><a href="#cb12-241" aria-hidden="true" tabindex="-1"></a><span class="fu">## Discussion questions</span></span>
+<span id="cb12-242"><a href="#cb12-242" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-243"><a href="#cb12-243" aria-hidden="true" tabindex="-1"></a><span class="ss">1. </span>The neuron fires on cat faces far more strongly than on anything else in COCO. Is a neuron</span>
+<span id="cb12-244"><a href="#cb12-244" aria-hidden="true" tabindex="-1"></a>   whose top of the distribution is 85% cats, but whose tail is "pointed things", best</span>
+<span id="cb12-245"><a href="#cb12-245" aria-hidden="true" tabindex="-1"></a>   called a cat neuron, a V neuron, or something else? Does the answer depend on what reads</span>
+<span id="cb12-246"><a href="#cb12-246" aria-hidden="true" tabindex="-1"></a>   it?</span>
+<span id="cb12-247"><a href="#cb12-247" aria-hidden="true" tabindex="-1"></a><span class="ss">2. </span>The essay's recommended trick is to describe a neuron without nouns. Try it on the</span>
+<span id="cb12-248"><a href="#cb12-248" aria-hidden="true" tabindex="-1"></a>   negative-pole sheet above. Is "round" the only candidate?</span>
+<span id="cb12-249"><a href="#cb12-249" aria-hidden="true" tabindex="-1"></a><span class="ss">3. </span>How would one tell a "V-shape" neuron from a "frontal face or front of object" neuron?</span>
+<span id="cb12-250"><a href="#cb12-250" aria-hidden="true" tabindex="-1"></a>   What stimulus would separate them?</span>
 </code></pre></div><button title="Copy to Clipboard" class="code-copy-button" data-in-quarto-modal=""><i class="bi"></i></button></div>
 </div></div></div></div></div>
 </div> <!-- /content -->
