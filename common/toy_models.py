@@ -127,3 +127,95 @@ def cosine_matrix(W: torch.Tensor) -> np.ndarray:
     W = W.detach()
     What = W / W.norm(dim=0, keepdim=True).clamp_min(1e-8)
     return (What.T @ What).numpy()
+
+
+# ----------------------------------------------------------------------------
+# Readers instead of reconstruction: the bottleneck feeds hidden neurons that
+# must compute T downstream tasks, each a function of one sum over a subset of
+# inputs. The knob is how many *distinct* subsets the tasks factor through.
+# ----------------------------------------------------------------------------
+def make_subsets(n: int, J: int, fan_in: int, seed: int = 0, tries: int = 2000):
+    """J subsets of size fan_in from n inputs. J*fan_in <= n gives a disjoint
+    partition; otherwise choose the draw with the smallest maximum pairwise
+    overlap (and, tie-breaking, the most even coverage)."""
+    rng = np.random.default_rng(seed)
+    if J * fan_in <= n:
+        perm = rng.permutation(n)
+        return [sorted(perm[j*fan_in:(j+1)*fan_in].tolist()) for j in range(J)]
+    best, best_key = None, None
+    for _ in range(tries):
+        subs = [sorted(rng.choice(n, fan_in, replace=False).tolist()) for _ in range(J)]
+        ov = max(len(set(a) & set(b)) for i, a in enumerate(subs) for b in subs[i+1:])
+        cov = np.bincount(np.concatenate(subs), minlength=n)
+        key = (ov, cov.max() - cov.min())
+        if best_key is None or key < best_key:
+            best, best_key = subs, key
+    return best
+
+
+def make_tasks(subsets, T: int, thetas=(0.0, 0.25, 0.5)):
+    """T tasks, each ReLU(sum over one subset - theta). Tasks cycle through
+    the subsets, so with fewer subsets each sum is read by more tasks."""
+    return [(subsets[t % len(subsets)], thetas[(t // len(subsets)) % len(thetas)]) for t in range(T)]
+
+
+def task_targets(x: torch.Tensor, tasks) -> torch.Tensor:
+    cols = []
+    for subset, theta in tasks:
+        cols.append(F.relu(x[:, subset].sum(1) - theta))
+    return torch.stack(cols, 1)
+
+
+class ReaderToy(torch.nn.Module):
+    """x -> h = W x (m dims) -> a = ReLU(V h + c) (k neurons) -> y_hat = U a + b (T tasks)."""
+
+    def __init__(self, n: int, m: int, k: int, T: int, gen: torch.Generator):
+        super().__init__()
+        self.W = torch.nn.Parameter(torch.randn(m, n, generator=gen) / np.sqrt(m))
+        self.V = torch.nn.Parameter(torch.randn(k, m, generator=gen) / np.sqrt(m))
+        self.c = torch.nn.Parameter(torch.zeros(k))
+        self.U = torch.nn.Parameter(torch.randn(T, k, generator=gen) / np.sqrt(k))
+        self.b = torch.nn.Parameter(torch.zeros(T))
+
+    def hidden(self, x):
+        return F.relu((x @ self.W.T) @ self.V.T + self.c)
+
+    def forward(self, x):
+        return self.hidden(x) @ self.U.T + self.b
+
+
+def train_tasks(model: ReaderToy, tasks, n: int, sparsity: float, steps: int = 5000,
+                batch: int = 1024, lr: float = 1e-3, seed: int = 0):
+    gen = torch.Generator().manual_seed(seed)
+    opt = torch.optim.Adam(model.parameters(), lr=lr)
+    sched = torch.optim.lr_scheduler.CosineAnnealingLR(opt, steps)
+    losses = []
+    for _ in range(steps):
+        x = sample_independent(batch, n, sparsity, gen)
+        y = task_targets(x, tasks)
+        loss = ((model(x) - y) ** 2).sum(-1).mean()
+        opt.zero_grad(); loss.backward(); opt.step(); sched.step()
+        losses.append(loss.item())
+    return np.array(losses)
+
+
+def participation_ratio(W: torch.Tensor) -> float:
+    """(sum s^2)^2 / sum s^4 over singular values: effective number of
+    bottleneck dimensions in use."""
+    s = torch.linalg.svdvals(W.detach())
+    return float((s**2).sum()**2 / (s**4).sum())
+
+
+def within_between_cosine(W: torch.Tensor, subsets):
+    """Mean |cosine| between input directions for pairs that share a subset
+    (within) and pairs that share none (between)."""
+    C = np.abs(cosine_matrix(W))
+    n = C.shape[0]
+    share = np.zeros((n, n), dtype=bool)
+    for s in subsets:
+        for i in s:
+            for j in s:
+                share[i, j] = True
+    iu = np.triu_indices(n, 1)
+    w = C[iu][share[iu]]; b = C[iu][~share[iu]]
+    return float(w.mean()) if len(w) else float("nan"), float(b.mean()) if len(b) else float("nan")

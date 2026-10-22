@@ -296,7 +296,194 @@ neurons a one-group positive pole, but it does not make mixed neurons disappear.
 networks are in a regime where two-group neurons are rare is exactly what the rest of the
 essay tries to show empirically, and it is not something a toy can settle.
 
-## 6. What to carry into the essay
+## 6. Adding the missing benefit: readers instead of reconstruction
+
+Section 5 put the relatedness into the *data*. But in a toy with independent inputs there is
+nothing intrinsically related about any two of them: every partition into groups is a
+relabelling of every other. So any grouping we saw there could be credited to the input
+statistics. The essay's argument is about something else: a representation matters only
+through what reads it, and sharing a direction between two inputs is a benefit when
+downstream readers want them together. The original toy has no readers, so that benefit is
+priced at zero. Here we put readers in and leave the inputs exactly as in the original toy:
+independent and sparse.
+
+**The setup.** The bottleneck $h = Wx$ feeds a hidden ReLU layer, which feeds $T = 12$ output
+tasks. Every task has the same form: a rectified sum over five inputs,
+$y_t = \mathrm{ReLU}\big(\sum_{i \in S_t} x_i - \theta_t\big)$, with $\theta_t$ cycling
+through three thresholds. The only thing we vary is **how many distinct subsets $S_t$ the
+twelve tasks factor through**, which we call $J$:
+
+- $J = 4$: four disjoint subsets, each read by three tasks. A four-dimensional intermediate
+  (the four sums) serves every reader. This is maximal reuse.
+- $J = 12$: twelve subsets chosen to overlap as little as possible, each read by one task.
+  No shared intermediate helps anyone. This is the control.
+- $J = 6, 8$ in between.
+
+With $J = 4$ and only four tasks the two conditions would be identical, which is the
+relabelling point again; the difference appears only when several readers want the same
+combination. That is what the essay calls reuse, so $J$ is the quantity under test rather
+than a proxy for it.
+
+**What to measure**, without reference to any grouping the data does not contain:
+the **participation ratio** of the singular values of $W$ (the effective number of bottleneck
+dimensions in use), the mean |cosine| between input directions for pairs that **share a
+subset** versus pairs that **share none**, the **task loss**, and the hidden-neuron poles
+scored against the task-defined subsets.
+
+```{python}
+#| code-summary: "Train the reader toy across the reuse knob J"
+from common.toy_models import (ReaderToy, make_subsets, make_tasks, train_tasks,
+                               participation_ratio, within_between_cosine)
+n, m, k, T, fan, S_READ = 20, 5, 20, 12, 5, 0.9
+
+def fit_readers(J, S=S_READ, seed=0, steps=4000, extra_tasks=()):
+    subs = make_subsets(n, J, fan, seed=seed)
+    tasks = make_tasks(subs, T) + list(extra_tasks(subs) if callable(extra_tasks) else extra_tasks)
+    model = ReaderToy(n, m, k, len(tasks), torch.Generator().manual_seed(seed))
+    L = train_tasks(model, tasks, n, S, steps=steps, seed=seed)
+    return model, subs, tasks, L[-200:].mean()
+
+Js = [4, 6, 8, 12]
+reader_runs = {J: [fit_readers(J, seed=s) for s in range(2)] for J in Js}
+print(f"{'J':>3s} {'max overlap':>12s} {'loss':>8s} {'PR':>6s} {'|cos| within':>13s} {'between':>8s}   (S = {S_READ}, 2 seeds)")
+for J in Js:
+    rows = []
+    for model, subs, _, loss in reader_runs[J]:
+        w, b = within_between_cosine(model.W, subs)
+        rows.append((loss, participation_ratio(model.W), w, b))
+    r = np.mean(rows, 0)
+    subs = reader_runs[J][0][1]
+    ov = max(len(set(a) & set(b)) for i, a in enumerate(subs) for b in subs[i+1:])
+    print(f"{J:3d} {ov:12d} {r[0]:8.3f} {r[1]:6.2f} {r[2]:13.2f} {r[3]:8.2f}")
+```
+
+```{python}
+#| code-summary: "Input directions, ordered by subset, at the two ends of the knob"
+#| fig-cap: "Cosine between the bottleneck directions $W_i$ of the 20 independent inputs, ordered by the task subsets (boundaries drawn), for maximal reuse ($J=4$, left) and no reuse ($J=12$, right; inputs ordered by their first subset). The inputs are statistically identical in both panels; only the readers differ."
+fig, axes = plt.subplots(1, 2, figsize=(7.2, 3.6))
+for ax, J in zip(axes, [4, 12]):
+    model, subs, _, _ = reader_runs[J][0]
+    first = {}
+    for j, s in enumerate(subs):
+        for i in s: first.setdefault(i, j)
+    order = sorted(range(n), key=lambda i: (first.get(i, 99), i))
+    C = cosine_matrix(model.W)[np.ix_(order, order)]
+    ax.imshow(C, cmap="RdBu_r", vmin=-1, vmax=1)
+    if J == 4:
+        for gb in range(fan, n, fan):
+            ax.axhline(gb-0.5, color="k", lw=0.6); ax.axvline(gb-0.5, color="k", lw=0.6)
+    ax.set_xticks([]); ax.set_yticks([]); ax.set_title(f"J = {J}")
+plt.tight_layout()
+```
+
+With maximal reuse the bottleneck becomes four coarse directions, one per shared sum, with
+the five inputs of each sum nearly parallel (|cosine| about 0.8 within, 0.2 between) and a
+participation ratio of 4. Nothing about the inputs asked for this; the readers did. With no
+reuse the same inputs are spread with no block structure, the participation ratio rises
+toward 5, and the task loss is seventy times larger: twelve independent sums do not fit in
+five dimensions, so the network packs them with interference. Intermediate $J$ gives
+intermediate values of everything.
+
+Two remarks on the control. First, it is the original toy's situation transposed up one
+level: the quantities being packed are now the readers' sums rather than the inputs, but the
+mechanism is the same. Second, the control is not a strawman. Each task still reads five
+inputs through the same function; it just reads a combination nobody else wants.
+
+```{python}
+#| code-summary: "Hidden-neuron poles against the task subsets"
+#| fig-cap: "Cosine between each hidden neuron's read direction and each subset's shared direction (the mean of its five $W_i$). Left: $J=4$, four subsets. Right: $J=12$, twelve subsets. With reuse, neurons are about one sum, some with a contrasting negative pole; without, they read many overlapping sums."
+def subset_cosines(model, subs):
+    W = model.W.detach(); V = model.V.detach()
+    G = torch.stack([W[:, s].mean(1) for s in subs], 1); G = G / G.norm(dim=0, keepdim=True)
+    Vn = V / V.norm(dim=1, keepdim=True).clamp_min(1e-8)
+    return (Vn @ G).numpy()
+fig, axes = plt.subplots(1, 2, figsize=(8, 3.6), gridspec_kw={"width_ratios": [4, 12]})
+for ax, J in zip(axes, [4, 12]):
+    model, subs, _, _ = reader_runs[J][0]
+    cs = subset_cosines(model, subs)
+    order = np.lexsort((-np.abs(cs).max(1), np.abs(cs).argmax(1)))
+    im = ax.imshow(cs[order], cmap="RdBu_r", vmin=-1, vmax=1, aspect="auto")
+    ax.set_xlabel("task subset"); ax.set_title(f"J = {J}")
+axes[0].set_ylabel("hidden neuron")
+plt.colorbar(im, ax=axes, shrink=0.8, label="cos(V_j, subset direction)")
+```
+
+```{python}
+#| code-summary: "Does sparsity rescue the no-reuse control?"
+#| fig-cap: "Task loss (left) and the gap between within-subset and between-subset |cosine| (right) as a function of input sparsity, for maximal reuse and no reuse. Two seeds each."
+S_list = [0.0, 0.5, 0.8, 0.9, 0.97]
+curves = {J: [] for J in (4, 12)}
+for Sp in S_list:
+    for J in (4, 12):
+        rows = []
+        for s in range(2):
+            model, subs, _, loss = fit_readers(J, S=Sp, seed=s)
+            w, b = within_between_cosine(model.W, subs)
+            rows.append((loss, w - b))
+        curves[J].append(np.mean(rows, 0))
+fig, axes = plt.subplots(1, 2, figsize=(8, 3.2))
+for J, lab in [(4, "J = 4 (reuse)"), (12, "J = 12 (no reuse)")]:
+    c = np.array(curves[J])
+    axes[0].plot(S_list, c[:, 0], "o-", label=lab); axes[1].plot(S_list, c[:, 1], "o-", label=lab)
+axes[0].set_yscale("log"); axes[0].set_xlabel("sparsity S"); axes[0].set_ylabel("task loss"); axes[0].legend(fontsize=8)
+axes[1].set_xlabel("sparsity S"); axes[1].set_ylabel("|cos| within − between")
+plt.tight_layout()
+```
+
+The reuse condition is clean and nearly lossless at every sparsity. The no-reuse condition
+is simply infeasible when inputs are dense, and only approaches a low loss at very high
+sparsity, where packing with interference becomes cheap. This is the original toy's
+phase diagram again, now driven by the readers: superposition is what a network does when
+the things it must represent are unrelated *to its readers* and rare enough to pack.
+
+### A private offshoot
+
+If reuse makes inputs coarse, what happens when one reader wants fine structure? We keep the
+$J = 4$ tasks and add a single extra task that reads one input alone, $y = x_{i^\star}$ for
+some $i^\star$ in the first subset. The prediction from the essay's picture is that
+$W_{i^\star}$ stays aligned with its group direction and grows a private component that the
+rest of the group lacks.
+
+```{python}
+#| code-summary: "One extra reader on a single input"
+def offshoot_stats(extra, seeds=3):
+    out = []
+    for s in range(seeds):
+        ex = (lambda subs: [([subs[0][0]], 0.0)]) if extra else ()
+        model, subs, _, loss = fit_readers(4, seed=s, extra_tasks=ex)
+        W = model.W.detach(); g = W[:, subs[0]].mean(1); g = g / g.norm()
+        def split(i):
+            w = W[:, i]; par = float(w @ g); return par, float((w - par * g).norm())
+        t = split(subs[0][0]); o = np.mean([split(i) for i in subs[0][1:]], 0)
+        out.append((loss, t[0], t[1], o[0], o[1]))
+    return np.mean(out, 0)
+print(f"{'extra reader':>13s} {'loss':>7s} {'target ∥ group':>15s} {'target ⊥':>9s} {'others ∥ group':>15s} {'others ⊥':>9s}")
+for extra in (False, True):
+    r = offshoot_stats(extra)
+    print(f"{str(extra):>13s} {r[0]:7.3f} {r[1]:15.2f} {r[2]:9.2f} {r[3]:15.2f} {r[4]:9.2f}")
+```
+
+The single extra reader makes the target input's private component more than six times
+larger while leaving its alignment with the group untouched, and leaves the other four members of the group as they
+were. In the essay's language, the input has a group direction and an offshoot, and the
+offshoot exists because something reads it. This is the smallest possible model of
+"recursive generalisation": a coarse representation that grows a finer branch exactly where
+a downstream reader needs one.
+
+### What this adds to the picture
+
+- The relatedness that makes a network group things is not in the inputs. It is in the
+  readers. Identical input statistics give clean coarse directions under shared readers and
+  packing under unshared ones.
+- Superposition and generalisation are not two learning principles here; they are what one
+  objective does in two regimes of reader structure. Packing wins only when the quantities
+  readers need are unrelated to each other and sparse enough to overlap cheaply.
+- What the toy cannot tell us is which regime a real network's readers are in. The essay's
+  bet is that in real data "almost nothing is related to nothing", so real readers are
+  overwhelmingly of the shared kind. That is the empirical claim the rest of the essay has
+  to carry.
+
+## 7. What to carry into the essay
 
 - **Packing is real and robust in the toy's world.** Independent sparse features in a narrow
   bottleneck with nothing downstream get packed into polytopes, with discrete phase changes.
@@ -309,7 +496,7 @@ essay tries to show empirically, and it is not something a toy can settle.
 - **The toy cannot say which regime real networks are in.** That is an empirical question and
   it is what the essay's vision and language experiments are for.
 
-## 7. What the toy does and does not say
+## 8. What the toy does and does not say
 
 The toy's results are robust and the essay accepts them: when independent, sparse features
 must be squeezed through a narrow linear bottleneck and reconstructed, the optimum packs
