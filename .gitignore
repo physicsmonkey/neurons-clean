@@ -12,3 +12,4 @@ _site/
 
 /.quarto/
 **/*.quarto_ipynb
+source/essay.md
