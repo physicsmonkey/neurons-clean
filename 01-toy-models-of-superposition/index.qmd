@@ -256,6 +256,11 @@ for ax, regime in zip(axes, ["sparse", "dense"]):
 plt.colorbar(im, ax=axes, shrink=0.8, label="cos(V_j, group direction)")
 ```
 
+::: {.beyond-inline}
+The pole-by-pole audit of the hidden neurons that follows is our own analysis. The essay's
+figure for this variant shows only the bottleneck's cosine structure.
+:::
+
 Because the output ReLU discards a neuron's negative side, what the neuron *transmits* is its
 positive pole. So the fair question, in the essay's own terms, is whether the positive pole
 is about one group. We count a neuron as "one group on the positive pole" if, among the
@@ -295,6 +300,8 @@ correlations and a hidden layer makes the bottleneck organise by group and gives
 neurons a one-group positive pole, but it does not make mixed neurons disappear. Whether real
 networks are in a regime where two-group neurons are rare is exactly what the rest of the
 essay tries to show empirically, and it is not something a toy can settle.
+
+::: {.beyond}
 
 ## 6. Adding the missing benefit: readers instead of reconstruction
 
@@ -482,6 +489,8 @@ a downstream reader needs one.
   bet is that in real data "almost nothing is related to nothing", so real readers are
   overwhelmingly of the shared kind. That is the empirical claim the rest of the essay has
   to carry.
+
+:::
 
 ## 7. What to carry into the essay
 

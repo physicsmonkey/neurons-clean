@@ -155,6 +155,8 @@ than data-weighted attributions, so the agreement is if anything stronger than t
 needed. (We have not visualised 4d:493 or 5a:94 ourselves; the labels "fox snout" and
 "V-shaped flames" are the essay's.)
 
+::: {.beyond}
+
 ## A synthetic probe: does a bare V excite it?
 
 If the neuron were a geometric V detector in the way an early-layer curve detector is a curve
@@ -208,6 +210,8 @@ front, a converging road) rather than a geometric primitive. The essay says as m
 footnote: "generalization happens inside high-level patterns", and the V neuron "really does
 take in cat circuitry". A mid-network neuron's inputs are already fairly abstract, so this is
 not a surprise, but it is a limit on how literally to take the word "V".
+
+:::
 
 ## Assessment
 

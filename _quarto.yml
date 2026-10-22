@@ -5,6 +5,8 @@ project:
     - "*.qmd"
     - "!source/"
 
+author: "Mostly Claude and Brian Swingle"
+
 website:
   title: "Neural Networks Are Already Clean — a slow read"
   description: "Section-by-section notes and small reproductions, written for physicists curious about interpretability."
@@ -41,6 +43,7 @@ website:
 format:
   html:
     theme: cosmo
+    css: custom.css
     toc: true
     toc-depth: 3
     number-sections: false

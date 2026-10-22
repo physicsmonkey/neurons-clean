@@ -29,6 +29,18 @@ things folded into one neuron, should be the last hypothesis rather than the fir
   small reproduction where one is feasible. Appendix material is folded into the section it
   supports.
 
+## What is the essay's and what is ours
+
+Most of each page summarises or re-creates something the essay or the papers it cites
+actually say. Where we go further, running an experiment of our own or drawing a conclusion
+the essay does not draw, the material sits in a tinted box labelled **Beyond the essay**.
+Those boxes make no claim beyond what the experiment in them shows; they are there so the
+reader can tell what comes from the literature and what we added.
+
+::: {.beyond-inline}
+This is what the marker looks like. Anything inside a box like this is our own addition.
+:::
+
 ## Ground rules for the reproductions
 
 None of the essay's models, checkpoints, or datasets are public, so nothing here is a
