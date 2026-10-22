@@ -1,0 +1,574 @@
+[
+  {
+    "objectID": "index.html",
+    "href": "index.html",
+    "title": "A slow read of Neural Networks Are Already Clean",
+    "section": "",
+    "text": "These are working notes on Nick Cammarata’s essay Neural Networks Are Already Clean (Goodfire, 2026). The audience is people with a physics background who are curious about interpretability but have not worked in it. The aim is to go through the essay slowly, one section at a time, filling in the background each section assumes and re-creating its claims in the smallest instructive setting that fits on a single consumer GPU.\nThe essay itself is long (about 27,000 words with its appendix) and is written as a working hypothesis rather than a paper. Its central claim is that the famous examples of “polysemantic” neurons, the ones that seemed to respond to unrelated things and that motivated the superposition hypothesis, were misread. On the author’s account the mess came from broken tools, weak architectures, incomplete explanations, and a growth pattern he calls recursive generalization, all of which are fixable or benign. True superposition, unrelated things folded into one neuron, should be the last hypothesis rather than the first.",
+    "crumbs": [
+      "Home",
+      "A slow read of *Neural Networks Are Already Clean*"
+    ]
+  },
+  {
+    "objectID": "index.html#how-these-notes-are-organised",
+    "href": "index.html#how-these-notes-are-organised",
+    "title": "A slow read of Neural Networks Are Already Clean",
+    "section": "How these notes are organised",
+    "text": "How these notes are organised\n\nPreliminaries fill in what a neuron, a feature, a residual stream, an attention head, a sparse autoencoder, and feature visualisation are, in the sense the essay uses them.\nBackground: Toy Models of Superposition reproduces the Anthropic toy model that made superposition precise, and the essay’s modification of it. This comes before the essay’s own “Superposition” section because the essay is largely a critique of that framing.\nThe essay, section by section then follows the essay’s own top-level headings. Each page gives a summary, the background needed, what the claim would look like if false, and a small reproduction where one is feasible. Appendix material is folded into the section it supports.",
+    "crumbs": [
+      "Home",
+      "A slow read of *Neural Networks Are Already Clean*"
+    ]
+  },
+  {
+    "objectID": "index.html#ground-rules-for-the-reproductions",
+    "href": "index.html#ground-rules-for-the-reproductions",
+    "title": "A slow read of Neural Networks Are Already Clean",
+    "section": "Ground rules for the reproductions",
+    "text": "Ground rules for the reproductions\nNone of the essay’s models, checkpoints, or datasets are public, so nothing here is a replication in the strict sense. Each experiment is a re-creation at the smallest scale that keeps the phenomenon, run on one 12 GB GPU in at most a day. Where we had to substitute (a smaller dataset than ImageNet, a smaller language model than Qwen3-32B) the page says so.",
+    "crumbs": [
+      "Home",
+      "A slow read of *Neural Networks Are Already Clean*"
+    ]
+  },
+  {
+    "objectID": "index.html#source",
+    "href": "index.html#source",
+    "title": "A slow read of Neural Networks Are Already Clean",
+    "section": "Source",
+    "text": "Source\nThe plain-text version of the essay is kept in source/essay.md for reference. Quotations are from that file.",
+    "crumbs": [
+      "Home",
+      "A slow read of *Neural Networks Are Already Clean*"
+    ]
+  },
+  {
+    "objectID": "10-exploring-language-models/index.html",
+    "href": "10-exploring-language-models/index.html",
+    "title": "Exploring Language Models",
+    "section": "",
+    "text": "Not written yet.",
+    "crumbs": [
+      "Home",
+      "The essay, section by section",
+      "Exploring Language Models"
+    ]
+  },
+  {
+    "objectID": "08-exploring-image-models/index.html",
+    "href": "08-exploring-image-models/index.html",
+    "title": "Exploring Image Models",
+    "section": "",
+    "text": "Not written yet.",
+    "crumbs": [
+      "Home",
+      "The essay, section by section",
+      "Exploring Image Models"
+    ]
+  },
+  {
+    "objectID": "06-superposition/index.html",
+    "href": "06-superposition/index.html",
+    "title": "Superposition",
+    "section": "",
+    "text": "Not written yet.",
+    "crumbs": [
+      "Home",
+      "The essay, section by section",
+      "Superposition"
+    ]
+  },
+  {
+    "objectID": "04-microscope-errors/index.html",
+    "href": "04-microscope-errors/index.html",
+    "title": "Microscope Errors",
+    "section": "",
+    "text": "Not written yet.",
+    "crumbs": [
+      "Home",
+      "The essay, section by section",
+      "Microscope Errors"
+    ]
+  },
+  {
+    "objectID": "02-the-short-version/index.html",
+    "href": "02-the-short-version/index.html",
+    "title": "The Short Version",
+    "section": "",
+    "text": "The opening section is the whole essay in miniature. This page lists what it claims, sorts the claims by how testable they are, and notes where in these notes each one is taken up. No experiments here; the section is a statement of position.",
+    "crumbs": [
+      "Home",
+      "The essay, section by section",
+      "The Short Version"
+    ]
+  },
+  {
+    "objectID": "02-the-short-version/index.html#the-argument-in-one-paragraph",
+    "href": "02-the-short-version/index.html#the-argument-in-one-paragraph",
+    "title": "The Short Version",
+    "section": "The argument in one paragraph",
+    "text": "The argument in one paragraph\nThe field found neurons that seemed to respond to unrelated things (polysemanticity), and explained them with superposition: a network short of neurons folds unrelated things together because they rarely co-occur. If true, the neurons are a knot with nothing to learn from, and the only route is to train a second model (a sparse autoencoder) that unfolds it. The essay says the canonical evidence for this was misread. The messy late layers of InceptionV1 were an architecture and tooling failure that modern architectures fixed by accident; the famous cat-and-car neuron and the car-into-dogs circuit were ordinary generalisation and composition; and the residual apparent polysemanticity is mostly recursive generalisation, a neuron sprouting related offshoots as it grows. That leaves one learning principle, generalisation, which happens to be fractal. So the network’s own neurons and circuits can be studied directly, and this works in practice up to trillion-parameter models.",
+    "crumbs": [
+      "Home",
+      "The essay, section by section",
+      "The Short Version"
+    ]
+  },
+  {
+    "objectID": "02-the-short-version/index.html#two-ways-to-do-interpretability",
+    "href": "02-the-short-version/index.html#two-ways-to-do-interpretability",
+    "title": "The Short Version",
+    "section": "Two ways to do interpretability",
+    "text": "Two ways to do interpretability\nThe essay frames everything around a choice.\n\nNormal science on the network itself. Look at neurons and circuits, watch data flow through them, run experiments at agentic scale to test explanations. This is where the field started (the Distill Circuits thread, 2020).\nStart from a hypothesised feature list and design reconstruction objectives to extract it, “usually ignoring the original”. This is the sparse-autoencoder programme the field moved to after 2022.\n\nThe essay’s position is that the field fell back from the first to the second on the strength of evidence that does not hold up, and that the first approach now works. Note the rhetorical asymmetry: option 2 is described as ignoring the original network. Practitioners of SAEs would say they study the original through a better basis. Worth raising in discussion.",
+    "crumbs": [
+      "Home",
+      "The essay, section by section",
+      "The Short Version"
+    ]
+  },
+  {
+    "objectID": "02-the-short-version/index.html#the-claims-sorted",
+    "href": "02-the-short-version/index.html#the-claims-sorted",
+    "title": "The Short Version",
+    "section": "The claims, sorted",
+    "text": "The claims, sorted\n\nEmpirical claims about specific models\n\n\n\n\n\n\n\n\n\nClaim\nStated evidence\nTestable here?\nWhere\n\n\n\n\nInceptionV1’s last layer looked ~5% interpretable in 2014-era tools; a same-size modern conv net is 99–100% interpretable in its last layer, with no change in data or size\nAuthor’s own ConvNeXt training runs and microscope\nPartly: we can train a small conv net on a substitute dataset and audit last-layer neurons by eye\n§08\n\n\nLegibility holds across a 300× size range; smaller models get coarser neurons, not packed ones\nThree ConvNeXts\nPartly, same caveat\n§08\n\n\nThe car-into-dogs circuit in Zoom In was composition through a shared pose neuron, not superposition, and “nothing reads that combination”\nReanalysis with better feature visualisation and attribution\nYes in principle: InceptionV1 weights are public\n§03, §04\n\n\nIn Qwen3-32B about 90% of neuron poles have one main job, ~7% two related jobs, ~2–4% not understood\nAgent-written “neuron papers”, preliminary, small samples\nNot at that scale; a small Qwen3 or GPT-2 XL audit is feasible\n§10\n\n\nResults are similar in MoE models and up to trillion parameters (Kimi K3)\nCompanion paper, forthcoming\nNo\n—\n\n\nRecursive generalisation is visible when watching neurons over training checkpoints, in every case the author has looked\nRetrained InceptionV1 and ConvNeXt checkpoints; LM examples (“iy” → “diy” → “do it yourself”)\nYes, for a small conv net we train ourselves\n§05\n\n\nA SwiGLU “double-negative regime” exists and was found only because most of the network was already understood\nQwen3-32B\nYes, the regime itself is a one-afternoon check on any SwiGLU model\n§10\n\n\n\n\n\nClaims about method and history\n\nEarly explainer models could not run conjecture-and-test loops; metrics rewarded simulating activations rather than being right; people looked for the wrong motifs (nouns rather than feelings, social cues, punctuation summaries); most studies used small simplified models.\nUnderstanding compounds like a crossword: once most of the map is filled in, each new neuron is constrained by its neighbours, and the unexplained remainder points at broken tools.\nBigger models learn narrower neurons, so size helps rather than hurts.\n“Understanding the whole network may be easier than understanding just the parts we care about most.”\n\nThese are not falsifiable in a single experiment but they make predictions about how an auditing effort should scale, and we can at least check the narrowing-with-size claim on our own model sweep.\n\n\nThe four-step argument, and where its weight sits\n\nOne learning principle, not two. (The empirical heart. Everything in §03–§09 is evidence for this.)\nNormal science on modern models goes better than expected. (Mostly testimony about agent-scale auditing; §10.)\nUnderstanding compounds. (A claim about process; hard to test, easy to believe once 1 and 2 hold.)\nHighly speculative: this might be most of what we need.\n\nThe essay is careful to label step 4 as speculation. Steps 1 and 2 carry the argument.",
+    "crumbs": [
+      "Home",
+      "The essay, section by section",
+      "The Short Version"
+    ]
+  },
+  {
+    "objectID": "02-the-short-version/index.html#things-to-notice-on-a-first-read",
+    "href": "02-the-short-version/index.html#things-to-notice-on-a-first-read",
+    "title": "The Short Version",
+    "section": "Things to notice on a first read",
+    "text": "Things to notice on a first read\n\nThe author co-authored both hypotheses. He found the original superposition circuit in 2019 and the “conjoined features” observation in 2021. The essay is a recantation of the first in favour of the second. This matters for how to weigh the testimony: the evidence that convinced him is mostly things he looked at, and the sample sizes he gives are explicitly small.\nThe headline percentages are soft. Footnote 1 says the 90% figure moves with the weak-activation threshold, depth, and what counts as one thing, and the author says he included a number only because reviewers wanted one. The claim that matters is the qualitative one: mixtures are related, not arbitrary.\n“Nothing reads that combination.” This is the sharpest sentence in the section. The original superposition story required a downstream reader that unpacked the car from the dog neurons. The essay’s claim is that no such reader exists. That is checkable from the weights.\nThe bitter-lesson analogy is doing argumentative work: “scaling ordinary investigation beats engineering a clever new decomposition”. It is an analogy, not evidence.",
+    "crumbs": [
+      "Home",
+      "The essay, section by section",
+      "The Short Version"
+    ]
+  },
+  {
+    "objectID": "02-the-short-version/index.html#questions-for-discussion",
+    "href": "02-the-short-version/index.html#questions-for-discussion",
+    "title": "The Short Version",
+    "section": "Questions for discussion",
+    "text": "Questions for discussion\n\nSuperposition and recursive generalisation make opposite predictions about what shares a neuron. What would a decisive test look like in a model we can train ourselves, and what confounds would make the two hard to tell apart in a finished model with no checkpoints?\nIf a small model’s neurons are merely coarse (one “car” neuron for all cars), is that distinguishable in practice from superposition of many car types? What does “coarse” mean operationally?\nThe essay treats “the neuron basis is privileged” as settled by the elementwise nonlinearity. For SwiGLU neurons with a gate and a value, is the neuron still the right unit, or is the pair?\nDoes “nothing reads that combination” generalise into a usable criterion: a representation is only in superposition if some downstream weight reads the packed combination?",
+    "crumbs": [
+      "Home",
+      "The essay, section by section",
+      "The Short Version"
+    ]
+  },
+  {
+    "objectID": "02-the-short-version/index.html#where-the-notes-go-next",
+    "href": "02-the-short-version/index.html#where-the-notes-go-next",
+    "title": "The Short Version",
+    "section": "Where the notes go next",
+    "text": "Where the notes go next\nThe next three sections of the essay, Cars and Animals, A History of Microscope Errors, and Recursive Generalization, are the evidence for step 1 in vision models. The first two can be checked directly on the public InceptionV1 weights.",
+    "crumbs": [
+      "Home",
+      "The essay, section by section",
+      "The Short Version"
+    ]
+  },
+  {
+    "objectID": "00-preliminaries/index.html",
+    "href": "00-preliminaries/index.html",
+    "title": "Preliminaries: the objects the essay talks about",
+    "section": "",
+    "text": "The essay assumes its reader already knows what a neuron is, what a feature is, why anyone would train a sparse autoencoder, and what an attribution graph shows. This page fills that in for someone with a physics background and no interpretability background. It is deliberately concrete: every object is defined by an equation or a procedure, and the vocabulary the essay uses is collected in a glossary at the end.\nIf you already work in interpretability, skip to the glossary and the map for physicists.",
+    "crumbs": [
+      "Home",
+      "Preliminaries",
+      "Preliminaries: the objects the essay talks about"
+    ]
+  },
+  {
+    "objectID": "00-preliminaries/index.html#neurons",
+    "href": "00-preliminaries/index.html#neurons",
+    "title": "Preliminaries: the objects the essay talks about",
+    "section": "1. Neurons",
+    "text": "1. Neurons\nA trained network is a fixed function f_\\theta from inputs to outputs. “Interpretability” in the sense of this essay means explaining how it computes that function in terms of its internal parts, the way a biologist explains an organism in terms of cells and organs rather than in terms of its genome.\nThe basic internal part is the neuron. In a fully-connected (MLP) layer with input vector x \\in \\mathbb{R}^d, neuron i has an input weight vector w_i \\in \\mathbb{R}^d, a bias b_i, and a scalar nonlinearity \\phi:\n\na_i(x) = \\phi\\big(w_i \\cdot x + b_i\\big).\n\nThe quantity w_i\\cdot x + b_i is the preactivation; a_i is the activation. The layer’s output is then a linear map of the activation vector, y = \\sum_i a_i\\, v_i, where v_i is neuron i’s output weight vector. So each neuron reads one direction (w_i) and writes one direction (v_i), with a scalar nonlinearity in between. The essay’s language of “readers” and “what a neuron lets through” is literal: downstream neurons whose w_j has a large component along v_i are the readers of neuron i.\nThree nonlinearities matter here:\n\nReLU, \\phi(z) = \\max(z, 0). Used in InceptionV1 and most pre-2020 vision models. The negative side of the preactivation is thrown away.\nGELU, a smooth version of ReLU, \\phi(z) = z\\,\\Phi(z) with \\Phi the Gaussian CDF. Used in GPT-2 and ConvNeXt. Slightly negative for small negative z, which is why the essay can talk about a neuron’s negative side even in GELU networks.\nSwiGLU (gated), used in Llama, Qwen, and most modern language models. The neuron has two input weight vectors, a gate g_i and a value u_i, and \na_i(x) = \\mathrm{SiLU}(g_i\\cdot x)\\,(u_i\\cdot x), \\qquad \\mathrm{SiLU}(z) = \\frac{z}{1+e^{-z}}.\n Since \\mathrm{SiLU}(z) is slightly negative for z&lt;0, the product is positive when both the gate and the value are negative. The essay calls this the “double-negative regime” and argues it is an architectural artefact, so keep it in mind.\n\nThe negative pole. Even with ReLU, the preactivation w_i\\cdot x + b_i can be driven strongly negative by some inputs. The essay insists that this negative side is meaningful: the weights w_i are learned as a sum of “votes”, and whatever pushes the preactivation down is, by construction, the thing the neuron is built to not respond to. The essay’s canonical example is a neuron whose positive pole is “V-shaped” and whose negative pole is “round”. It uses the word pole for each side.\nNeurons in convolutional networks. In a conv net the “neuron” is a channel: a filter w_i that is applied at every spatial position, giving an activation map a_i(x, \\text{pos}) rather than a single number. InceptionV1 neuron “4e:55” means channel 55 of the layer named mixed4e. When the essay shows an image that “activates” a neuron it usually means the maximum, or sum, of the map over positions.\nNeurons in transformers. A transformer block has an attention sublayer and an MLP sublayer. The “neurons” are the hidden units of the MLP: for a model with residual width d_{\\text{model}} the MLP expands to d_{\\text{mlp}} \\approx 4\\, d_{\\text{model}} (or \\approx \\tfrac{8}{3} d_{\\text{model}} for SwiGLU) hidden units, each of which is a neuron in exactly the sense above. There is one activation per neuron per token. Qwen3-32B has 64 layers with 25,600 neurons each, so about 1.6 million neurons, which is the “more than a million neurons” the essay mentions. Attention heads are not neurons and the essay treats them separately.",
+    "crumbs": [
+      "Home",
+      "Preliminaries",
+      "Preliminaries: the objects the essay talks about"
+    ]
+  },
+  {
+    "objectID": "00-preliminaries/index.html#the-residual-stream",
+    "href": "00-preliminaries/index.html#the-residual-stream",
+    "title": "Preliminaries: the objects the essay talks about",
+    "section": "2. The residual stream",
+    "text": "2. The residual stream\nModern networks (ResNets, ConvNeXt, every transformer) are residual: each layer adds its output to a running vector rather than replacing it,\n\nx_{\\ell+1} = x_\\ell + f_\\ell(x_\\ell).\n\nThe running vector x_\\ell \\in \\mathbb{R}^{d_{\\text{model}}} is the residual stream. In a transformer there is one such vector per token position. Every neuron in every layer reads from the stream by taking an inner product with its w_i and writes back to it by adding a multiple of its v_i. The stream is therefore a shared, high-dimensional bus; the only nonlinear operations are the elementwise \\phi inside the MLPs, the softmax inside attention, and the normalisation (LayerNorm: subtract the mean, divide by the standard deviation across the d_{\\text{model}} components, then rescale) that precedes each sublayer.\nTwo facts about the stream drive much of the essay:\n\nIt has no privileged basis. Rotating the stream by an orthogonal matrix R, and correspondingly rotating every w_i \\to R w_i and v_i \\to R v_i, gives an identical network. Nothing about a single coordinate of the stream has any meaning. Neuron activations, by contrast, do have a privileged basis, because \\phi acts elementwise: rotating the neurons changes the function. This is why “look at the neurons” is a well-posed instruction and “look at the stream’s coordinates” is not.\nInceptionV1 has no residual stream (it predates ResNets). Each layer must carry everything the next layer needs. The essay argues that this, rather than any inherent property of learning, is why InceptionV1’s late layers looked like a mess, and it uses the absence of a residual stream to design a squeeze experiment later on.",
+    "crumbs": [
+      "Home",
+      "Preliminaries",
+      "Preliminaries: the objects the essay talks about"
+    ]
+  },
+  {
+    "objectID": "00-preliminaries/index.html#attention-briefly",
+    "href": "00-preliminaries/index.html#attention-briefly",
+    "title": "Preliminaries: the objects the essay talks about",
+    "section": "3. Attention, briefly",
+    "text": "3. Attention, briefly\nAn attention head at layer \\ell moves information between token positions. For each pair of positions (s, t) it computes a score from the query at t and the key at s, softmaxes the scores over s to get weights A_{ts}, and then adds to the stream at t the weighted sum \\sum_s A_{ts}\\, W_O W_V\\, x_s. The essay’s four questions about a head are: where it looks (A_{ts}, cheap to read off), what it looks for (the query-key circuit), what it does when it finds it (the output-value circuit, which can be read in terms of which neurons’ v_i it picks up and which neurons’ w_j it lands on), and why. The essay only claims progress on the first three and says little about the fourth.",
+    "crumbs": [
+      "Home",
+      "Preliminaries",
+      "Preliminaries: the objects the essay talks about"
+    ]
+  },
+  {
+    "objectID": "00-preliminaries/index.html#features-and-the-two-hypotheses",
+    "href": "00-preliminaries/index.html#features-and-the-two-hypotheses",
+    "title": "Preliminaries: the objects the essay talks about",
+    "section": "4. Features and the two hypotheses",
+    "text": "4. Features and the two hypotheses\nA feature is, informally, a property of the input that the network represents. The word is notoriously hard to make precise and the essay’s appendix has a note on exactly this problem. The working definition in most of the field is the linear representation hypothesis: a feature is a direction d_k in some activation space, and the degree to which the feature is present in input x is the projection of the activation onto d_k.\nIf the feature directions happened to coincide with neuron directions, every neuron would respond to exactly one human-recognisable thing. Such a neuron is called monosemantic. A neuron that seems to respond to several unrelated things is polysemantic. The famous example, and the essay’s opening target, is InceptionV1 neuron 4e:55, which the 2020 Zoom In paper reported as responding to both cat faces and car fronts.\nTwo explanations for polysemanticity were on the table before this essay:\n\nSuperposition. The network wants to represent more features than it has neurons, so it assigns features to nearly orthogonal directions that are not neuron-aligned. Each neuron then carries small pieces of several unrelated features. The next page reproduces the toy model that made this precise. Under this hypothesis the neurons are the wrong basis, and the right move is to decompose the activations into the underlying features by some optimisation (a sparse autoencoder).\nGeneralisation / composition. The neuron really does respond to one thing, but that thing is not a noun we have a word for (“V-shape” rather than “cat or car”), or the neuron grew outward from a core onto related territory during training (“recursive generalisation”). Under this hypothesis the neurons are the right basis and the task is to explain them better.\n\nThese make opposite predictions about what should be bundled together: superposition bundles things because they are unrelated (so that they rarely co-occur and interfere little), generalisation bundles things because they are related. The essay’s entire argument is that the evidence points to the second.",
+    "crumbs": [
+      "Home",
+      "Preliminaries",
+      "Preliminaries: the objects the essay talks about"
+    ]
+  },
+  {
+    "objectID": "00-preliminaries/index.html#how-people-look-at-neurons",
+    "href": "00-preliminaries/index.html#how-people-look-at-neurons",
+    "title": "Preliminaries: the objects the essay talks about",
+    "section": "5. How people look at neurons",
+    "text": "5. How people look at neurons\nThe tools below are the “microscope” the essay says was mis-set. Each is simple to state.\nTop-activating examples. Run a large dataset through the network, record each neuron’s activation on every input (or every token), and sort. The top few dozen inputs are the cheapest description of a neuron, and automated labelling pipelines mostly look at these. The essay’s “weak activations” section is about everything below the top of this list.\nFeature visualisation. Instead of searching a dataset, synthesise an input by gradient ascent on the activation, x^\\star = \\arg\\max_x a_i(x), starting from noise. Done naively this produces adversarial high-frequency noise. The 2017 Feature Visualization paper made it work by parametrising the image in a decorrelated Fourier basis and by transformation robustness: optimise the expected activation under random jitter, scaling and rotation of the image, so the optimiser must find a pattern that excites the neuron the way a real image would. The essay’s point about “reward hacking” is that in late layers the optimiser still finds a route the network rarely uses on real data (it draws dogs when the real circuit carries car information), and that this is a property of the tool, not the neuron.\nAblation. Set a neuron’s activation to zero (or to its dataset mean) on a given input and measure what changes in the output. This is the interventional test behind statements like “remove the eight neurons with a Santa negative side and the Santa probability falls from near-certain to 6 percent”.\nAttribution. For a given input, estimate how much neuron i in one layer contributes to neuron j in a later layer. The simplest version is the product of a_i and the gradient \\partial a_j / \\partial a_i, which is exact when the path between them is linear. In a residual network the path from v_i to w_j through the stream is exactly linear, so the direct effect is just a_i\\,(v_i\\cdot w_j), and the only approximation is in how the indirect effects through intervening nonlinearities are handled.\nAttribution graphs. Take one prompt, compute attributions between all pairs of units across all layers, keep the strong edges, and draw the result as a graph from input tokens to output logits. Anthropic’s 2025 circuit tracing work builds these graphs on transcoder features rather than neurons. A transcoder is a trained replacement for each MLP with a sparse, wide hidden layer, chosen so that the hidden units are more interpretable than the original neurons. The cost is that the replacement model is only approximately the original: the essay quotes Anthropic’s own methods page for the figure that it predicts the same next token only about half the time. The essay’s language-model claim is that the same graphs can be built on the original neurons with no replacement model at all.\nSteering. Add a multiple of v_i to the stream during generation and see what the model does. Used in the essay as an informal check (“steering the Colorado neuron makes the model want to go hiking”).",
+    "crumbs": [
+      "Home",
+      "Preliminaries",
+      "Preliminaries: the objects the essay talks about"
+    ]
+  },
+  {
+    "objectID": "00-preliminaries/index.html#sparse-autoencoders-dictionary-learning",
+    "href": "00-preliminaries/index.html#sparse-autoencoders-dictionary-learning",
+    "title": "Preliminaries: the objects the essay talks about",
+    "section": "6. Sparse autoencoders (dictionary learning)",
+    "text": "6. Sparse autoencoders (dictionary learning)\nIf superposition is true, activation vectors x \\in \\mathbb{R}^d are sparse non-negative combinations of n \\gg d feature directions, x \\approx \\sum_k f_k(x)\\, d_k with few f_k \\neq 0. A sparse autoencoder (SAE) tries to recover the dictionary \\{d_k\\} and the coefficients f_k by training\n\nf(x) = \\mathrm{ReLU}(W_{\\text{enc}}\\, x + b_{\\text{enc}}), \\qquad\n\\hat x = W_{\\text{dec}}\\, f(x) + b_{\\text{dec}},\n\nto minimise \\|x - \\hat x\\|^2 + \\lambda \\|f(x)\\|_1 over a large dataset of activations. The \\ell_1 penalty enforces sparsity; the columns of W_{\\text{dec}} are the learned feature directions. A TopK SAE replaces the penalty by keeping only the k largest preactivations per input, which is what the essay uses (640 features, k=2). “Dictionary learning” is the general name for this family.\nTwo numbers are always reported. Variance explained says how well \\hat x reconstructs x. More honest is to splice the SAE into the network, replacing x by \\hat x at that layer, and measure how much the network’s accuracy or loss degrades, because small reconstruction error can still destroy information the network needed. The essay reports both for its squeeze experiment.\nThe essay is not against SAEs as such. Its claim is that, in the networks it studied, an SAE mostly rediscovers the neurons (88 percent of SAE activity on ConvNeXt’s last layer is a near copy of a single neuron) and the rest is loose regroupings of them, and that on InceptionV1 4e:55 the SAE “fractures” a single V-shape neuron into a car feature and a cat feature, which is further from what the neuron does.",
+    "crumbs": [
+      "Home",
+      "Preliminaries",
+      "Preliminaries: the objects the essay talks about"
+    ]
+  },
+  {
+    "objectID": "00-preliminaries/index.html#the-model-zoo",
+    "href": "00-preliminaries/index.html#the-model-zoo",
+    "title": "Preliminaries: the objects the essay talks about",
+    "section": "7. The model zoo",
+    "text": "7. The model zoo\nThe essay moves between several networks. A one-line sketch of each:\n\n\n\n\n\n\n\n\n\n\nModel\nYear\nSize\nType\nWhy it appears\n\n\n\n\nInceptionV1 (GoogLeNet)\n2014\n6.6 M params\nconv net, no residual stream, ReLU\nThe original model organism; layers named mixed3a … mixed5b\n\n\nConvNeXt (small / medium / large)\n2022 design, trained by the author\n92 k / 7.06 M / 28.6 M\nmodern conv net with residuals, LayerNorm, GELU\nA 300× size sweep at fixed architecture; medium matches InceptionV1’s parameter count\n\n\nCLIP\n2021\n~ 400 M\nimage–text contrastive model\nSource of the “multimodal neurons” paper\n\n\nDINOv2\n2023\n~ 86 M (ViT-B)\nself-supervised vision transformer\nShows the same pose neuron appears at 10× InceptionV1’s size\n\n\nGPT-2 XL\n2019\n1.5 B\ntransformer, GELU\nModel of the 2023 OpenAI automated-interpretability project\n\n\nQwen3-32B\n2025\n32 B\ndense transformer, SwiGLU\nMain language model in the essay\n\n\nQwen3.6 (MoE)\n2026\n—\nmixture of experts\nThe 10,240-expert survey\n\n\nKimi K3\n2026\n&gt; 1 T\nmixture of experts\n“First attribution graph of a multi-trillion parameter model”\n\n\n\nMixture of experts. In an MoE transformer the MLP sublayer is replaced by many independent MLPs (“experts”) and a learned router that sends each token to a few of them. Each expert has its own neurons. The essay argues experts are far more specialised than usually reported and calls the architecture “anti-superposition”, because the router would have to recognise thousands of distinct things for packing to occur.",
+    "crumbs": [
+      "Home",
+      "Preliminaries",
+      "Preliminaries: the objects the essay talks about"
+    ]
+  },
+  {
+    "objectID": "00-preliminaries/index.html#a-map-for-physicists",
+    "href": "00-preliminaries/index.html#a-map-for-physicists",
+    "title": "Preliminaries: the objects the essay talks about",
+    "section": "8. A map for physicists",
+    "text": "8. A map for physicists\nSome intuitions carry over cleanly; others actively mislead. A short list.\n\nSuperposition is a compressed-sensing statement. n sparse signals in d &lt; n dimensions can be stored and recovered if their directions are nearly orthogonal (Johnson–Lindenstrauss: one can fit e^{O(\\epsilon^2 d)} vectors in \\mathbb{R}^d with pairwise overlaps below \\epsilon). The toy model on the next page is a learned version of this with ReLU as the decoder. The essay accepts the mathematics and disputes whether real networks are in the regime where the trade-off (capacity vs interference) is the dominant consideration.\n“Circuit racing” is mode competition. The essay’s account of why networks generalise is that broad features fire on more of the data, receive more gradient, and starve the narrow ones. This is rich-get-richer dynamics in the sense of a linear instability: whichever direction has the largest growth rate dominates. The companion idea in the literature is “gradient starvation” and “coherent gradients”.\nThe privileged basis is a symmetry statement. The residual stream has an O(d) symmetry; the neuron layer breaks it to permutations (and sign flips, in some cases) because \\phi is elementwise. Asking which basis is “real” is asking which symmetry the dynamics breaks.\nRecursive generalisation vs superposition is a locality question. Generalisation is local in some similarity metric on the data; superposition is non-local by design. This is the one empirical dichotomy the essay turns on, and watching a neuron over training checkpoints is the proposed experiment.\nBeware “feature” as a conserved quantity. The essay’s appendix argues that the toy model prices the cost of sharing a neuron (interference) but not the benefit (reuse by downstream readers), because in the toy there is nothing downstream. In a real network a representation only matters through what reads it. A physicist’s instinct to count degrees of freedom and ask whether n &gt; d is, on the essay’s account, the wrong question.\nBeware the “microscope” analogy as reassurance. A real microscope’s artefacts are well understood; the essay’s whole historical section is about artefacts in feature visualisation and in the choice of model organism that went unrecognised for years.",
+    "crumbs": [
+      "Home",
+      "Preliminaries",
+      "Preliminaries: the objects the essay talks about"
+    ]
+  },
+  {
+    "objectID": "00-preliminaries/index.html#glossary",
+    "href": "00-preliminaries/index.html#glossary",
+    "title": "Preliminaries: the objects the essay talks about",
+    "section": "Glossary",
+    "text": "Glossary\nTerms in the essay’s own sense, in roughly the order they appear.\n\nPolysemantic / monosemantic. A neuron that appears to respond to several unrelated things / to one thing. The essay argues the first is largely an observer’s statement.\nSuperposition. Unrelated features stored in overlapping, non-neuron-aligned directions because the network has run out of neurons. The essay distinguishes three senses: (a) more features than dimensions, which a clean network could also satisfy; (b) a learning principle that packs unrelated things into neurons, which is what the essay argues against; (c) the same principle applied to directions in the residual stream.\nRecursive generalisation. A neuron starts on one core and sprouts related offshoots as training proceeds, “the way a tree branch sprouts sub-branches”. Earlier called “conjoined features” in the multimodal-neurons paper.\nPole. The positive or negative side of a neuron’s preactivation. Both are treated as meaningful.\nGate. A neuron viewed as control flow: what it lets through and what it keeps out, rather than what noun it names.\nCircuit. A set of neurons across layers connected by large weights, doing an identifiable sub-computation.\nMotif. A pattern that recurs across many circuits (e.g. “summary on punctuation”, “say or just think”, pose neurons feeding class detectors).\nWeak activations. Everything below the top of a neuron’s activation distribution; the essay argues they are mostly generalisation and mostly ablatable.\nBlind maximum. Test an explanation by having a second agent, who sees only the explanation, write an input intended to maximally activate the neuron. If it beats the dataset maximum the explanation captured the centre of the neuron.\nNeuron paper. A short written audit of one neuron, produced by an agent; the essay reports statistics over 1,000 of them.\nAttribution graph. A per-prompt graph of which units drive which, from tokens to logits.\nEnumerative vs exploratory interpretability. Build a complete list of features to audit, vs start from questions and move through the network as needed. The essay favours the second and says the first was “always a means to an end”.\nAlready clean. The essay’s thesis: the network’s own parts are built to be read by its own downstream parts, and are therefore readable by us without being decomposed first.",
+    "crumbs": [
+      "Home",
+      "Preliminaries",
+      "Preliminaries: the objects the essay talks about"
+    ]
+  },
+  {
+    "objectID": "00-preliminaries/index.html#further-reading-for-this-page",
+    "href": "00-preliminaries/index.html#further-reading-for-this-page",
+    "title": "Preliminaries: the objects the essay talks about",
+    "section": "Further reading for this page",
+    "text": "Further reading for this page\n\nOlah et al., Feature Visualization, Distill 2017.\nOlah et al., Zoom In: An Introduction to Circuits, Distill 2020.\nElhage et al., Toy Models of Superposition, Transformer Circuits 2022 (next page).\nBricken et al., Towards Monosemanticity, Transformer Circuits 2023 (the SAE paper).\nAmeisen et al., Circuit Tracing and Lindsey et al., On the Biology of a Large Language Model, Transformer Circuits 2025 (attribution graphs).",
+    "crumbs": [
+      "Home",
+      "Preliminaries",
+      "Preliminaries: the objects the essay talks about"
+    ]
+  },
+  {
+    "objectID": "01-toy-models-of-superposition/index.html",
+    "href": "01-toy-models-of-superposition/index.html",
+    "title": "Background: Toy Models of Superposition",
+    "section": "",
+    "text": "Before reading the essay’s “Superposition” section it helps to have run the toy model that made superposition a precise idea: Elhage et al., Toy Models of Superposition (Anthropic, 2022). The essay’s appendix calls it “careful work, the kind our field should aspire to” and says it found no problems with its experiments. Its objection is to the framing: the toy prices the cost of sharing a neuron (interference) but not the benefit (reuse by downstream readers), because in the toy nothing is downstream.\nThis page does three things. It reproduces the toy’s main results in a few seconds of CPU time, it reproduces the essay’s modification (correlated inputs plus a layer of hidden neurons), and it states what we should carry forward into the essay proper.",
+    "crumbs": [
+      "Home",
+      "Background: Toy Models of Superposition",
+      "Background: Toy Models of Superposition"
+    ]
+  },
+  {
+    "objectID": "01-toy-models-of-superposition/index.html#the-setup",
+    "href": "01-toy-models-of-superposition/index.html#the-setup",
+    "title": "Background: Toy Models of Superposition",
+    "section": "1. The setup",
+    "text": "1. The setup\nThere are n features, collected in a vector x \\in [0,1]^n. Feature i is present with probability 1-S, with amplitude uniform on [0,1], and absent (exactly zero) otherwise. S is the sparsity. The network must squeeze x through a bottleneck of width m &lt; n and recover it:\n\nh = W x \\in \\mathbb{R}^m, \\qquad \\hat x = \\mathrm{ReLU}(W^{\\mathsf T} h + b).\n\nThe loss is a weighted reconstruction error \\sum_i I_i\\,(x_i - \\hat x_i)^2 with importances I_i = 0.9^i, so earlier features matter more. The whole model is the m \\times n matrix W and the bias b. Column W_i \\in \\mathbb{R}^m is the direction in the bottleneck that feature i is written to and read from.\nWhy ReLU on the output matters: with a linear decoder the best the model can do is PCA, keeping the top m features and dropping the rest. ReLU lets it do better, because small interference from other features can be clipped off at zero if the interfering features are usually absent. That is the whole mechanism of superposition: sparsity makes interference cheap.\nThe diagnostics used below, all computable from W:\n\n\\|W_i\\|: how strongly feature i is represented at all (0 means dropped).\nThe superposition index \\sum_{j\\ne i} (\\hat W_i\\cdot W_j)^2: how much other features overlap with feature i’s direction. Zero means a private direction.\nThe dimensionality D_i = \\|W_i\\|^2 / \\sum_j (\\hat W_i\\cdot W_j)^2. A feature with its own orthogonal direction has D_i = 1; two features sharing a direction antipodally have D_i = \\tfrac12; the paper shows the values cluster at simple fractions.\n\n\n\nImports and helpers\nimport sys, pathlib\nsys.path.insert(0, str(pathlib.Path.cwd().parent))\nimport numpy as np, torch, matplotlib.pyplot as plt\nfrom common.toy_models import (TMS, TMSHidden, train, sample_independent, sample_grouped,\n                               feature_norms, superposition_index, feature_dimensionality,\n                               cosine_matrix)\nplt.rcParams.update({\"figure.dpi\": 110, \"font.size\": 9})\n\ndef fit_tms(n, m, S, steps=4000, seed=0, importance_decay=0.9):\n    gen = torch.Generator().manual_seed(seed)\n    model = TMS(n, m, gen)\n    imp = torch.tensor([importance_decay**i for i in range(n)])\n    sampler = lambda b, g: sample_independent(b, n, S, g)\n    train(model, sampler, imp, steps=steps, seed=seed)\n    return model",
+    "crumbs": [
+      "Home",
+      "Background: Toy Models of Superposition",
+      "Background: Toy Models of Superposition"
+    ]
+  },
+  {
+    "objectID": "01-toy-models-of-superposition/index.html#from-keep-the-top-m-to-packing-as-sparsity-rises",
+    "href": "01-toy-models-of-superposition/index.html#from-keep-the-top-m-to-packing-as-sparsity-rises",
+    "title": "Background: Toy Models of Superposition",
+    "section": "2. From “keep the top m” to packing, as sparsity rises",
+    "text": "2. From “keep the top m” to packing, as sparsity rises\nThe paper’s headline figure: n=20 features in m=5 dimensions, trained at increasing sparsity. Each panel shows the Gram matrix W^{\\mathsf T}W (which features overlap with which) and, below it, each feature’s norm coloured by its superposition index.\n\n\nTrain n=20, m=5 across sparsity\nn, m = 20, 5\nsparsities = [0.0, 0.7, 0.9, 0.97, 0.99]\nmodels = {S: fit_tms(n, m, S, steps=8000) for S in sparsities}\n\nfig, axes = plt.subplots(2, len(sparsities), figsize=(2.2*len(sparsities), 4.6),\n                         gridspec_kw={\"height_ratios\": [3, 1.6]})\nfor j, S in enumerate(sparsities):\n    W = models[S].W.detach()\n    G = (W.T @ W).numpy()\n    ax = axes[0, j]\n    ax.imshow(G, cmap=\"RdBu_r\", vmin=-1, vmax=1)\n    ax.set_title(f\"S = {S}   (1/(1-S) = {1/(1-S):.0f})\", fontsize=8)\n    ax.set_xticks([]); ax.set_yticks([])\n    ax = axes[1, j]\n    norms = feature_norms(W); sup = superposition_index(W)\n    ax.bar(range(n), norms, color=plt.cm.viridis(np.clip(sup, 0, 1)))\n    ax.set_ylim(0, 1.15); ax.set_xticks([]);\n    if j == 0: ax.set_ylabel(\"‖W_i‖\")\nplt.tight_layout()\n\n\n\n\n\nTop row: W^{\\mathsf T}W. Bottom row: \\|W_i\\| per feature, coloured by superposition index (dark = private direction, yellow = heavily shared). At S=0 the model keeps the five most important features and drops the rest. As features become rarer it represents more of them, first in antipodal pairs, then in denser arrangements.\n\n\n\n\nReading the figure. With dense features (S=0) every feature is on almost every time, so any overlap is paid for on every sample; the model keeps the five most important features on orthogonal axes and drops the other fifteen. As features become rare, the expected cost of interference falls like (1-S) while the benefit of representing an extra feature does not, so more and more features are packed in. The first packing is antipodal pairs (two features on the same axis with opposite sign: the ReLU separates them because they are rarely both present), then denser polytopes.",
+    "crumbs": [
+      "Home",
+      "Background: Toy Models of Superposition",
+      "Background: Toy Models of Superposition"
+    ]
+  },
+  {
+    "objectID": "01-toy-models-of-superposition/index.html#the-geometry-of-packing",
+    "href": "01-toy-models-of-superposition/index.html#the-geometry-of-packing",
+    "title": "Background: Toy Models of Superposition",
+    "section": "3. The geometry of packing",
+    "text": "3. The geometry of packing\nWith m = 2 we can draw the columns W_i directly.\n\n\nTrain n=5 and n=6 features into m=2 dims at high sparsity\nfig, axes = plt.subplots(2, 4, figsize=(9, 4.6))\nfor r, nn_ in enumerate([5, 6]):\n    for j, S in enumerate([0.0, 0.8, 0.95, 0.995]):\n        W = fit_tms(nn_, 2, S, steps=3000, importance_decay=1.0, seed=1).W.detach().numpy()\n        ax = axes[r, j]\n        for i in range(nn_):\n            ax.annotate(\"\", xy=W[:, i], xytext=(0, 0),\n                        arrowprops=dict(arrowstyle=\"-&gt;\", color=plt.cm.tab10(i), lw=1.6))\n            ax.text(*(1.12*W[:, i]), str(i), color=plt.cm.tab10(i), ha=\"center\", va=\"center\", fontsize=8)\n        ax.set_xlim(-1.3, 1.3); ax.set_ylim(-1.3, 1.3); ax.set_aspect(\"equal\")\n        ax.set_xticks([]); ax.set_yticks([])\n        ax.set_title(f\"n={nn_}, S={S}\", fontsize=8)\nplt.tight_layout()\n\n\n\n\n\nFeature directions W_i in a two-dimensional bottleneck. At low sparsity only two features survive. At high sparsity the model spreads all of them around a regular polygon (pentagon, hexagon), the arrangement that minimises the worst-case overlap.\n\n\n\n\nA pentagon in two dimensions is the simplest picture of superposition: five directions, none orthogonal to any other, each with overlap \\cos 72^\\circ \\approx 0.31 with its two neighbours. Any single feature is read with a little contamination from its neighbours, but if at most one is present at a time the ReLU on the output removes the contamination exactly. The price is that when two neighbours are present together, both reconstructions are wrong.",
+    "crumbs": [
+      "Home",
+      "Background: Toy Models of Superposition",
+      "Background: Toy Models of Superposition"
+    ]
+  },
+  {
+    "objectID": "01-toy-models-of-superposition/index.html#dimensionality-per-feature-is-quantised",
+    "href": "01-toy-models-of-superposition/index.html#dimensionality-per-feature-is-quantised",
+    "title": "Background: Toy Models of Superposition",
+    "section": "4. Dimensionality per feature is quantised",
+    "text": "4. Dimensionality per feature is quantised\nScaling up the counts shows the paper’s most striking observation: the amount of bottleneck each feature gets, D_i, does not vary continuously with sparsity but jumps between a few discrete values that correspond to regular geometric arrangements.\n\n\nTrain n=80, m=20 across many sparsity values and scatter D_i\nn, m = 80, 20\nS_list = [0.0, 0.5, 0.75, 0.875, 0.94, 0.97, 0.985, 0.992, 0.996]\nfig, ax = plt.subplots(figsize=(7, 3.6))\nfor S in S_list:\n    W = fit_tms(n, m, S, steps=4000, importance_decay=0.97, seed=2).W\n    D = feature_dimensionality(W)\n    x = 1/(1-S) * (1 + 0.04*np.random.default_rng(0).standard_normal(n))\n    ax.scatter(x, D, s=8, alpha=0.6, color=\"C0\")\nfor y, lab in [(1, \"1\"), (0.5, \"1/2\"), (0.4, \"2/5\"), (1/3, \"1/3\")]:\n    ax.axhline(y, color=\"gray\", lw=0.6, ls=\"--\"); ax.text(1.05, y+0.015, lab, fontsize=8, color=\"gray\")\nax.set_xscale(\"log\"); ax.set_xlabel(\"1 / (1 − S)\"); ax.set_ylabel(\"dimensionality $D_i$\")\nax.set_ylim(-0.05, 1.1)\nplt.tight_layout()\n\n\n\n\n\nDimensionality per feature against 1/(1-S) (log scale). Each point is one feature. Values pile up at 1 (own axis), 1/2 (antipodal pair), and fractions like 2/5 and 1/3 that correspond to pentagons and triangles in sub-spaces of the bottleneck. Dropped features sit at 0.\n\n\n\n\nAt low sparsity the features split cleanly between “own axis” (D_i = 1), “antipodal pair” (D_i = \\tfrac12) and “dropped” (D_i = 0). As sparsity rises the represented features move to lower plateaus and eventually, when every feature is represented, settle near m/n = 0.25, the uniform share. The paper’s figure, with n = 400 features and m = 30 dimensions and much longer training, resolves more of the intermediate plateaus (2/5 for pentagons, 1/3 for triangles and so on) than this quick run does. The plateaus are what the paper means by phase changes: as sparsity increases, the optimal arrangement jumps discretely from one polytope to another. A physicist will recognise this as a continuous control parameter selecting among discrete symmetric configurations. It is a genuine and robust result and the essay does not dispute it.",
+    "crumbs": [
+      "Home",
+      "Background: Toy Models of Superposition",
+      "Background: Toy Models of Superposition"
+    ]
+  },
+  {
+    "objectID": "01-toy-models-of-superposition/index.html#the-essays-modification-correlated-inputs-plus-hidden-neurons",
+    "href": "01-toy-models-of-superposition/index.html#the-essays-modification-correlated-inputs-plus-hidden-neurons",
+    "title": "Background: Toy Models of Superposition",
+    "section": "5. The essay’s modification: correlated inputs plus hidden neurons",
+    "text": "5. The essay’s modification: correlated inputs plus hidden neurons\nNow the part the essay added. Its appendix says: “When we put correlated inputs and hidden neurons in one model, related inputs grew onto the neurons. Making inputs fire more often pushed the toy toward what the paper calls ‘PCA-like’ solutions, combining related inputs into shared representations.”\nTwo changes to the toy.\n\nCorrelated data. Instead of independent features, 20 inputs are arranged in 4 groups of\n\nA whole group turns on together with probability p; within an active group each member gets an independent amplitude. This is the toy version of “in real data almost nothing is related to nothing”.\n\nA hidden layer. After the 5-dimensional bottleneck there is a layer of k ReLU neurons before the output: a = \\mathrm{ReLU}(V h + c), \\hat x = U a + b. These are the “neurons” whose cleanliness we can now ask about; the original toy has none.\n\n\n\nTrain the grouped model, sparse and dense\nn_groups, group_size, m, k = 4, 5, 5, 10\nn = n_groups * group_size\ngroup_of = np.repeat(np.arange(n_groups), group_size)\n\ndef fit_grouped(p_group, hidden=True, seed=0, steps=5000):\n    gen = torch.Generator().manual_seed(seed)\n    model = TMSHidden(n, m, k, gen) if hidden else TMS(n, m, gen)\n    sampler = lambda b, g: sample_grouped(b, n_groups, group_size, p_group, g)\n    train(model, sampler, None, steps=steps, seed=seed)\n    return model\n\nruns = {(\"sparse\", True): fit_grouped(0.05, True),\n        (\"dense\",  True): fit_grouped(0.50, True),\n        (\"sparse\", False): fit_grouped(0.05, False),\n        (\"dense\",  False): fit_grouped(0.50, False)}\n\n\nFirst, what the bottleneck does with correlated inputs. The cosine matrix between the 20 input directions W_i shows whether the model gave each group a shared direction.\n\n\nCosine between input directions\nfig, axes = plt.subplots(2, 2, figsize=(6.2, 6))\nfor r, regime in enumerate([\"sparse\", \"dense\"]):\n    for c, hidden in enumerate([False, True]):\n        W = runs[(regime, hidden)].W\n        C = cosine_matrix(W)\n        ax = axes[r, c]\n        ax.imshow(C, cmap=\"RdBu_r\", vmin=-1, vmax=1)\n        for gb in range(group_size, n, group_size):\n            ax.axhline(gb-0.5, color=\"k\", lw=0.6); ax.axvline(gb-0.5, color=\"k\", lw=0.6)\n        ax.set_xticks([]); ax.set_yticks([])\n        ax.set_title(f\"{regime}, {'with' if hidden else 'no'} hidden layer\", fontsize=9)\nplt.tight_layout()\n\n\n\n\n\nCosine similarity between the bottleneck directions W_i of the 20 inputs, which come in 4 correlated groups of 5 (block boundaries drawn). Left pair: original toy with no hidden layer. Right pair: with a hidden layer. Rows: groups rarely on (sparse) and often on (dense).\n\n\n\n\nReading the figure. Without a hidden layer (left column) the toy behaves as the paper says: sparse groups are packed input by input, with no block structure, exactly as if the inputs were independent; dense groups get the “PCA-like” solution in which each group of five shares one direction. With a hidden layer (right column) the block structure appears even in the sparse regime: related inputs are written to a shared direction and the hidden neurons read that direction. That is the essay’s “related inputs grew onto the neurons”.\nSecond, what the hidden neurons read. For each hidden neuron j we take the cosine of its read direction V_j with each of the four group directions, defined as the mean of each group’s W_i. The sign matters: a neuron that is positive on one group and negative on another is a contrast between two things, which is what the essay calls a gate with two poles, not a mixture.\n\n\nHidden neurons in the group basis\ndef group_cosines(model):\n    W = model.W.detach(); V = model.V.detach()\n    G = torch.stack([W[:, group_of == g].mean(1) for g in range(n_groups)], 1)  # (m, n_groups)\n    G = G / G.norm(dim=0, keepdim=True)\n    Vn = V / V.norm(dim=1, keepdim=True).clamp_min(1e-8)\n    return (Vn @ G).numpy()\n\nfig, axes = plt.subplots(1, 2, figsize=(6.4, 3.4))\nfor ax, regime in zip(axes, [\"sparse\", \"dense\"]):\n    cs = group_cosines(runs[(regime, True)])\n    order = np.lexsort((-np.abs(cs).max(1), np.abs(cs).argmax(1)))\n    im = ax.imshow(cs[order], cmap=\"RdBu_r\", vmin=-1, vmax=1, aspect=\"auto\")\n    ax.set_xticks(range(n_groups)); ax.set_xticklabels([f\"g{g}\" for g in range(n_groups)])\n    ax.set_ylabel(\"hidden neuron\"); ax.set_title(regime)\nplt.colorbar(im, ax=axes, shrink=0.8, label=\"cos(V_j, group direction)\")\n\n\n\n\n\nEach row is one hidden neuron; each column a group of correlated inputs. Colour is the cosine between the neuron’s read direction V_j and that group’s shared direction. Left: sparse groups. Right: dense groups. A neuron ‘about’ one group is a single strong cell; a contrast neuron has one red and one blue cell.\n\n\n\n\nBecause the output ReLU discards a neuron’s negative side, what the neuron transmits is its positive pole. So the fair question, in the essay’s own terms, is whether the positive pole is about one group. We count a neuron as “one group on the positive pole” if, among the groups it reads with positive sign, one carries more than 80% of the positive weight; we also record whether it has a strong negative pole on some other group.\n\n\nSummary over several seeds\ndef classify(model):\n    cs = group_cosines(model); V = model.V.detach()\n    alive = (V.norm(dim=1) &gt; 1e-2).numpy()\n    pos = np.clip(cs, 0, None) ** 2\n    share = pos.max(1) / np.maximum(pos.sum(1), 1e-8)\n    return alive, share &gt; 0.8, cs.min(1) &lt; -0.5\n\nprint(f\"{'regime':8s} {'alive':&gt;6s} {'one-group +pole':&gt;16s} {'…with strong -pole':&gt;19s} {'mixed +pole':&gt;12s}   (5 seeds x {k} neurons)\")\nfor regime, p in [(\"sparse\", 0.05), (\"dense\", 0.5)]:\n    tot = np.zeros(4)\n    for seed in range(5):\n        alive, one, neg = classify(fit_grouped(p, True, seed=seed, steps=4000))\n        tot += [alive.sum(), (one & alive).sum(), (one & neg & alive).sum(), (~one & alive).sum()]\n    print(f\"{regime:8s} {tot[0]:6.0f} {tot[1]:16.0f} {tot[2]:19.0f} {tot[3]:12.0f}\")\n\n\nregime    alive  one-group +pole  …with strong -pole  mixed +pole   (5 seeds x 10 neurons)\nsparse       50               31                  10           19\ndense        50               22                  12           28\n\n\nThe result is intermediate, and worth stating plainly rather than rounding toward either side. Roughly three in five hidden neurons in the sparse regime, and about half in the dense regime, have a positive pole that is about one group; a third of those also carry a strong negative pole on another group, which is the “V versus O” structure the essay describes. The remaining neurons read a positive combination of two groups. No neuron reads all four. Widening the hidden layer to 20 neurons does not change the proportions. (Making the groups fire more often makes the bottleneck more PCA-like, as the essay says, but it does not make the hidden neurons cleaner in this count.)\nOne caution on reading this. The groups here are independent of each other, so a neuron reading two groups is a mixture of unrelated things in the essay’s sense. Adding correlations and a hidden layer makes the bottleneck organise by group and gives many neurons a one-group positive pole, but it does not make mixed neurons disappear. Whether real networks are in a regime where two-group neurons are rare is exactly what the rest of the essay tries to show empirically, and it is not something a toy can settle.",
+    "crumbs": [
+      "Home",
+      "Background: Toy Models of Superposition",
+      "Background: Toy Models of Superposition"
+    ]
+  },
+  {
+    "objectID": "01-toy-models-of-superposition/index.html#adding-the-missing-benefit-readers-instead-of-reconstruction",
+    "href": "01-toy-models-of-superposition/index.html#adding-the-missing-benefit-readers-instead-of-reconstruction",
+    "title": "Background: Toy Models of Superposition",
+    "section": "6. Adding the missing benefit: readers instead of reconstruction",
+    "text": "6. Adding the missing benefit: readers instead of reconstruction\nSection 5 put the relatedness into the data. But in a toy with independent inputs there is nothing intrinsically related about any two of them: every partition into groups is a relabelling of every other. So any grouping we saw there could be credited to the input statistics. The essay’s argument is about something else: a representation matters only through what reads it, and sharing a direction between two inputs is a benefit when downstream readers want them together. The original toy has no readers, so that benefit is priced at zero. Here we put readers in and leave the inputs exactly as in the original toy: independent and sparse.\nThe setup. The bottleneck h = Wx feeds a hidden ReLU layer, which feeds T = 12 output tasks. Every task has the same form: a rectified sum over five inputs, y_t = \\mathrm{ReLU}\\big(\\sum_{i \\in S_t} x_i - \\theta_t\\big), with \\theta_t cycling through three thresholds. The only thing we vary is how many distinct subsets S_t the twelve tasks factor through, which we call J:\n\nJ = 4: four disjoint subsets, each read by three tasks. A four-dimensional intermediate (the four sums) serves every reader. This is maximal reuse.\nJ = 12: twelve subsets chosen to overlap as little as possible, each read by one task. No shared intermediate helps anyone. This is the control.\nJ = 6, 8 in between.\n\nWith J = 4 and only four tasks the two conditions would be identical, which is the relabelling point again; the difference appears only when several readers want the same combination. That is what the essay calls reuse, so J is the quantity under test rather than a proxy for it.\nWhat to measure, without reference to any grouping the data does not contain: the participation ratio of the singular values of W (the effective number of bottleneck dimensions in use), the mean |cosine| between input directions for pairs that share a subset versus pairs that share none, the task loss, and the hidden-neuron poles scored against the task-defined subsets.\n\n\nTrain the reader toy across the reuse knob J\nfrom common.toy_models import (ReaderToy, make_subsets, make_tasks, train_tasks,\n                               participation_ratio, within_between_cosine)\nn, m, k, T, fan, S_READ = 20, 5, 20, 12, 5, 0.9\n\ndef fit_readers(J, S=S_READ, seed=0, steps=4000, extra_tasks=()):\n    subs = make_subsets(n, J, fan, seed=seed)\n    tasks = make_tasks(subs, T) + list(extra_tasks(subs) if callable(extra_tasks) else extra_tasks)\n    model = ReaderToy(n, m, k, len(tasks), torch.Generator().manual_seed(seed))\n    L = train_tasks(model, tasks, n, S, steps=steps, seed=seed)\n    return model, subs, tasks, L[-200:].mean()\n\nJs = [4, 6, 8, 12]\nreader_runs = {J: [fit_readers(J, seed=s) for s in range(2)] for J in Js}\nprint(f\"{'J':&gt;3s} {'max overlap':&gt;12s} {'loss':&gt;8s} {'PR':&gt;6s} {'|cos| within':&gt;13s} {'between':&gt;8s}   (S = {S_READ}, 2 seeds)\")\nfor J in Js:\n    rows = []\n    for model, subs, _, loss in reader_runs[J]:\n        w, b = within_between_cosine(model.W, subs)\n        rows.append((loss, participation_ratio(model.W), w, b))\n    r = np.mean(rows, 0)\n    subs = reader_runs[J][0][1]\n    ov = max(len(set(a) & set(b)) for i, a in enumerate(subs) for b in subs[i+1:])\n    print(f\"{J:3d} {ov:12d} {r[0]:8.3f} {r[1]:6.2f} {r[2]:13.2f} {r[3]:8.2f}\")\n\n\n  J  max overlap     loss     PR  |cos| within  between   (S = 0.9, 2 seeds)\n  4            0    0.005   4.13          0.81     0.18\n  6            2    0.086   4.23          0.61     0.22\n  8            2    0.173   4.51          0.51     0.24\n 12            2    0.388   4.61          0.42     0.25\n\n\n\n\nInput directions, ordered by subset, at the two ends of the knob\nfig, axes = plt.subplots(1, 2, figsize=(7.2, 3.6))\nfor ax, J in zip(axes, [4, 12]):\n    model, subs, _, _ = reader_runs[J][0]\n    first = {}\n    for j, s in enumerate(subs):\n        for i in s: first.setdefault(i, j)\n    order = sorted(range(n), key=lambda i: (first.get(i, 99), i))\n    C = cosine_matrix(model.W)[np.ix_(order, order)]\n    ax.imshow(C, cmap=\"RdBu_r\", vmin=-1, vmax=1)\n    if J == 4:\n        for gb in range(fan, n, fan):\n            ax.axhline(gb-0.5, color=\"k\", lw=0.6); ax.axvline(gb-0.5, color=\"k\", lw=0.6)\n    ax.set_xticks([]); ax.set_yticks([]); ax.set_title(f\"J = {J}\")\nplt.tight_layout()\n\n\n\n\n\nCosine between the bottleneck directions W_i of the 20 independent inputs, ordered by the task subsets (boundaries drawn), for maximal reuse (J=4, left) and no reuse (J=12, right; inputs ordered by their first subset). The inputs are statistically identical in both panels; only the readers differ.\n\n\n\n\nWith maximal reuse the bottleneck becomes four coarse directions, one per shared sum, with the five inputs of each sum nearly parallel (|cosine| about 0.8 within, 0.2 between) and a participation ratio of 4. Nothing about the inputs asked for this; the readers did. With no reuse the same inputs are spread with no block structure, the participation ratio rises toward 5, and the task loss is seventy times larger: twelve independent sums do not fit in five dimensions, so the network packs them with interference. Intermediate J gives intermediate values of everything.\nTwo remarks on the control. First, it is the original toy’s situation transposed up one level: the quantities being packed are now the readers’ sums rather than the inputs, but the mechanism is the same. Second, the control is not a strawman. Each task still reads five inputs through the same function; it just reads a combination nobody else wants.\n\n\nHidden-neuron poles against the task subsets\ndef subset_cosines(model, subs):\n    W = model.W.detach(); V = model.V.detach()\n    G = torch.stack([W[:, s].mean(1) for s in subs], 1); G = G / G.norm(dim=0, keepdim=True)\n    Vn = V / V.norm(dim=1, keepdim=True).clamp_min(1e-8)\n    return (Vn @ G).numpy()\nfig, axes = plt.subplots(1, 2, figsize=(8, 3.6), gridspec_kw={\"width_ratios\": [4, 12]})\nfor ax, J in zip(axes, [4, 12]):\n    model, subs, _, _ = reader_runs[J][0]\n    cs = subset_cosines(model, subs)\n    order = np.lexsort((-np.abs(cs).max(1), np.abs(cs).argmax(1)))\n    im = ax.imshow(cs[order], cmap=\"RdBu_r\", vmin=-1, vmax=1, aspect=\"auto\")\n    ax.set_xlabel(\"task subset\"); ax.set_title(f\"J = {J}\")\naxes[0].set_ylabel(\"hidden neuron\")\nplt.colorbar(im, ax=axes, shrink=0.8, label=\"cos(V_j, subset direction)\")\n\n\n\n\n\nCosine between each hidden neuron’s read direction and each subset’s shared direction (the mean of its five W_i). Left: J=4, four subsets. Right: J=12, twelve subsets. With reuse, neurons are about one sum, some with a contrasting negative pole; without, they read many overlapping sums.\n\n\n\n\n\n\nDoes sparsity rescue the no-reuse control?\nS_list = [0.0, 0.5, 0.8, 0.9, 0.97]\ncurves = {J: [] for J in (4, 12)}\nfor Sp in S_list:\n    for J in (4, 12):\n        rows = []\n        for s in range(2):\n            model, subs, _, loss = fit_readers(J, S=Sp, seed=s)\n            w, b = within_between_cosine(model.W, subs)\n            rows.append((loss, w - b))\n        curves[J].append(np.mean(rows, 0))\nfig, axes = plt.subplots(1, 2, figsize=(8, 3.2))\nfor J, lab in [(4, \"J = 4 (reuse)\"), (12, \"J = 12 (no reuse)\")]:\n    c = np.array(curves[J])\n    axes[0].plot(S_list, c[:, 0], \"o-\", label=lab); axes[1].plot(S_list, c[:, 1], \"o-\", label=lab)\naxes[0].set_yscale(\"log\"); axes[0].set_xlabel(\"sparsity S\"); axes[0].set_ylabel(\"task loss\"); axes[0].legend(fontsize=8)\naxes[1].set_xlabel(\"sparsity S\"); axes[1].set_ylabel(\"|cos| within − between\")\nplt.tight_layout()\n\n\n\n\n\nTask loss (left) and the gap between within-subset and between-subset |cosine| (right) as a function of input sparsity, for maximal reuse and no reuse. Two seeds each.\n\n\n\n\nThe reuse condition is clean and nearly lossless at every sparsity. The no-reuse condition is simply infeasible when inputs are dense, and only approaches a low loss at very high sparsity, where packing with interference becomes cheap. This is the original toy’s phase diagram again, now driven by the readers: superposition is what a network does when the things it must represent are unrelated to its readers and rare enough to pack.\n\nA private offshoot\nIf reuse makes inputs coarse, what happens when one reader wants fine structure? We keep the J = 4 tasks and add a single extra task that reads one input alone, y = x_{i^\\star} for some i^\\star in the first subset. The prediction from the essay’s picture is that W_{i^\\star} stays aligned with its group direction and grows a private component that the rest of the group lacks.\n\n\nOne extra reader on a single input\ndef offshoot_stats(extra, seeds=3):\n    out = []\n    for s in range(seeds):\n        ex = (lambda subs: [([subs[0][0]], 0.0)]) if extra else ()\n        model, subs, _, loss = fit_readers(4, seed=s, extra_tasks=ex)\n        W = model.W.detach(); g = W[:, subs[0]].mean(1); g = g / g.norm()\n        def split(i):\n            w = W[:, i]; par = float(w @ g); return par, float((w - par * g).norm())\n        t = split(subs[0][0]); o = np.mean([split(i) for i in subs[0][1:]], 0)\n        out.append((loss, t[0], t[1], o[0], o[1]))\n    return np.mean(out, 0)\nprint(f\"{'extra reader':&gt;13s} {'loss':&gt;7s} {'target ∥ group':&gt;15s} {'target ⊥':&gt;9s} {'others ∥ group':&gt;15s} {'others ⊥':&gt;9s}\")\nfor extra in (False, True):\n    r = offshoot_stats(extra)\n    print(f\"{str(extra):&gt;13s} {r[0]:7.3f} {r[1]:15.2f} {r[2]:9.2f} {r[3]:15.2f} {r[4]:9.2f}\")\n\n\n extra reader    loss  target ∥ group  target ⊥  others ∥ group  others ⊥\n        False   0.005            0.90      0.18            0.92      0.35\n         True   0.015            0.92      1.21            0.91      0.39\n\n\nThe single extra reader makes the target input’s private component more than six times larger while leaving its alignment with the group untouched, and leaves the other four members of the group as they were. In the essay’s language, the input has a group direction and an offshoot, and the offshoot exists because something reads it. This is the smallest possible model of “recursive generalisation”: a coarse representation that grows a finer branch exactly where a downstream reader needs one.\n\n\nWhat this adds to the picture\n\nThe relatedness that makes a network group things is not in the inputs. It is in the readers. Identical input statistics give clean coarse directions under shared readers and packing under unshared ones.\nSuperposition and generalisation are not two learning principles here; they are what one objective does in two regimes of reader structure. Packing wins only when the quantities readers need are unrelated to each other and sparse enough to overlap cheaply.\nWhat the toy cannot tell us is which regime a real network’s readers are in. The essay’s bet is that in real data “almost nothing is related to nothing”, so real readers are overwhelmingly of the shared kind. That is the empirical claim the rest of the essay has to carry.",
+    "crumbs": [
+      "Home",
+      "Background: Toy Models of Superposition",
+      "Background: Toy Models of Superposition"
+    ]
+  },
+  {
+    "objectID": "01-toy-models-of-superposition/index.html#what-to-carry-into-the-essay",
+    "href": "01-toy-models-of-superposition/index.html#what-to-carry-into-the-essay",
+    "title": "Background: Toy Models of Superposition",
+    "section": "7. What to carry into the essay",
+    "text": "7. What to carry into the essay\n\nPacking is real and robust in the toy’s world. Independent sparse features in a narrow bottleneck with nothing downstream get packed into polytopes, with discrete phase changes.\nCorrelation plus a hidden layer changes the picture, partly. Related inputs share directions in the bottleneck, and about half to two thirds of hidden neurons have a one-group positive pole, some with a contrasting negative pole. This is the mechanism the essay calls generalisation, and it appears as soon as the toy has somewhere for related things to grow. But a sizeable minority of neurons still read two unrelated groups, so the toy supports the essay’s mechanism without supporting its strong claim.\nThe toy cannot say which regime real networks are in. That is an empirical question and it is what the essay’s vision and language experiments are for.",
+    "crumbs": [
+      "Home",
+      "Background: Toy Models of Superposition",
+      "Background: Toy Models of Superposition"
+    ]
+  },
+  {
+    "objectID": "01-toy-models-of-superposition/index.html#what-the-toy-does-and-does-not-say",
+    "href": "01-toy-models-of-superposition/index.html#what-the-toy-does-and-does-not-say",
+    "title": "Background: Toy Models of Superposition",
+    "section": "8. What the toy does and does not say",
+    "text": "8. What the toy does and does not say\nThe toy’s results are robust and the essay accepts them: when independent, sparse features must be squeezed through a narrow linear bottleneck and reconstructed, the optimum packs them into non-orthogonal polytopes, with discrete phase changes as sparsity varies.\nThe essay’s objection is to three modelling choices that it argues do not hold in real networks:\n\nFeatures are given in advance and independent. In a real network nothing is defined in advance; everything is grown, and real data has structure at every scale (“a rare person still has a country, a job and a name”).\nNothing reads the representation. The loss is reconstruction, so each feature is an end in itself. In a real network a representation only matters through what downstream reads it, and sharing a direction between related things is a benefit (reuse), not a cost.\nThere are no hidden neurons in the main experiments. Superposition in the toy is about directions in a bottleneck; reports of polysemanticity in real networks are about mixtures in neurons. The paper itself studies hidden neurons and correlated features, but separately.\n\nThe toy therefore predicts where to expect packing: memories that are ends in themselves and related to nothing else. The essay’s claim is that real networks are rarely in that regime, and the rest of the essay is an attempt to show this empirically in vision and language models.",
+    "crumbs": [
+      "Home",
+      "Background: Toy Models of Superposition",
+      "Background: Toy Models of Superposition"
+    ]
+  },
+  {
+    "objectID": "01-toy-models-of-superposition/index.html#further-reading",
+    "href": "01-toy-models-of-superposition/index.html#further-reading",
+    "title": "Background: Toy Models of Superposition",
+    "section": "Further reading",
+    "text": "Further reading\n\nElhage et al., Toy Models of Superposition (2022), especially the sections on feature geometry, phase diagrams, and correlated features.\nThe essay’s appendix sections “Toy Models” and “A Note on Features and Definitions”.",
+    "crumbs": [
+      "Home",
+      "Background: Toy Models of Superposition",
+      "Background: Toy Models of Superposition"
+    ]
+  },
+  {
+    "objectID": "03-cars-and-animals/index.html",
+    "href": "03-cars-and-animals/index.html",
+    "title": "Cars and Animals",
+    "section": "",
+    "text": "The essay’s first piece of evidence is a reinterpretation of the most famous polysemantic neuron in the field, InceptionV1’s 4e:55 (channel 55 of layer mixed4e). Zoom In (2020) presented it as responding to cat faces and car fronts and said outright that it “isn’t responding to some commonality of cars and cat faces”. The essay now says it is a V-shape neuron: pointed things drive it positive, round things drive it negative, and the cats and cars are two of many things with a V in them.\nThe original 2014 InceptionV1 weights are public (the inception5h graph that the Lucid and Lucent libraries ship), so this is a claim we can check directly. We do not have ImageNet, so we use the 5,000 COCO validation images instead, which have cats, cars, dogs and much else, and which come with object labels we can use for statistics.",
+    "crumbs": [
+      "Home",
+      "The essay, section by section",
+      "Cars and Animals"
+    ]
+  },
+  {
+    "objectID": "03-cars-and-animals/index.html#what-the-essay-claims-specifically",
+    "href": "03-cars-and-animals/index.html#what-the-essay-claims-specifically",
+    "title": "Cars and Animals",
+    "section": "What the essay claims, specifically",
+    "text": "What the essay claims, specifically\n\nThe neuron’s strongest inputs from the previous layer include 4d:493 (fox snout), 4d:477 (wolf face) and 4d:201 (van front); its strongest reader downstream is 5a:94 (V-shaped flames).\nIts negative pole is “an O, round where the V is pointed”.\nIts positive pole generalises beyond cats and cars to anything pointed: fox faces, pool tables, bullet trains.\nTherefore the right description is a shared pattern (a verb, “pointed versus round”), not a list of nouns (cats OR cars).\n\nClaims 1 and 2 are checkable from the weights and from any photo collection. Claim 3 we can check partially with COCO’s labels. Claim 4 is an interpretation, and the last section discusses how much the evidence supports it.\n\n\nSetup: load the original InceptionV1 and scan COCO (cached after the first run)\nimport sys, pathlib, json, numpy as np, torch, matplotlib.pyplot as plt\nfrom PIL import Image\nROOT = pathlib.Path.cwd().parent\nsys.path.insert(0, str(ROOT))\nfrom common.inception import load_inceptionv1, scan_layer, receptive_crop\nplt.rcParams.update({\"figure.dpi\": 110, \"font.size\": 9})\nDEV = \"cuda\" if torch.cuda.is_available() else \"cpu\"\nCH = 55\nmodel = load_inceptionv1(DEV)\npaths = sorted((ROOT / \"data/coco/val2017\").glob(\"*.jpg\"))\ncache = ROOT / \"data/cache/mixed4e_1x1_prerelu_coco.npz\"\nif cache.exists():\n    z = dict(np.load(cache))\nelse:\n    res = scan_layer(model, \"mixed4e_1x1_pre_relu_conv\", paths, device=DEV, batch=100)\n    np.savez_compressed(cache, **{k: v for k, v in res.items() if k != \"paths\"}, paths=np.array(res[\"paths\"]))\n    z = dict(np.load(cache))\nmx, mn, grid = z[\"max\"][:, CH], z[\"min\"][:, CH], int(z[\"grid\"][0])\nprint(f\"{len(paths)} images; 4e:55 pre-ReLU spatial max: median {np.median(mx):.0f}, \"\n      f\"99th pct {np.percentile(mx, 99):.0f}, top {mx.max():.0f}; spatial min: bottom {mn.min():.0f}\")\n\n\n5000 images; 4e:55 pre-ReLU spatial max: median 196, 99th pct 766, top 1719; spatial min: bottom -575\n\n\nA note on what is measured. mixed4e is a concatenation of four branches and channel 55 is in the 1×1 branch, so we hook that branch’s convolution before its ReLU. That way the negative pole is visible; after the ReLU it would be zero everywhere. For each image we record the maximum and minimum over the 14×14 spatial grid and where they occur, and show a crop around that location as a stand-in for the receptive field.",
+    "crumbs": [
+      "Home",
+      "The essay, section by section",
+      "Cars and Animals"
+    ]
+  },
+  {
+    "objectID": "03-cars-and-animals/index.html#the-two-poles-on-5000-photographs",
+    "href": "03-cars-and-animals/index.html#the-two-poles-on-5000-photographs",
+    "title": "Cars and Animals",
+    "section": "The two poles on 5,000 photographs",
+    "text": "The two poles on 5,000 photographs\n\n\nContact sheets of the strongest positive and negative responses\ndef sheet(order, locs, n=40, ncol=8, size=96):\n    W = Image.new(\"RGB\", (ncol*size, (n//ncol)*size), \"white\")\n    for k, i in enumerate(order[:n]):\n        c = receptive_crop(pathlib.Path(z[\"paths\"][i]), locs[i, CH], grid).resize((size, size))\n        W.paste(c, ((k % ncol)*size, (k//ncol)*size))\n    return W\npos = sheet(np.argsort(-mx), z[\"argmax_yx\"]); neg = sheet(np.argsort(mn), z[\"argmin_yx\"])\nfig, axes = plt.subplots(1, 2, figsize=(11, 3.8))\nfor ax, im, t in zip(axes, [pos, neg], [\"positive pole (top 40)\", \"negative pole (bottom 40)\"]):\n    ax.imshow(im); ax.set_title(t); ax.axis(\"off\")\nplt.tight_layout()\n\n\n\n\n\nLeft: crops around the location of the 40 strongest positive responses of 4e:55 in COCO val2017. Right: the 40 strongest negative responses. Each crop is about 45% of the 224-pixel input, centred on the activation’s location.\n\n\n\n\nThe positive sheet is the famous grid: frontal cat faces and the fronts of cars, with a couple of small dogs. The negative sheet is clocks, the round heads of bears and cows, teddy bears, the backs of human heads, plates and bowls. The essay’s description of the negative pole as “an O” holds up on a dataset the neuron was never ranked on before.",
+    "crumbs": [
+      "Home",
+      "The essay, section by section",
+      "Cars and Animals"
+    ]
+  },
+  {
+    "objectID": "03-cars-and-animals/index.html#is-it-really-just-cats-and-cars-using-the-labels",
+    "href": "03-cars-and-animals/index.html#is-it-really-just-cats-and-cars-using-the-labels",
+    "title": "Cars and Animals",
+    "section": "Is it really just cats and cars? Using the labels",
+    "text": "Is it really just cats and cars? Using the labels\nCOCO’s instance annotations tell us what is in each image. If the neuron were an OR of cat and car, images with neither should not reach the top. If it is a V-shape detector, some should, and they should be pointed things.\n\n\nLabel statistics of the top images\nann = json.load(open(ROOT / \"data/coco/annotations/instances_val2017.json\"))\ncat_name = {c[\"id\"]: c[\"name\"] for c in ann[\"categories\"]}\nlabels = {}\nfor a in ann[\"annotations\"]:\n    labels.setdefault(a[\"image_id\"], set()).add(cat_name[a[\"category_id\"]])\nids = [int(pathlib.Path(p).stem) for p in z[\"paths\"]]\ndef has(i, names): return bool(labels.get(ids[i], set()) & set(names))\norder = np.argsort(-mx)\nvehicles = [\"car\", \"truck\", \"bus\"]\nprint(f\"{'top-k':&gt;6s} {'cat':&gt;6s} {'car/truck/bus':&gt;14s} {'dog':&gt;6s} {'none of these':&gt;14s}\")\nfor k in (20, 50, 200, 500):\n    top = order[:k]\n    print(f\"{k:6d} {np.mean([has(i,['cat']) for i in top]):6.2f} \"\n          f\"{np.mean([has(i,vehicles) for i in top]):14.2f} \"\n          f\"{np.mean([has(i,['dog']) for i in top]):6.2f} \"\n          f\"{np.mean([not has(i,['cat','dog']+vehicles) for i in top]):14.2f}\")\n\n\n top-k    cat  car/truck/bus    dog  none of these\n    20   0.85           0.10   0.05           0.00\n    50   0.66           0.30   0.04           0.02\n   200   0.27           0.42   0.07           0.26\n   500   0.14           0.38   0.06           0.44\n\n\n\n\nThe strongest responses among images with no cat, dog, car, truck or bus\nrest = [i for i in order if not has(i, [\"cat\", \"dog\"] + vehicles)]\nprint(f\"best 'neither' image: activation {mx[rest[0]]:.0f} vs overall top {mx[order[0]]:.0f} \"\n      f\"and 99th percentile {np.percentile(mx, 99):.0f}\")\nfrom collections import Counter\nprint(\"most common labels in the top 60 of these:\",\n      Counter(l for i in rest[:60] for l in labels.get(ids[i], [])).most_common(10))\nfig, ax = plt.subplots(figsize=(8, 5))\nax.imshow(sheet(rest, z[\"argmax_yx\"])); ax.axis(\"off\")\n\n\nbest 'neither' image: activation 877 vs overall top 1719 and 99th percentile 766\nmost common labels in the top 60 of these: [('person', 21), ('chair', 14), ('bottle', 8), ('cup', 8), ('remote', 7), ('tennis racket', 7), ('sink', 7), ('bed', 6), ('tv', 6), ('airplane', 6)]\n\n\n\n\n\nThe 40 strongest positive responses among COCO images that contain no cat, dog, car, truck or bus. The best of these reaches above the 99th percentile of all images.\n\n\n\n\nWhat drives the neuron when cats and cars are excluded: frontal animal faces (goat, bighorn sheep, horse, zebra, bear, small birds), the noses of trains and aircraft, computer mice and remote controls seen end-on, and scenes with strong converging perspective lines such as tennis courts, baseball diamonds, railway tracks and bed corners. The essay’s own examples of what the V generalises to were fox faces, pool tables and bullet trains. The COCO list is the same kind of thing: pointed fronts and converging lines. This is the strongest evidence on this page for the “V, not OR(cat, car)” reading.",
+    "crumbs": [
+      "Home",
+      "The essay, section by section",
+      "Cars and Animals"
+    ]
+  },
+  {
+    "objectID": "03-cars-and-animals/index.html#the-circuit-inputs-and-readers-from-the-weights",
+    "href": "03-cars-and-animals/index.html#the-circuit-inputs-and-readers-from-the-weights",
+    "title": "Cars and Animals",
+    "section": "The circuit: inputs and readers from the weights",
+    "text": "The circuit: inputs and readers from the weights\nThe essay names specific neighbours. Because mixed4e’s 1×1 branch is a 1×1 convolution, its weight matrix is directly the vector of votes each mixed4d channel casts for 4e:55, and the mixed5a convolutions give the votes 4e:55 casts for each mixed5a channel.\n\n\nRank the essay’s named inputs and reader by weight\nw_in = model.mixed4e_1x1_pre_relu_conv.weight[CH, :, 0, 0].detach().cpu()\ntop = torch.argsort(-w_in)[:8]\nprint(\"strongest inputs from mixed4d  (channel, weight):\", [(int(i), round(float(w_in[i]), 3)) for i in top])\nfor c, name in [(493, \"fox snout\"), (477, \"wolf face\"), (201, \"van front\")]:\n    print(f\"  essay's 4d:{c} ({name}): weight {float(w_in[c]):+.3f}, rank {int((w_in &gt; w_in[c]).sum())+1} of 528\")\nw1 = model.mixed5a_1x1_pre_relu_conv.weight[:, CH, 0, 0].detach().cpu()\nprint(\"strongest readers in mixed5a 1x1 branch:\", [(int(i), round(float(w1[i]), 3)) for i in torch.argsort(-w1)[:6]])\nprint(f\"  essay's 5a:94 (V-shaped flames): weight {float(w1[94]):+.3f}, rank {int((w1 &gt; w1[94]).sum())+1} of 256\")\n\n\nstrongest inputs from mixed4d  (channel, weight): [(493, 0.311), (511, 0.128), (61, 0.116), (352, 0.102), (334, 0.08), (383, 0.079), (143, 0.072), (477, 0.068)]\n  essay's 4d:493 (fox snout): weight +0.311, rank 1 of 528\n  essay's 4d:477 (wolf face): weight +0.068, rank 8 of 528\n  essay's 4d:201 (van front): weight +0.057, rank 15 of 528\nstrongest readers in mixed5a 1x1 branch: [(94, 0.1), (240, 0.058), (81, 0.057), (254, 0.057), (102, 0.057), (62, 0.055)]\n  essay's 5a:94 (V-shaped flames): weight +0.100, rank 1 of 256\n\n\nThe essay’s named input 4d:493 is the single strongest weight into the neuron, by a factor of more than two over the next, and its named reader 5a:94 is the single strongest reader in that branch. The other two named inputs are in the top fifteen of 528. These are raw weights rather than data-weighted attributions, so the agreement is if anything stronger than the essay needed. (We have not visualised 4d:493 or 5a:94 ourselves; the labels “fox snout” and “V-shaped flames” are the essay’s.)",
+    "crumbs": [
+      "Home",
+      "The essay, section by section",
+      "Cars and Animals"
+    ]
+  },
+  {
+    "objectID": "03-cars-and-animals/index.html#a-synthetic-probe-does-a-bare-v-excite-it",
+    "href": "03-cars-and-animals/index.html#a-synthetic-probe-does-a-bare-v-excite-it",
+    "title": "Cars and Animals",
+    "section": "A synthetic probe: does a bare V excite it?",
+    "text": "A synthetic probe: does a bare V excite it?\nIf the neuron were a geometric V detector in the way an early-layer curve detector is a curve detector, a line drawing of a V should drive it. We draw simple shapes on a grey background and record the pre-ReLU maximum and minimum.\n\n\nLine-drawn shapes on grey\nfrom PIL import ImageDraw\nfeats = {}\nhook = dict(model.named_modules())[\"mixed4e_1x1_pre_relu_conv\"].register_forward_hook(\n    lambda m, i, o: feats.__setitem__(\"x\", o))\ndef canvas(): return Image.new(\"RGB\", (224, 224), (128, 128, 128))\ndef shape(kind, size=90, width=10, angle=0.0, color=(0, 0, 0), cx=112, cy=112):\n    im = canvas(); d = ImageDraw.Draw(im)\n    if kind == \"V\":\n        a = np.deg2rad(angle); half = np.deg2rad(35)\n        apex = np.array([cx, cy]) + size*0.5*np.array([np.sin(a), np.cos(a)])\n        for s in (+1, -1):\n            end = apex - size*np.array([np.sin(a+s*half), np.cos(a+s*half)])\n            d.line([tuple(apex), tuple(end)], fill=color, width=width)\n    elif kind == \"O\": d.ellipse([cx-size/2, cy-size/2, cx+size/2, cy+size/2], outline=color, width=width)\n    elif kind == \"disc\": d.ellipse([cx-size/2, cy-size/2, cx+size/2, cy+size/2], fill=color)\n    elif kind == \"square\": d.rectangle([cx-size/2, cy-size/2, cx+size/2, cy+size/2], outline=color, width=width)\n    elif kind == \"X\":\n        d.line([(cx-size/2, cy-size/2), (cx+size/2, cy+size/2)], fill=color, width=width)\n        d.line([(cx-size/2, cy+size/2), (cx+size/2, cy-size/2)], fill=color, width=width)\n    elif kind == \"triangle\":\n        d.polygon([(cx, cy+size/2), (cx-size/2, cy-size/2), (cx+size/2, cy-size/2)], outline=color, width=width)\n    return im\n@torch.no_grad()\ndef run(imgs):\n    x = torch.stack([torch.from_numpy(np.asarray(im, dtype=np.float32) - 117).permute(2, 0, 1) for im in imgs]).to(DEV)\n    model(x); fm = feats[\"x\"][:, CH]\n    return fm.flatten(1).max(1).values.cpu().numpy(), fm.flatten(1).min(1).values.cpu().numpy()\nkinds = [\"V\", \"triangle\", \"X\", \"square\", \"O\", \"disc\", \"blank\"]\nsizes, widths, colours = [60, 90, 120, 150], [6, 12], [(0, 0, 0), (255, 255, 255)]\nprint(f\"{'shape':9s} {'mean max':&gt;9s} {'mean min':&gt;9s}    (over 4 sizes x 2 widths x 2 colours; photo scale: 99th pct max = {np.percentile(mx,99):.0f})\")\nfor kind in kinds:\n    imgs = [canvas() if kind == \"blank\" else shape(kind, s, w, color=c) for s in sizes for w in widths for c in colours]\n    a, b = run(imgs); print(f\"{kind:9s} {a.mean():9.0f} {b.mean():9.0f}\")\nhook.remove()\n\n\nshape      mean max  mean min    (over 4 sizes x 2 widths x 2 colours; photo scale: 99th pct max = 766)\nV                54       -85\ntriangle         97      -100\nX               148       -85\nsquare           42      -125\nO                44      -136\ndisc             16      -160\nblank            -0       -76\n\n\nTwo things come out. The round shapes (an outline O and a filled disc) give the most negative responses of any stimulus, a good deal below a blank grey field, so “round pushes it negative” survives even in line drawings. But a bare V does not excite the neuron much: its positive response is about a tenth of what a real cat face produces and no larger than a square’s. Whatever “V” means for this neuron, it is a pattern inside high-level structure (a face, a car front, a converging road) rather than a geometric primitive. The essay says as much in its footnote: “generalization happens inside high-level patterns”, and the V neuron “really does take in cat circuitry”. A mid-network neuron’s inputs are already fairly abstract, so this is not a surprise, but it is a limit on how literally to take the word “V”.",
+    "crumbs": [
+      "Home",
+      "The essay, section by section",
+      "Cars and Animals"
+    ]
+  },
+  {
+    "objectID": "03-cars-and-animals/index.html#assessment",
+    "href": "03-cars-and-animals/index.html#assessment",
+    "title": "Cars and Animals",
+    "section": "Assessment",
+    "text": "Assessment\n\nConfirmed on public weights: the named inputs and reader are the strongest by weight; the negative pole is round things; the positive pole extends beyond cats and cars to frontal animal faces, vehicle noses and converging lines.\nSupported but not proven: that “pointed versus round” is the right one-line description. It fits everything we saw, and it fits better than OR(cat, car), which cannot explain the goats, trains and tennis courts. A line-drawn V alone is not enough, so the description is of a high-level shape cue, not a contour.\nNot addressed here: the second half of the essay’s section, the car-into-dogs circuit and the “generalised pose neurons”. That needs feature visualisation with and without the bias toward natural paths, which is the subject of the next section.",
+    "crumbs": [
+      "Home",
+      "The essay, section by section",
+      "Cars and Animals"
+    ]
+  },
+  {
+    "objectID": "03-cars-and-animals/index.html#discussion-questions",
+    "href": "03-cars-and-animals/index.html#discussion-questions",
+    "title": "Cars and Animals",
+    "section": "Discussion questions",
+    "text": "Discussion questions\n\nThe neuron fires on cat faces far more strongly than on anything else in COCO. Is a neuron whose top of the distribution is 85% cats, but whose tail is “pointed things”, best called a cat neuron, a V neuron, or something else? Does the answer depend on what reads it?\nThe essay’s recommended trick is to describe a neuron without nouns. Try it on the negative-pole sheet above. Is “round” the only candidate?\nHow would one tell a “V-shape” neuron from a “frontal face or front of object” neuron? What stimulus would separate them?",
+    "crumbs": [
+      "Home",
+      "The essay, section by section",
+      "Cars and Animals"
+    ]
+  },
+  {
+    "objectID": "05-recursive-generalization/index.html",
+    "href": "05-recursive-generalization/index.html",
+    "title": "Recursive Generalization",
+    "section": "",
+    "text": "Not written yet.",
+    "crumbs": [
+      "Home",
+      "The essay, section by section",
+      "Recursive Generalization"
+    ]
+  },
+  {
+    "objectID": "07-superposition-of-the-gaps/index.html",
+    "href": "07-superposition-of-the-gaps/index.html",
+    "title": "Superposition Of The Gaps",
+    "section": "",
+    "text": "Not written yet.",
+    "crumbs": [
+      "Home",
+      "The essay, section by section",
+      "Superposition Of The Gaps"
+    ]
+  },
+  {
+    "objectID": "09-weak-activations/index.html",
+    "href": "09-weak-activations/index.html",
+    "title": "Weak Activations",
+    "section": "",
+    "text": "Not written yet.",
+    "crumbs": [
+      "Home",
+      "The essay, section by section",
+      "Weak Activations"
+    ]
+  },
+  {
+    "objectID": "11-zooming-out/index.html",
+    "href": "11-zooming-out/index.html",
+    "title": "Zooming Out",
+    "section": "",
+    "text": "Not written yet.",
+    "crumbs": [
+      "Home",
+      "The essay, section by section",
+      "Zooming Out"
+    ]
+  }
+]

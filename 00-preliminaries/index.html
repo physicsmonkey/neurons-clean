@@ -1,0 +1,1349 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.10.19">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>Preliminaries: the objects the essay talks about – Neural Networks Are Already Clean — a slow read</title>
+<style>
+/* Default styles provided by pandoc.
+** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
+*/
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: 1.5em;}
+div.column{flex: auto;}
+@media screen {
+div.columns{gap: min(4vw, 1.5em);}
+div.column{overflow-x: auto;}
+}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+html { -webkit-text-size-adjust: 100%; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+
+<script src="../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../">
+<script src="../site_libs/quarto-html/quarto.js" type="module"></script>
+<script src="../site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="../site_libs/quarto-html/popper.min.js"></script>
+<script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting-bf27225e3a48a9273f3daa8f8e829971.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../site_libs/bootstrap/bootstrap-27d0aecb2de0abaf2c1b0e6b7abd202f.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "overlay",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+
+  <script>window.backupDefine = window.define; window.define = undefined;</script><script src="https://cdn.jsdelivr.net/npm/katex@latest/dist/katex.min.js"></script>
+  <script>document.addEventListener("DOMContentLoaded", function () {
+ var mathElements = document.getElementsByClassName("math");
+ var macros = [];
+ for (var i = 0; i < mathElements.length; i++) {
+  var texText = mathElements[i].firstChild;
+  if (mathElements[i].tagName == "SPAN") {
+   katex.render(texText.data, mathElements[i], {
+    displayMode: mathElements[i].classList.contains('display'),
+    throwOnError: false,
+    macros: macros,
+    fleqn: false
+   });
+}}});
+  </script>
+  <script>window.define = window.backupDefine; window.backupDefine = undefined;</script><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@latest/dist/katex.min.css">
+
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN" && texText && texText.data) {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
+
+</head>
+
+<body class="nav-sidebar docked nav-fixed quarto-light">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+    <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container mx-auto">
+    <a class="navbar-brand" href="../index.html">
+    <span class="navbar-title">Neural Networks Are Already Clean — a slow read</span>
+    </a>
+  </div>
+            <div id="quarto-search" class="" title="Search"></div>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" role="menu" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+  <span class="navbar-toggler-icon"></span>
+</button>
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav navbar-nav-scroll me-auto">
+  <li class="nav-item">
+    <a class="nav-link active" href="../index.html" aria-current="page"> 
+<span class="menu-text">Home</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="https://already-clean.goodfire.com/"> 
+<span class="menu-text">The essay</span></a>
+  </li>  
+</ul>
+          </div> <!-- /navcollapse -->
+            <div class="quarto-navbar-tools">
+</div>
+      </div> <!-- /container-fluid -->
+    </nav>
+  <nav class="quarto-secondary-nav">
+    <div class="container-fluid d-flex">
+      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+        <i class="bi bi-layout-text-sidebar-reverse"></i>
+      </button>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../00-preliminaries/index.html">Preliminaries</a></li><li class="breadcrumb-item"><a href="../00-preliminaries/index.html">Preliminaries: the objects the essay talks about</a></li></ol></nav>
+        <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+        </a>
+      <button type="button" class="btn quarto-search-button" aria-label="Search" onclick="window.quartoOpenSearch();">
+        <i class="bi bi-search"></i>
+      </button>
+    </div>
+  </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation docked overflow-auto">
+        <div class="mt-2 flex-shrink-0 align-items-center">
+        <div class="sidebar-search">
+        <div id="quarto-search" class="" title="Search"></div>
+        </div>
+        </div>
+    <div class="sidebar-menu-container"> 
+    <ul class="list-unstyled mt-1">
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">A slow read of <em>Neural Networks Are Already Clean</em></span></a>
+  </div>
+</li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="true">
+ <span class="menu-text">Preliminaries</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-1" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../00-preliminaries/index.html" class="sidebar-item-text sidebar-link active">
+ <span class="menu-text">Preliminaries: the objects the essay talks about</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" role="navigation" aria-expanded="true">
+ <span class="menu-text">Background: Toy Models of Superposition</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-2" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../01-toy-models-of-superposition/index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Background: Toy Models of Superposition</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" role="navigation" aria-expanded="true">
+ <span class="menu-text">The essay, section by section</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-3" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../02-the-short-version/index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">The Short Version</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../03-cars-and-animals/index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Cars and Animals</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../04-microscope-errors/index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Microscope Errors</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../05-recursive-generalization/index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Recursive Generalization</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../06-superposition/index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Superposition</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../07-superposition-of-the-gaps/index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Superposition Of The Gaps</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../08-exploring-image-models/index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Exploring Image Models</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../09-weak-activations/index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Weak Activations</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../10-exploring-language-models/index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Exploring Language Models</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../11-zooming-out/index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Zooming Out</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+    </ul>
+    </div>
+</nav>
+<div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul>
+  <li><a href="#neurons" id="toc-neurons" class="nav-link active" data-scroll-target="#neurons">1. Neurons</a></li>
+  <li><a href="#the-residual-stream" id="toc-the-residual-stream" class="nav-link" data-scroll-target="#the-residual-stream">2. The residual stream</a></li>
+  <li><a href="#attention-briefly" id="toc-attention-briefly" class="nav-link" data-scroll-target="#attention-briefly">3. Attention, briefly</a></li>
+  <li><a href="#features-and-the-two-hypotheses" id="toc-features-and-the-two-hypotheses" class="nav-link" data-scroll-target="#features-and-the-two-hypotheses">4. Features and the two hypotheses</a></li>
+  <li><a href="#how-people-look-at-neurons" id="toc-how-people-look-at-neurons" class="nav-link" data-scroll-target="#how-people-look-at-neurons">5. How people look at neurons</a></li>
+  <li><a href="#sparse-autoencoders-dictionary-learning" id="toc-sparse-autoencoders-dictionary-learning" class="nav-link" data-scroll-target="#sparse-autoencoders-dictionary-learning">6. Sparse autoencoders (dictionary learning)</a></li>
+  <li><a href="#the-model-zoo" id="toc-the-model-zoo" class="nav-link" data-scroll-target="#the-model-zoo">7. The model zoo</a></li>
+  <li><a href="#a-map-for-physicists" id="toc-a-map-for-physicists" class="nav-link" data-scroll-target="#a-map-for-physicists">8. A map for physicists</a></li>
+  <li><a href="#glossary" id="toc-glossary" class="nav-link" data-scroll-target="#glossary">Glossary</a></li>
+  <li><a href="#further-reading-for-this-page" id="toc-further-reading-for-this-page" class="nav-link" data-scroll-target="#further-reading-for-this-page">Further reading for this page</a></li>
+  </ul>
+</nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../00-preliminaries/index.html">Preliminaries</a></li><li class="breadcrumb-item"><a href="../00-preliminaries/index.html">Preliminaries: the objects the essay talks about</a></li></ol></nav>
+<div class="quarto-title">
+<div class="quarto-title-block"><div><h1 class="title">Preliminaries: the objects the essay talks about</h1><button type="button" class="btn code-tools-button" id="quarto-code-tools-source"><i class="bi"></i> Code</button></div></div>
+<p class="subtitle lead">Neurons, features, the residual stream, and the tools used to look at them</p>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<p>The essay assumes its reader already knows what a neuron is, what a feature is, why anyone would train a sparse autoencoder, and what an attribution graph shows. This page fills that in for someone with a physics background and no interpretability background. It is deliberately concrete: every object is defined by an equation or a procedure, and the vocabulary the essay uses is collected in a glossary at the end.</p>
+<p>If you already work in interpretability, skip to the <a href="#glossary">glossary</a> and the <a href="#a-map-for-physicists">map for physicists</a>.</p>
+<section id="neurons" class="level2">
+<h2 class="anchored" data-anchor-id="neurons">1. Neurons</h2>
+<p>A trained network is a fixed function <span class="math inline">f_\theta</span> from inputs to outputs. “Interpretability” in the sense of this essay means explaining <em>how</em> it computes that function in terms of its internal parts, the way a biologist explains an organism in terms of cells and organs rather than in terms of its genome.</p>
+<p>The basic internal part is the <strong>neuron</strong>. In a fully-connected (MLP) layer with input vector <span class="math inline">x \in \mathbb{R}^d</span>, neuron <span class="math inline">i</span> has an input weight vector <span class="math inline">w_i \in \mathbb{R}^d</span>, a bias <span class="math inline">b_i</span>, and a scalar nonlinearity <span class="math inline">\phi</span>:</p>
+<p><span class="math display">
+a_i(x) = \phi\big(w_i \cdot x + b_i\big).
+</span></p>
+<p>The quantity <span class="math inline">w_i\cdot x + b_i</span> is the <strong>preactivation</strong>; <span class="math inline">a_i</span> is the <strong>activation</strong>. The layer’s output is then a linear map of the activation vector, <span class="math inline">y = \sum_i a_i\, v_i</span>, where <span class="math inline">v_i</span> is neuron <span class="math inline">i</span>’s <strong>output weight</strong> vector. So each neuron <em>reads</em> one direction (<span class="math inline">w_i</span>) and <em>writes</em> one direction (<span class="math inline">v_i</span>), with a scalar nonlinearity in between. The essay’s language of “readers” and “what a neuron lets through” is literal: downstream neurons whose <span class="math inline">w_j</span> has a large component along <span class="math inline">v_i</span> are the readers of neuron <span class="math inline">i</span>.</p>
+<p>Three nonlinearities matter here:</p>
+<ul>
+<li><strong>ReLU</strong>, <span class="math inline">\phi(z) = \max(z, 0)</span>. Used in InceptionV1 and most pre-2020 vision models. The negative side of the preactivation is thrown away.</li>
+<li><strong>GELU</strong>, a smooth version of ReLU, <span class="math inline">\phi(z) = z\,\Phi(z)</span> with <span class="math inline">\Phi</span> the Gaussian CDF. Used in GPT-2 and ConvNeXt. Slightly negative for small negative <span class="math inline">z</span>, which is why the essay can talk about a neuron’s negative side even in GELU networks.</li>
+<li><strong>SwiGLU</strong> (gated), used in Llama, Qwen, and most modern language models. The neuron has two input weight vectors, a <em>gate</em> <span class="math inline">g_i</span> and a <em>value</em> <span class="math inline">u_i</span>, and <span class="math display">
+a_i(x) = \mathrm{SiLU}(g_i\cdot x)\,(u_i\cdot x), \qquad \mathrm{SiLU}(z) = \frac{z}{1+e^{-z}}.
+</span> Since <span class="math inline">\mathrm{SiLU}(z)</span> is slightly negative for <span class="math inline">z&lt;0</span>, the product is <em>positive</em> when both the gate and the value are negative. The essay calls this the “double-negative regime” and argues it is an architectural artefact, so keep it in mind.</li>
+</ul>
+<p><strong>The negative pole.</strong> Even with ReLU, the preactivation <span class="math inline">w_i\cdot x + b_i</span> can be driven strongly negative by some inputs. The essay insists that this negative side is meaningful: the weights <span class="math inline">w_i</span> are learned as a sum of “votes”, and whatever pushes the preactivation down is, by construction, the thing the neuron is built to <em>not</em> respond to. The essay’s canonical example is a neuron whose positive pole is “V-shaped” and whose negative pole is “round”. It uses the word <strong>pole</strong> for each side.</p>
+<p><strong>Neurons in convolutional networks.</strong> In a conv net the “neuron” is a <em>channel</em>: a filter <span class="math inline">w_i</span> that is applied at every spatial position, giving an activation <em>map</em> <span class="math inline">a_i(x, \text{pos})</span> rather than a single number. InceptionV1 neuron “4e:55” means channel 55 of the layer named <code>mixed4e</code>. When the essay shows an image that “activates” a neuron it usually means the maximum, or sum, of the map over positions.</p>
+<p><strong>Neurons in transformers.</strong> A transformer block has an attention sublayer and an MLP sublayer. The “neurons” are the hidden units of the MLP: for a model with residual width <span class="math inline">d_{\text{model}}</span> the MLP expands to <span class="math inline">d_{\text{mlp}} \approx 4\, d_{\text{model}}</span> (or <span class="math inline">\approx \tfrac{8}{3} d_{\text{model}}</span> for SwiGLU) hidden units, each of which is a neuron in exactly the sense above. There is one activation per neuron <em>per token</em>. Qwen3-32B has 64 layers with 25,600 neurons each, so about 1.6 million neurons, which is the “more than a million neurons” the essay mentions. Attention heads are not neurons and the essay treats them separately.</p>
+</section>
+<section id="the-residual-stream" class="level2">
+<h2 class="anchored" data-anchor-id="the-residual-stream">2. The residual stream</h2>
+<p>Modern networks (ResNets, ConvNeXt, every transformer) are <strong>residual</strong>: each layer adds its output to a running vector rather than replacing it,</p>
+<p><span class="math display">
+x_{\ell+1} = x_\ell + f_\ell(x_\ell).
+</span></p>
+<p>The running vector <span class="math inline">x_\ell \in \mathbb{R}^{d_{\text{model}}}</span> is the <strong>residual stream</strong>. In a transformer there is one such vector per token position. Every neuron in every layer reads from the stream by taking an inner product with its <span class="math inline">w_i</span> and writes back to it by adding a multiple of its <span class="math inline">v_i</span>. The stream is therefore a shared, high-dimensional bus; the only nonlinear operations are the elementwise <span class="math inline">\phi</span> inside the MLPs, the softmax inside attention, and the normalisation (<strong>LayerNorm</strong>: subtract the mean, divide by the standard deviation across the <span class="math inline">d_{\text{model}}</span> components, then rescale) that precedes each sublayer.</p>
+<p>Two facts about the stream drive much of the essay:</p>
+<ul>
+<li>It has <strong>no privileged basis</strong>. Rotating the stream by an orthogonal matrix <span class="math inline">R</span>, and correspondingly rotating every <span class="math inline">w_i \to R w_i</span> and <span class="math inline">v_i \to R v_i</span>, gives an identical network. Nothing about a single coordinate of the stream has any meaning. Neuron activations, by contrast, <em>do</em> have a privileged basis, because <span class="math inline">\phi</span> acts elementwise: rotating the neurons changes the function. This is why “look at the neurons” is a well-posed instruction and “look at the stream’s coordinates” is not.</li>
+<li>InceptionV1 has <strong>no residual stream</strong> (it predates ResNets). Each layer must carry everything the next layer needs. The essay argues that this, rather than any inherent property of learning, is why InceptionV1’s late layers looked like a mess, and it uses the absence of a residual stream to design a squeeze experiment later on.</li>
+</ul>
+</section>
+<section id="attention-briefly" class="level2">
+<h2 class="anchored" data-anchor-id="attention-briefly">3. Attention, briefly</h2>
+<p>An attention head at layer <span class="math inline">\ell</span> moves information between token positions. For each pair of positions <span class="math inline">(s, t)</span> it computes a score from the <strong>query</strong> at <span class="math inline">t</span> and the <strong>key</strong> at <span class="math inline">s</span>, softmaxes the scores over <span class="math inline">s</span> to get weights <span class="math inline">A_{ts}</span>, and then adds to the stream at <span class="math inline">t</span> the weighted sum <span class="math inline">\sum_s A_{ts}\, W_O W_V\, x_s</span>. The essay’s four questions about a head are: <em>where</em> it looks (<span class="math inline">A_{ts}</span>, cheap to read off), <em>what</em> it looks for (the query-key circuit), <em>what it does</em> when it finds it (the output-value circuit, which can be read in terms of which neurons’ <span class="math inline">v_i</span> it picks up and which neurons’ <span class="math inline">w_j</span> it lands on), and <em>why</em>. The essay only claims progress on the first three and says little about the fourth.</p>
+</section>
+<section id="features-and-the-two-hypotheses" class="level2">
+<h2 class="anchored" data-anchor-id="features-and-the-two-hypotheses">4. Features and the two hypotheses</h2>
+<p>A <strong>feature</strong> is, informally, a property of the input that the network represents. The word is notoriously hard to make precise and the essay’s appendix has a note on exactly this problem. The working definition in most of the field is the <strong>linear representation hypothesis</strong>: a feature is a <em>direction</em> <span class="math inline">d_k</span> in some activation space, and the degree to which the feature is present in input <span class="math inline">x</span> is the projection of the activation onto <span class="math inline">d_k</span>.</p>
+<p>If the feature directions happened to coincide with neuron directions, every neuron would respond to exactly one human-recognisable thing. Such a neuron is called <strong>monosemantic</strong>. A neuron that seems to respond to several unrelated things is <strong>polysemantic</strong>. The famous example, and the essay’s opening target, is InceptionV1 neuron 4e:55, which the 2020 <em>Zoom In</em> paper reported as responding to both cat faces and car fronts.</p>
+<p>Two explanations for polysemanticity were on the table before this essay:</p>
+<ol type="1">
+<li><strong>Superposition.</strong> The network wants to represent more features than it has neurons, so it assigns features to <em>nearly</em> orthogonal directions that are not neuron-aligned. Each neuron then carries small pieces of several unrelated features. The next page reproduces the toy model that made this precise. Under this hypothesis the neurons are the wrong basis, and the right move is to <em>decompose</em> the activations into the underlying features by some optimisation (a sparse autoencoder).</li>
+<li><strong>Generalisation / composition.</strong> The neuron really does respond to one thing, but that thing is not a noun we have a word for (“V-shape” rather than “cat or car”), or the neuron grew outward from a core onto related territory during training (“recursive generalisation”). Under this hypothesis the neurons are the right basis and the task is to explain them better.</li>
+</ol>
+<p>These make opposite predictions about what should be bundled together: superposition bundles things <em>because</em> they are unrelated (so that they rarely co-occur and interfere little), generalisation bundles things <em>because</em> they are related. The essay’s entire argument is that the evidence points to the second.</p>
+</section>
+<section id="how-people-look-at-neurons" class="level2">
+<h2 class="anchored" data-anchor-id="how-people-look-at-neurons">5. How people look at neurons</h2>
+<p>The tools below are the “microscope” the essay says was mis-set. Each is simple to state.</p>
+<p><strong>Top-activating examples.</strong> Run a large dataset through the network, record each neuron’s activation on every input (or every token), and sort. The top few dozen inputs are the cheapest description of a neuron, and automated labelling pipelines mostly look at these. The essay’s “weak activations” section is about everything <em>below</em> the top of this list.</p>
+<p><strong>Feature visualisation.</strong> Instead of searching a dataset, synthesise an input by gradient ascent on the activation, <span class="math inline">x^\star = \arg\max_x a_i(x)</span>, starting from noise. Done naively this produces adversarial high-frequency noise. The 2017 <em>Feature Visualization</em> paper made it work by parametrising the image in a decorrelated Fourier basis and by <strong>transformation robustness</strong>: optimise the expected activation under random jitter, scaling and rotation of the image, so the optimiser must find a pattern that excites the neuron the way a real image would. The essay’s point about “reward hacking” is that in late layers the optimiser still finds a route the network rarely uses on real data (it draws dogs when the real circuit carries car information), and that this is a property of the tool, not the neuron.</p>
+<p><strong>Ablation.</strong> Set a neuron’s activation to zero (or to its dataset mean) on a given input and measure what changes in the output. This is the interventional test behind statements like “remove the eight neurons with a Santa negative side and the Santa probability falls from near-certain to 6 percent”.</p>
+<p><strong>Attribution.</strong> For a given input, estimate how much neuron <span class="math inline">i</span> in one layer contributes to neuron <span class="math inline">j</span> in a later layer. The simplest version is the product of <span class="math inline">a_i</span> and the gradient <span class="math inline">\partial a_j / \partial a_i</span>, which is exact when the path between them is linear. In a residual network the path from <span class="math inline">v_i</span> to <span class="math inline">w_j</span> <em>through the stream</em> is exactly linear, so the direct effect is just <span class="math inline">a_i\,(v_i\cdot w_j)</span>, and the only approximation is in how the indirect effects through intervening nonlinearities are handled.</p>
+<p><strong>Attribution graphs.</strong> Take one prompt, compute attributions between all pairs of units across all layers, keep the strong edges, and draw the result as a graph from input tokens to output logits. Anthropic’s 2025 <em>circuit tracing</em> work builds these graphs on <strong>transcoder</strong> features rather than neurons. A transcoder is a trained replacement for each MLP with a sparse, wide hidden layer, chosen so that the hidden units are more interpretable than the original neurons. The cost is that the replacement model is only approximately the original: the essay quotes Anthropic’s own methods page for the figure that it predicts the same next token only about half the time. The essay’s language-model claim is that the same graphs can be built on the original neurons with no replacement model at all.</p>
+<p><strong>Steering.</strong> Add a multiple of <span class="math inline">v_i</span> to the stream during generation and see what the model does. Used in the essay as an informal check (“steering the Colorado neuron makes the model want to go hiking”).</p>
+</section>
+<section id="sparse-autoencoders-dictionary-learning" class="level2">
+<h2 class="anchored" data-anchor-id="sparse-autoencoders-dictionary-learning">6. Sparse autoencoders (dictionary learning)</h2>
+<p>If superposition is true, activation vectors <span class="math inline">x \in \mathbb{R}^d</span> are sparse non-negative combinations of <span class="math inline">n \gg d</span> feature directions, <span class="math inline">x \approx \sum_k f_k(x)\, d_k</span> with few <span class="math inline">f_k \neq 0</span>. A <strong>sparse autoencoder</strong> (SAE) tries to recover the dictionary <span class="math inline">\{d_k\}</span> and the coefficients <span class="math inline">f_k</span> by training</p>
+<p><span class="math display">
+f(x) = \mathrm{ReLU}(W_{\text{enc}}\, x + b_{\text{enc}}), \qquad
+\hat x = W_{\text{dec}}\, f(x) + b_{\text{dec}},
+</span></p>
+<p>to minimise <span class="math inline">\|x - \hat x\|^2 + \lambda \|f(x)\|_1</span> over a large dataset of activations. The <span class="math inline">\ell_1</span> penalty enforces sparsity; the columns of <span class="math inline">W_{\text{dec}}</span> are the learned feature directions. A <strong>TopK</strong> SAE replaces the penalty by keeping only the <span class="math inline">k</span> largest preactivations per input, which is what the essay uses (640 features, <span class="math inline">k=2</span>). “Dictionary learning” is the general name for this family.</p>
+<p>Two numbers are always reported. <strong>Variance explained</strong> says how well <span class="math inline">\hat x</span> reconstructs <span class="math inline">x</span>. More honest is to <strong>splice</strong> the SAE into the network, replacing <span class="math inline">x</span> by <span class="math inline">\hat x</span> at that layer, and measure how much the network’s accuracy or loss degrades, because small reconstruction error can still destroy information the network needed. The essay reports both for its squeeze experiment.</p>
+<p>The essay is not against SAEs as such. Its claim is that, in the networks it studied, an SAE mostly rediscovers the neurons (88 percent of SAE activity on ConvNeXt’s last layer is a near copy of a single neuron) and the rest is loose regroupings of them, and that on InceptionV1 4e:55 the SAE “fractures” a single V-shape neuron into a car feature and a cat feature, which is further from what the neuron does.</p>
+</section>
+<section id="the-model-zoo" class="level2">
+<h2 class="anchored" data-anchor-id="the-model-zoo">7. The model zoo</h2>
+<p>The essay moves between several networks. A one-line sketch of each:</p>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 20%">
+<col style="width: 20%">
+<col style="width: 20%">
+<col style="width: 20%">
+<col style="width: 20%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Model</th>
+<th>Year</th>
+<th>Size</th>
+<th>Type</th>
+<th>Why it appears</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>InceptionV1 (GoogLeNet)</td>
+<td>2014</td>
+<td>6.6 M params</td>
+<td>conv net, no residual stream, ReLU</td>
+<td>The original model organism; layers named <code>mixed3a … mixed5b</code></td>
+</tr>
+<tr class="even">
+<td>ConvNeXt (small / medium / large)</td>
+<td>2022 design, trained by the author</td>
+<td>92 k / 7.06 M / 28.6 M</td>
+<td>modern conv net with residuals, LayerNorm, GELU</td>
+<td>A 300× size sweep at fixed architecture; medium matches InceptionV1’s parameter count</td>
+</tr>
+<tr class="odd">
+<td>CLIP</td>
+<td>2021</td>
+<td>~ 400 M</td>
+<td>image–text contrastive model</td>
+<td>Source of the “multimodal neurons” paper</td>
+</tr>
+<tr class="even">
+<td>DINOv2</td>
+<td>2023</td>
+<td>~ 86 M (ViT-B)</td>
+<td>self-supervised vision transformer</td>
+<td>Shows the same pose neuron appears at 10× InceptionV1’s size</td>
+</tr>
+<tr class="odd">
+<td>GPT-2 XL</td>
+<td>2019</td>
+<td>1.5 B</td>
+<td>transformer, GELU</td>
+<td>Model of the 2023 OpenAI automated-interpretability project</td>
+</tr>
+<tr class="even">
+<td>Qwen3-32B</td>
+<td>2025</td>
+<td>32 B</td>
+<td>dense transformer, SwiGLU</td>
+<td>Main language model in the essay</td>
+</tr>
+<tr class="odd">
+<td>Qwen3.6 (MoE)</td>
+<td>2026</td>
+<td>—</td>
+<td>mixture of experts</td>
+<td>The 10,240-expert survey</td>
+</tr>
+<tr class="even">
+<td>Kimi K3</td>
+<td>2026</td>
+<td>&gt; 1 T</td>
+<td>mixture of experts</td>
+<td>“First attribution graph of a multi-trillion parameter model”</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Mixture of experts.</strong> In an MoE transformer the MLP sublayer is replaced by many independent MLPs (“experts”) and a learned router that sends each token to a few of them. Each expert has its own neurons. The essay argues experts are far more specialised than usually reported and calls the architecture “anti-superposition”, because the router would have to recognise thousands of distinct things for packing to occur.</p>
+</section>
+<section id="a-map-for-physicists" class="level2">
+<h2 class="anchored" data-anchor-id="a-map-for-physicists">8. A map for physicists</h2>
+<p>Some intuitions carry over cleanly; others actively mislead. A short list.</p>
+<ul>
+<li><strong>Superposition is a compressed-sensing statement.</strong> <span class="math inline">n</span> sparse signals in <span class="math inline">d &lt; n</span> dimensions can be stored and recovered if their directions are nearly orthogonal (Johnson–Lindenstrauss: one can fit <span class="math inline">e^{O(\epsilon^2 d)}</span> vectors in <span class="math inline">\mathbb{R}^d</span> with pairwise overlaps below <span class="math inline">\epsilon</span>). The toy model on the next page is a learned version of this with ReLU as the decoder. The essay accepts the mathematics and disputes whether real networks are in the regime where the trade-off (capacity vs interference) is the dominant consideration.</li>
+<li><strong>“Circuit racing” is mode competition.</strong> The essay’s account of why networks generalise is that broad features fire on more of the data, receive more gradient, and starve the narrow ones. This is rich-get-richer dynamics in the sense of a linear instability: whichever direction has the largest growth rate dominates. The companion idea in the literature is “gradient starvation” and “coherent gradients”.</li>
+<li><strong>The privileged basis is a symmetry statement.</strong> The residual stream has an <span class="math inline">O(d)</span> symmetry; the neuron layer breaks it to permutations (and sign flips, in some cases) because <span class="math inline">\phi</span> is elementwise. Asking which basis is “real” is asking which symmetry the dynamics breaks.</li>
+<li><strong>Recursive generalisation vs superposition is a locality question.</strong> Generalisation is local in some similarity metric on the data; superposition is non-local by design. This is the one empirical dichotomy the essay turns on, and watching a neuron over training checkpoints is the proposed experiment.</li>
+<li><strong>Beware “feature” as a conserved quantity.</strong> The essay’s appendix argues that the toy model prices the <em>cost</em> of sharing a neuron (interference) but not the <em>benefit</em> (reuse by downstream readers), because in the toy there is nothing downstream. In a real network a representation only matters through what reads it. A physicist’s instinct to count degrees of freedom and ask whether <span class="math inline">n &gt; d</span> is, on the essay’s account, the wrong question.</li>
+<li><strong>Beware the “microscope” analogy as reassurance.</strong> A real microscope’s artefacts are well understood; the essay’s whole historical section is about artefacts in feature visualisation and in the choice of model organism that went unrecognised for years.</li>
+</ul>
+</section>
+<section id="glossary" class="level2">
+<h2 class="anchored" data-anchor-id="glossary">Glossary</h2>
+<p>Terms in the essay’s own sense, in roughly the order they appear.</p>
+<ul>
+<li><strong>Polysemantic / monosemantic.</strong> A neuron that appears to respond to several unrelated things / to one thing. The essay argues the first is largely an observer’s statement.</li>
+<li><strong>Superposition.</strong> Unrelated features stored in overlapping, non-neuron-aligned directions because the network has run out of neurons. The essay distinguishes three senses: (a) more features than dimensions, which a clean network could also satisfy; (b) a learning principle that packs unrelated things into neurons, which is what the essay argues against; (c) the same principle applied to directions in the residual stream.</li>
+<li><strong>Recursive generalisation.</strong> A neuron starts on one core and sprouts related offshoots as training proceeds, “the way a tree branch sprouts sub-branches”. Earlier called “conjoined features” in the multimodal-neurons paper.</li>
+<li><strong>Pole.</strong> The positive or negative side of a neuron’s preactivation. Both are treated as meaningful.</li>
+<li><strong>Gate.</strong> A neuron viewed as control flow: what it lets through and what it keeps out, rather than what noun it names.</li>
+<li><strong>Circuit.</strong> A set of neurons across layers connected by large weights, doing an identifiable sub-computation.</li>
+<li><strong>Motif.</strong> A pattern that recurs across many circuits (e.g.&nbsp;“summary on punctuation”, “say or just think”, pose neurons feeding class detectors).</li>
+<li><strong>Weak activations.</strong> Everything below the top of a neuron’s activation distribution; the essay argues they are mostly generalisation and mostly ablatable.</li>
+<li><strong>Blind maximum.</strong> Test an explanation by having a second agent, who sees only the explanation, write an input intended to maximally activate the neuron. If it beats the dataset maximum the explanation captured the centre of the neuron.</li>
+<li><strong>Neuron paper.</strong> A short written audit of one neuron, produced by an agent; the essay reports statistics over 1,000 of them.</li>
+<li><strong>Attribution graph.</strong> A per-prompt graph of which units drive which, from tokens to logits.</li>
+<li><strong>Enumerative vs exploratory interpretability.</strong> Build a complete list of features to audit, vs start from questions and move through the network as needed. The essay favours the second and says the first was “always a means to an end”.</li>
+<li><strong>Already clean.</strong> The essay’s thesis: the network’s own parts are built to be read by its own downstream parts, and are therefore readable by us without being decomposed first.</li>
+</ul>
+</section>
+<section id="further-reading-for-this-page" class="level2">
+<h2 class="anchored" data-anchor-id="further-reading-for-this-page">Further reading for this page</h2>
+<ul>
+<li>Olah et al., <em>Feature Visualization</em>, Distill 2017.</li>
+<li>Olah et al., <em>Zoom In: An Introduction to Circuits</em>, Distill 2020.</li>
+<li>Elhage et al., <em>Toy Models of Superposition</em>, Transformer Circuits 2022 (next page).</li>
+<li>Bricken et al., <em>Towards Monosemanticity</em>, Transformer Circuits 2023 (the SAE paper).</li>
+<li>Ameisen et al., <em>Circuit Tracing</em> and Lindsey et al., <em>On the Biology of a Large Language Model</em>, Transformer Circuits 2025 (attribution graphs).</li>
+</ul>
+
+
+<!-- -->
+
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
+      }
+      return false;
+    }
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "Copied!");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "Copied!");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+      const outerScaffold = trigger.parentElement.cloneNode(true);
+      const codeEl = outerScaffold.querySelector('code');
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+    const viewSource = window.document.getElementById('quarto-view-source') ||
+                       window.document.getElementById('quarto-code-tools-source');
+    if (viewSource) {
+      const sourceUrl = viewSource.getAttribute("data-quarto-source-url");
+      viewSource.addEventListener("click", function(e) {
+        if (sourceUrl) {
+          // rstudio viewer pane
+          if (/\bcapabilities=\b/.test(window.location)) {
+            window.open(sourceUrl);
+          } else {
+            window.location.href = sourceUrl;
+          }
+        } else {
+          const modal = new bootstrap.Modal(document.getElementById('quarto-embedded-source-code-modal'));
+          modal.show();
+        }
+        return false;
+      });
+    }
+    function toggleCodeHandler(show) {
+      return function(e) {
+        const cellDetails = window.document.querySelectorAll(".cell details.code-fold");
+        for (let i=0; i<cellDetails.length; i++) {
+          const details = cellDetails[i];
+          if (show) {
+            details.open = true;
+          } else {
+            details.removeAttribute("open");
+          }
+        }
+        const cellCodeDivs = window.document.querySelectorAll(".cell div.sourceCode.cell-code");
+        const fromCls = show ? "hidden" : "unhidden";
+        const toCls = show ? "unhidden" : "hidden";
+        for (let i=0; i<cellCodeDivs.length; i++) {
+          const codeDiv = cellCodeDivs[i];
+          if (codeDiv.classList.contains(fromCls)) {
+            codeDiv.classList.remove(fromCls);
+            codeDiv.classList.add(toCls);
+          } 
+        }
+        return false;
+      }
+    }
+    const hideAllCode = window.document.getElementById("quarto-hide-all-code");
+    if (hideAllCode) {
+      hideAllCode.addEventListener("click", toggleCodeHandler(false));
+    }
+    const showAllCode = window.document.getElementById("quarto-show-all-code");
+    if (showAllCode) {
+      showAllCode.addEventListener("click", toggleCodeHandler(true));
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp("https:\/\/physicsmonkey\.github\.io\/neurons-clean\/");
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
+        }
+      }
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
+      } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
+      }
+    }
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
+          }
+        } else {
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.querySelector('main.content');
+            if (note !== null) {
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }, function(instance) {
+      });
+    }
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          let top = null;
+          let height = null;
+          let parent = null;
+          if (lineIds.length > 0) {
+              //compute the position of the single el (top and bottom and make a div)
+              const el = window.document.getElementById(lineIds[0]);
+              top = el.offsetTop;
+              height = el.offsetHeight;
+              parent = el.parentElement.parentElement;
+            if (lineIds.length > 1) {
+              const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+              const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+              height = bottom - top;
+            }
+            if (top !== null && height !== null && parent !== null) {
+              // cook up a div (if necessary) and position it 
+              let div = window.document.getElementById("code-annotation-line-highlight");
+              if (div === null) {
+                div = window.document.createElement("div");
+                div.setAttribute("id", "code-annotation-line-highlight");
+                div.style.position = 'absolute';
+                parent.appendChild(div);
+              }
+              div.style.top = top - 2 + "px";
+              div.style.height = height + 4 + "px";
+              div.style.left = 0;
+              let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+              if (gutterDiv === null) {
+                gutterDiv = window.document.createElement("div");
+                gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+                gutterDiv.style.position = 'absolute';
+                const codeCell = window.document.getElementById(targetCell);
+                const gutter = codeCell.querySelector('.code-annotation-gutter');
+                gutter.appendChild(gutterDiv);
+              }
+              gutterDiv.style.top = top - 2 + "px";
+              gutterDiv.style.height = height + 4 + "px";
+            }
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script><div class="modal fade" id="quarto-embedded-source-code-modal" tabindex="-1" aria-labelledby="quarto-embedded-source-code-modal-label" aria-hidden="true"><div class="modal-dialog modal-dialog-scrollable"><div class="modal-content"><div class="modal-header"><h5 class="modal-title" id="quarto-embedded-source-code-modal-label">Source Code</h5><button class="btn-close" data-bs-dismiss="modal"></button></div><div class="modal-body"><div class="">
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb1" data-shortcodes="false"><pre class="sourceCode markdown code-with-copy"><code class="sourceCode markdown"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co">---</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="an">title:</span><span class="co"> "Preliminaries: the objects the essay talks about"</span></span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="an">subtitle:</span><span class="co"> "Neurons, features, the residual stream, and the tools used to look at them"</span></span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="co">---</span></span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>The essay assumes its reader already knows what a neuron is, what a feature is, why anyone</span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>would train a sparse autoencoder, and what an attribution graph shows. This page fills that in</span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>for someone with a physics background and no interpretability background. It is deliberately</span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a>concrete: every object is defined by an equation or a procedure, and the vocabulary the essay</span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a>uses is collected in a glossary at the end.</span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a>If you already work in interpretability, skip to the <span class="co">[</span><span class="ot">glossary</span><span class="co">](#glossary)</span> and the</span>
+<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a><span class="co">[</span><span class="ot">map for physicists</span><span class="co">](#a-map-for-physicists)</span>.</span>
+<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a><span class="fu">## 1. Neurons</span></span>
+<span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-17"><a href="#cb1-17" aria-hidden="true" tabindex="-1"></a>A trained network is a fixed function $f_\theta$ from inputs to outputs. "Interpretability" in</span>
+<span id="cb1-18"><a href="#cb1-18" aria-hidden="true" tabindex="-1"></a>the sense of this essay means explaining *how* it computes that function in terms of its</span>
+<span id="cb1-19"><a href="#cb1-19" aria-hidden="true" tabindex="-1"></a>internal parts, the way a biologist explains an organism in terms of cells and organs rather</span>
+<span id="cb1-20"><a href="#cb1-20" aria-hidden="true" tabindex="-1"></a>than in terms of its genome.</span>
+<span id="cb1-21"><a href="#cb1-21" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-22"><a href="#cb1-22" aria-hidden="true" tabindex="-1"></a>The basic internal part is the **neuron**. In a fully-connected (MLP) layer with input vector</span>
+<span id="cb1-23"><a href="#cb1-23" aria-hidden="true" tabindex="-1"></a>$x \in \mathbb{R}^d$, neuron $i$ has an input weight vector $w_i \in \mathbb{R}^d$, a bias</span>
+<span id="cb1-24"><a href="#cb1-24" aria-hidden="true" tabindex="-1"></a>$b_i$, and a scalar nonlinearity $\phi$:</span>
+<span id="cb1-25"><a href="#cb1-25" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-26"><a href="#cb1-26" aria-hidden="true" tabindex="-1"></a>$$</span>
+<span id="cb1-27"><a href="#cb1-27" aria-hidden="true" tabindex="-1"></a>a_i(x) = \phi\big(w_i \cdot x + b_i\big).</span>
+<span id="cb1-28"><a href="#cb1-28" aria-hidden="true" tabindex="-1"></a>$$</span>
+<span id="cb1-29"><a href="#cb1-29" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-30"><a href="#cb1-30" aria-hidden="true" tabindex="-1"></a>The quantity $w_i\cdot x + b_i$ is the **preactivation**; $a_i$ is the **activation**. The</span>
+<span id="cb1-31"><a href="#cb1-31" aria-hidden="true" tabindex="-1"></a>layer's output is then a linear map of the activation vector, $y = \sum_i a_i\, v_i$, where</span>
+<span id="cb1-32"><a href="#cb1-32" aria-hidden="true" tabindex="-1"></a>$v_i$ is neuron $i$'s **output weight** vector. So each neuron *reads* one direction</span>
+<span id="cb1-33"><a href="#cb1-33" aria-hidden="true" tabindex="-1"></a>($w_i$) and *writes* one direction ($v_i$), with a scalar nonlinearity in between. The essay's</span>
+<span id="cb1-34"><a href="#cb1-34" aria-hidden="true" tabindex="-1"></a>language of "readers" and "what a neuron lets through" is literal: downstream neurons whose</span>
+<span id="cb1-35"><a href="#cb1-35" aria-hidden="true" tabindex="-1"></a>$w_j$ has a large component along $v_i$ are the readers of neuron $i$.</span>
+<span id="cb1-36"><a href="#cb1-36" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-37"><a href="#cb1-37" aria-hidden="true" tabindex="-1"></a>Three nonlinearities matter here:</span>
+<span id="cb1-38"><a href="#cb1-38" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-39"><a href="#cb1-39" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>**ReLU**, $\phi(z) = \max(z, 0)$. Used in InceptionV1 and most pre-2020 vision models. The</span>
+<span id="cb1-40"><a href="#cb1-40" aria-hidden="true" tabindex="-1"></a>  negative side of the preactivation is thrown away.</span>
+<span id="cb1-41"><a href="#cb1-41" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>**GELU**, a smooth version of ReLU, $\phi(z) = z\,\Phi(z)$ with $\Phi$ the Gaussian CDF.</span>
+<span id="cb1-42"><a href="#cb1-42" aria-hidden="true" tabindex="-1"></a>  Used in GPT-2 and ConvNeXt. Slightly negative for small negative $z$, which is why the essay</span>
+<span id="cb1-43"><a href="#cb1-43" aria-hidden="true" tabindex="-1"></a>  can talk about a neuron's negative side even in GELU networks.</span>
+<span id="cb1-44"><a href="#cb1-44" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>**SwiGLU** (gated), used in Llama, Qwen, and most modern language models. The neuron has two</span>
+<span id="cb1-45"><a href="#cb1-45" aria-hidden="true" tabindex="-1"></a>  input weight vectors, a *gate* $g_i$ and a *value* $u_i$, and</span>
+<span id="cb1-46"><a href="#cb1-46" aria-hidden="true" tabindex="-1"></a>  $$</span>
+<span id="cb1-47"><a href="#cb1-47" aria-hidden="true" tabindex="-1"></a>  a_i(x) = \mathrm{SiLU}(g_i\cdot x)\,(u_i\cdot x), \qquad \mathrm{SiLU}(z) = \frac{z}{1+e^{-z}}.</span>
+<span id="cb1-48"><a href="#cb1-48" aria-hidden="true" tabindex="-1"></a>  $$</span>
+<span id="cb1-49"><a href="#cb1-49" aria-hidden="true" tabindex="-1"></a>  Since $\mathrm{SiLU}(z)$ is slightly negative for $z&lt;0$, the product is *positive* when both</span>
+<span id="cb1-50"><a href="#cb1-50" aria-hidden="true" tabindex="-1"></a>  the gate and the value are negative. The essay calls this the "double-negative regime" and</span>
+<span id="cb1-51"><a href="#cb1-51" aria-hidden="true" tabindex="-1"></a>  argues it is an architectural artefact, so keep it in mind.</span>
+<span id="cb1-52"><a href="#cb1-52" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-53"><a href="#cb1-53" aria-hidden="true" tabindex="-1"></a>**The negative pole.** Even with ReLU, the preactivation $w_i\cdot x + b_i$ can be driven</span>
+<span id="cb1-54"><a href="#cb1-54" aria-hidden="true" tabindex="-1"></a>strongly negative by some inputs. The essay insists that this negative side is meaningful:</span>
+<span id="cb1-55"><a href="#cb1-55" aria-hidden="true" tabindex="-1"></a>the weights $w_i$ are learned as a sum of "votes", and whatever pushes the preactivation</span>
+<span id="cb1-56"><a href="#cb1-56" aria-hidden="true" tabindex="-1"></a>down is, by construction, the thing the neuron is built to *not* respond to. The essay's</span>
+<span id="cb1-57"><a href="#cb1-57" aria-hidden="true" tabindex="-1"></a>canonical example is a neuron whose positive pole is "V-shaped" and whose negative pole is</span>
+<span id="cb1-58"><a href="#cb1-58" aria-hidden="true" tabindex="-1"></a>"round". It uses the word **pole** for each side.</span>
+<span id="cb1-59"><a href="#cb1-59" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-60"><a href="#cb1-60" aria-hidden="true" tabindex="-1"></a>**Neurons in convolutional networks.** In a conv net the "neuron" is a *channel*: a filter</span>
+<span id="cb1-61"><a href="#cb1-61" aria-hidden="true" tabindex="-1"></a>$w_i$ that is applied at every spatial position, giving an activation *map* $a_i(x, \text{pos})$</span>
+<span id="cb1-62"><a href="#cb1-62" aria-hidden="true" tabindex="-1"></a>rather than a single number. InceptionV1 neuron "4e:55" means channel 55 of the layer named</span>
+<span id="cb1-63"><a href="#cb1-63" aria-hidden="true" tabindex="-1"></a><span class="in">`mixed4e`</span>. When the essay shows an image that "activates" a neuron it usually means the</span>
+<span id="cb1-64"><a href="#cb1-64" aria-hidden="true" tabindex="-1"></a>maximum, or sum, of the map over positions.</span>
+<span id="cb1-65"><a href="#cb1-65" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-66"><a href="#cb1-66" aria-hidden="true" tabindex="-1"></a>**Neurons in transformers.** A transformer block has an attention sublayer and an MLP</span>
+<span id="cb1-67"><a href="#cb1-67" aria-hidden="true" tabindex="-1"></a>sublayer. The "neurons" are the hidden units of the MLP: for a model with residual width</span>
+<span id="cb1-68"><a href="#cb1-68" aria-hidden="true" tabindex="-1"></a>$d_{\text{model}}$ the MLP expands to $d_{\text{mlp}} \approx 4\, d_{\text{model}}$ (or</span>
+<span id="cb1-69"><a href="#cb1-69" aria-hidden="true" tabindex="-1"></a>$\approx \tfrac{8}{3} d_{\text{model}}$ for SwiGLU) hidden units, each of which is a neuron in</span>
+<span id="cb1-70"><a href="#cb1-70" aria-hidden="true" tabindex="-1"></a>exactly the sense above. There is one activation per neuron *per token*. Qwen3-32B has 64</span>
+<span id="cb1-71"><a href="#cb1-71" aria-hidden="true" tabindex="-1"></a>layers with 25,600 neurons each, so about 1.6 million neurons, which is the "more than a</span>
+<span id="cb1-72"><a href="#cb1-72" aria-hidden="true" tabindex="-1"></a>million neurons" the essay mentions. Attention heads are not neurons and the essay treats</span>
+<span id="cb1-73"><a href="#cb1-73" aria-hidden="true" tabindex="-1"></a>them separately.</span>
+<span id="cb1-74"><a href="#cb1-74" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-75"><a href="#cb1-75" aria-hidden="true" tabindex="-1"></a><span class="fu">## 2. The residual stream</span></span>
+<span id="cb1-76"><a href="#cb1-76" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-77"><a href="#cb1-77" aria-hidden="true" tabindex="-1"></a>Modern networks (ResNets, ConvNeXt, every transformer) are **residual**: each layer adds its</span>
+<span id="cb1-78"><a href="#cb1-78" aria-hidden="true" tabindex="-1"></a>output to a running vector rather than replacing it,</span>
+<span id="cb1-79"><a href="#cb1-79" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-80"><a href="#cb1-80" aria-hidden="true" tabindex="-1"></a>$$</span>
+<span id="cb1-81"><a href="#cb1-81" aria-hidden="true" tabindex="-1"></a>x_{\ell+1} = x_\ell + f_\ell(x_\ell).</span>
+<span id="cb1-82"><a href="#cb1-82" aria-hidden="true" tabindex="-1"></a>$$</span>
+<span id="cb1-83"><a href="#cb1-83" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-84"><a href="#cb1-84" aria-hidden="true" tabindex="-1"></a>The running vector $x_\ell \in \mathbb{R}^{d_{\text{model}}}$ is the **residual stream**. In a</span>
+<span id="cb1-85"><a href="#cb1-85" aria-hidden="true" tabindex="-1"></a>transformer there is one such vector per token position. Every neuron in every layer reads</span>
+<span id="cb1-86"><a href="#cb1-86" aria-hidden="true" tabindex="-1"></a>from the stream by taking an inner product with its $w_i$ and writes back to it by adding a</span>
+<span id="cb1-87"><a href="#cb1-87" aria-hidden="true" tabindex="-1"></a>multiple of its $v_i$. The stream is therefore a shared, high-dimensional bus; the only</span>
+<span id="cb1-88"><a href="#cb1-88" aria-hidden="true" tabindex="-1"></a>nonlinear operations are the elementwise $\phi$ inside the MLPs, the softmax inside</span>
+<span id="cb1-89"><a href="#cb1-89" aria-hidden="true" tabindex="-1"></a>attention, and the normalisation (**LayerNorm**: subtract the mean, divide by the standard</span>
+<span id="cb1-90"><a href="#cb1-90" aria-hidden="true" tabindex="-1"></a>deviation across the $d_{\text{model}}$ components, then rescale) that precedes each</span>
+<span id="cb1-91"><a href="#cb1-91" aria-hidden="true" tabindex="-1"></a>sublayer.</span>
+<span id="cb1-92"><a href="#cb1-92" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-93"><a href="#cb1-93" aria-hidden="true" tabindex="-1"></a>Two facts about the stream drive much of the essay:</span>
+<span id="cb1-94"><a href="#cb1-94" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-95"><a href="#cb1-95" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>It has **no privileged basis**. Rotating the stream by an orthogonal matrix $R$, and</span>
+<span id="cb1-96"><a href="#cb1-96" aria-hidden="true" tabindex="-1"></a>  correspondingly rotating every $w_i \to R w_i$ and $v_i \to R v_i$, gives an identical</span>
+<span id="cb1-97"><a href="#cb1-97" aria-hidden="true" tabindex="-1"></a>  network. Nothing about a single coordinate of the stream has any meaning. Neuron</span>
+<span id="cb1-98"><a href="#cb1-98" aria-hidden="true" tabindex="-1"></a>  activations, by contrast, *do* have a privileged basis, because $\phi$ acts elementwise:</span>
+<span id="cb1-99"><a href="#cb1-99" aria-hidden="true" tabindex="-1"></a>  rotating the neurons changes the function. This is why "look at the neurons" is a</span>
+<span id="cb1-100"><a href="#cb1-100" aria-hidden="true" tabindex="-1"></a>  well-posed instruction and "look at the stream's coordinates" is not.</span>
+<span id="cb1-101"><a href="#cb1-101" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>InceptionV1 has **no residual stream** (it predates ResNets). Each layer must carry</span>
+<span id="cb1-102"><a href="#cb1-102" aria-hidden="true" tabindex="-1"></a>  everything the next layer needs. The essay argues that this, rather than any inherent</span>
+<span id="cb1-103"><a href="#cb1-103" aria-hidden="true" tabindex="-1"></a>  property of learning, is why InceptionV1's late layers looked like a mess, and it uses the</span>
+<span id="cb1-104"><a href="#cb1-104" aria-hidden="true" tabindex="-1"></a>  absence of a residual stream to design a squeeze experiment later on.</span>
+<span id="cb1-105"><a href="#cb1-105" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-106"><a href="#cb1-106" aria-hidden="true" tabindex="-1"></a><span class="fu">## 3. Attention, briefly</span></span>
+<span id="cb1-107"><a href="#cb1-107" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-108"><a href="#cb1-108" aria-hidden="true" tabindex="-1"></a>An attention head at layer $\ell$ moves information between token positions. For each pair</span>
+<span id="cb1-109"><a href="#cb1-109" aria-hidden="true" tabindex="-1"></a>of positions $(s, t)$ it computes a score from the **query** at $t$ and the **key** at $s$,</span>
+<span id="cb1-110"><a href="#cb1-110" aria-hidden="true" tabindex="-1"></a>softmaxes the scores over $s$ to get weights $A_{ts}$, and then adds to the stream at $t$ the</span>
+<span id="cb1-111"><a href="#cb1-111" aria-hidden="true" tabindex="-1"></a>weighted sum $\sum_s A_{ts}\, W_O W_V\, x_s$. The essay's four questions about a head are:</span>
+<span id="cb1-112"><a href="#cb1-112" aria-hidden="true" tabindex="-1"></a>*where* it looks ($A_{ts}$, cheap to read off), *what* it looks for (the query-key circuit),</span>
+<span id="cb1-113"><a href="#cb1-113" aria-hidden="true" tabindex="-1"></a>*what it does* when it finds it (the output-value circuit, which can be read in terms of</span>
+<span id="cb1-114"><a href="#cb1-114" aria-hidden="true" tabindex="-1"></a>which neurons' $v_i$ it picks up and which neurons' $w_j$ it lands on), and *why*. The essay</span>
+<span id="cb1-115"><a href="#cb1-115" aria-hidden="true" tabindex="-1"></a>only claims progress on the first three and says little about the fourth.</span>
+<span id="cb1-116"><a href="#cb1-116" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-117"><a href="#cb1-117" aria-hidden="true" tabindex="-1"></a><span class="fu">## 4. Features and the two hypotheses</span></span>
+<span id="cb1-118"><a href="#cb1-118" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-119"><a href="#cb1-119" aria-hidden="true" tabindex="-1"></a>A **feature** is, informally, a property of the input that the network represents. The</span>
+<span id="cb1-120"><a href="#cb1-120" aria-hidden="true" tabindex="-1"></a>word is notoriously hard to make precise and the essay's appendix has a note on exactly this</span>
+<span id="cb1-121"><a href="#cb1-121" aria-hidden="true" tabindex="-1"></a>problem. The working definition in most of the field is the **linear representation</span>
+<span id="cb1-122"><a href="#cb1-122" aria-hidden="true" tabindex="-1"></a>hypothesis**: a feature is a *direction* $d_k$ in some activation space, and the degree to</span>
+<span id="cb1-123"><a href="#cb1-123" aria-hidden="true" tabindex="-1"></a>which the feature is present in input $x$ is the projection of the activation onto $d_k$.</span>
+<span id="cb1-124"><a href="#cb1-124" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-125"><a href="#cb1-125" aria-hidden="true" tabindex="-1"></a>If the feature directions happened to coincide with neuron directions, every neuron would</span>
+<span id="cb1-126"><a href="#cb1-126" aria-hidden="true" tabindex="-1"></a>respond to exactly one human-recognisable thing. Such a neuron is called **monosemantic**. A</span>
+<span id="cb1-127"><a href="#cb1-127" aria-hidden="true" tabindex="-1"></a>neuron that seems to respond to several unrelated things is **polysemantic**. The famous</span>
+<span id="cb1-128"><a href="#cb1-128" aria-hidden="true" tabindex="-1"></a>example, and the essay's opening target, is InceptionV1 neuron 4e:55, which the 2020 *Zoom</span>
+<span id="cb1-129"><a href="#cb1-129" aria-hidden="true" tabindex="-1"></a>In* paper reported as responding to both cat faces and car fronts.</span>
+<span id="cb1-130"><a href="#cb1-130" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-131"><a href="#cb1-131" aria-hidden="true" tabindex="-1"></a>Two explanations for polysemanticity were on the table before this essay:</span>
+<span id="cb1-132"><a href="#cb1-132" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-133"><a href="#cb1-133" aria-hidden="true" tabindex="-1"></a><span class="ss">1. </span>**Superposition.** The network wants to represent more features than it has neurons, so it</span>
+<span id="cb1-134"><a href="#cb1-134" aria-hidden="true" tabindex="-1"></a>   assigns features to *nearly* orthogonal directions that are not neuron-aligned. Each neuron</span>
+<span id="cb1-135"><a href="#cb1-135" aria-hidden="true" tabindex="-1"></a>   then carries small pieces of several unrelated features. The next page reproduces the toy</span>
+<span id="cb1-136"><a href="#cb1-136" aria-hidden="true" tabindex="-1"></a>   model that made this precise. Under this hypothesis the neurons are the wrong basis, and</span>
+<span id="cb1-137"><a href="#cb1-137" aria-hidden="true" tabindex="-1"></a>   the right move is to *decompose* the activations into the underlying features by some</span>
+<span id="cb1-138"><a href="#cb1-138" aria-hidden="true" tabindex="-1"></a>   optimisation (a sparse autoencoder).</span>
+<span id="cb1-139"><a href="#cb1-139" aria-hidden="true" tabindex="-1"></a><span class="ss">2. </span>**Generalisation / composition.** The neuron really does respond to one thing, but that</span>
+<span id="cb1-140"><a href="#cb1-140" aria-hidden="true" tabindex="-1"></a>   thing is not a noun we have a word for ("V-shape" rather than "cat or car"), or the neuron</span>
+<span id="cb1-141"><a href="#cb1-141" aria-hidden="true" tabindex="-1"></a>   grew outward from a core onto related territory during training ("recursive</span>
+<span id="cb1-142"><a href="#cb1-142" aria-hidden="true" tabindex="-1"></a>   generalisation"). Under this hypothesis the neurons are the right basis and the task is</span>
+<span id="cb1-143"><a href="#cb1-143" aria-hidden="true" tabindex="-1"></a>   to explain them better.</span>
+<span id="cb1-144"><a href="#cb1-144" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-145"><a href="#cb1-145" aria-hidden="true" tabindex="-1"></a>These make opposite predictions about what should be bundled together: superposition</span>
+<span id="cb1-146"><a href="#cb1-146" aria-hidden="true" tabindex="-1"></a>bundles things *because* they are unrelated (so that they rarely co-occur and interfere</span>
+<span id="cb1-147"><a href="#cb1-147" aria-hidden="true" tabindex="-1"></a>little), generalisation bundles things *because* they are related. The essay's entire</span>
+<span id="cb1-148"><a href="#cb1-148" aria-hidden="true" tabindex="-1"></a>argument is that the evidence points to the second.</span>
+<span id="cb1-149"><a href="#cb1-149" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-150"><a href="#cb1-150" aria-hidden="true" tabindex="-1"></a><span class="fu">## 5. How people look at neurons</span></span>
+<span id="cb1-151"><a href="#cb1-151" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-152"><a href="#cb1-152" aria-hidden="true" tabindex="-1"></a>The tools below are the "microscope" the essay says was mis-set. Each is simple to state.</span>
+<span id="cb1-153"><a href="#cb1-153" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-154"><a href="#cb1-154" aria-hidden="true" tabindex="-1"></a>**Top-activating examples.** Run a large dataset through the network, record each neuron's</span>
+<span id="cb1-155"><a href="#cb1-155" aria-hidden="true" tabindex="-1"></a>activation on every input (or every token), and sort. The top few dozen inputs are the</span>
+<span id="cb1-156"><a href="#cb1-156" aria-hidden="true" tabindex="-1"></a>cheapest description of a neuron, and automated labelling pipelines mostly look at these.</span>
+<span id="cb1-157"><a href="#cb1-157" aria-hidden="true" tabindex="-1"></a>The essay's "weak activations" section is about everything *below* the top of this list.</span>
+<span id="cb1-158"><a href="#cb1-158" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-159"><a href="#cb1-159" aria-hidden="true" tabindex="-1"></a>**Feature visualisation.** Instead of searching a dataset, synthesise an input by gradient</span>
+<span id="cb1-160"><a href="#cb1-160" aria-hidden="true" tabindex="-1"></a>ascent on the activation, $x^\star = \arg\max_x a_i(x)$, starting from noise. Done naively</span>
+<span id="cb1-161"><a href="#cb1-161" aria-hidden="true" tabindex="-1"></a>this produces adversarial high-frequency noise. The 2017 *Feature Visualization* paper made</span>
+<span id="cb1-162"><a href="#cb1-162" aria-hidden="true" tabindex="-1"></a>it work by parametrising the image in a decorrelated Fourier basis and by **transformation</span>
+<span id="cb1-163"><a href="#cb1-163" aria-hidden="true" tabindex="-1"></a>robustness**: optimise the expected activation under random jitter, scaling and rotation of</span>
+<span id="cb1-164"><a href="#cb1-164" aria-hidden="true" tabindex="-1"></a>the image, so the optimiser must find a pattern that excites the neuron the way a real</span>
+<span id="cb1-165"><a href="#cb1-165" aria-hidden="true" tabindex="-1"></a>image would. The essay's point about "reward hacking" is that in late layers the optimiser</span>
+<span id="cb1-166"><a href="#cb1-166" aria-hidden="true" tabindex="-1"></a>still finds a route the network rarely uses on real data (it draws dogs when the real</span>
+<span id="cb1-167"><a href="#cb1-167" aria-hidden="true" tabindex="-1"></a>circuit carries car information), and that this is a property of the tool, not the neuron.</span>
+<span id="cb1-168"><a href="#cb1-168" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-169"><a href="#cb1-169" aria-hidden="true" tabindex="-1"></a>**Ablation.** Set a neuron's activation to zero (or to its dataset mean) on a given input</span>
+<span id="cb1-170"><a href="#cb1-170" aria-hidden="true" tabindex="-1"></a>and measure what changes in the output. This is the interventional test behind statements</span>
+<span id="cb1-171"><a href="#cb1-171" aria-hidden="true" tabindex="-1"></a>like "remove the eight neurons with a Santa negative side and the Santa probability falls</span>
+<span id="cb1-172"><a href="#cb1-172" aria-hidden="true" tabindex="-1"></a>from near-certain to 6 percent".</span>
+<span id="cb1-173"><a href="#cb1-173" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-174"><a href="#cb1-174" aria-hidden="true" tabindex="-1"></a>**Attribution.** For a given input, estimate how much neuron $i$ in one layer contributes to</span>
+<span id="cb1-175"><a href="#cb1-175" aria-hidden="true" tabindex="-1"></a>neuron $j$ in a later layer. The simplest version is the product of $a_i$ and the gradient</span>
+<span id="cb1-176"><a href="#cb1-176" aria-hidden="true" tabindex="-1"></a>$\partial a_j / \partial a_i$, which is exact when the path between them is linear. In a</span>
+<span id="cb1-177"><a href="#cb1-177" aria-hidden="true" tabindex="-1"></a>residual network the path from $v_i$ to $w_j$ *through the stream* is exactly linear, so the</span>
+<span id="cb1-178"><a href="#cb1-178" aria-hidden="true" tabindex="-1"></a>direct effect is just $a_i\,(v_i\cdot w_j)$, and the only approximation is in how the</span>
+<span id="cb1-179"><a href="#cb1-179" aria-hidden="true" tabindex="-1"></a>indirect effects through intervening nonlinearities are handled.</span>
+<span id="cb1-180"><a href="#cb1-180" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-181"><a href="#cb1-181" aria-hidden="true" tabindex="-1"></a>**Attribution graphs.** Take one prompt, compute attributions between all pairs of units</span>
+<span id="cb1-182"><a href="#cb1-182" aria-hidden="true" tabindex="-1"></a>across all layers, keep the strong edges, and draw the result as a graph from input tokens</span>
+<span id="cb1-183"><a href="#cb1-183" aria-hidden="true" tabindex="-1"></a>to output logits. Anthropic's 2025 *circuit tracing* work builds these graphs on</span>
+<span id="cb1-184"><a href="#cb1-184" aria-hidden="true" tabindex="-1"></a>**transcoder** features rather than neurons. A transcoder is a trained replacement for each</span>
+<span id="cb1-185"><a href="#cb1-185" aria-hidden="true" tabindex="-1"></a>MLP with a sparse, wide hidden layer, chosen so that the hidden units are more interpretable</span>
+<span id="cb1-186"><a href="#cb1-186" aria-hidden="true" tabindex="-1"></a>than the original neurons. The cost is that the replacement model is only approximately the</span>
+<span id="cb1-187"><a href="#cb1-187" aria-hidden="true" tabindex="-1"></a>original: the essay quotes Anthropic's own methods page for the figure that it predicts the</span>
+<span id="cb1-188"><a href="#cb1-188" aria-hidden="true" tabindex="-1"></a>same next token only about half the time. The essay's language-model claim is that the same</span>
+<span id="cb1-189"><a href="#cb1-189" aria-hidden="true" tabindex="-1"></a>graphs can be built on the original neurons with no replacement model at all.</span>
+<span id="cb1-190"><a href="#cb1-190" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-191"><a href="#cb1-191" aria-hidden="true" tabindex="-1"></a>**Steering.** Add a multiple of $v_i$ to the stream during generation and see what the model</span>
+<span id="cb1-192"><a href="#cb1-192" aria-hidden="true" tabindex="-1"></a>does. Used in the essay as an informal check ("steering the Colorado neuron makes the model</span>
+<span id="cb1-193"><a href="#cb1-193" aria-hidden="true" tabindex="-1"></a>want to go hiking").</span>
+<span id="cb1-194"><a href="#cb1-194" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-195"><a href="#cb1-195" aria-hidden="true" tabindex="-1"></a><span class="fu">## 6. Sparse autoencoders (dictionary learning)</span></span>
+<span id="cb1-196"><a href="#cb1-196" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-197"><a href="#cb1-197" aria-hidden="true" tabindex="-1"></a>If superposition is true, activation vectors $x \in \mathbb{R}^d$ are sparse non-negative</span>
+<span id="cb1-198"><a href="#cb1-198" aria-hidden="true" tabindex="-1"></a>combinations of $n \gg d$ feature directions, $x \approx \sum_k f_k(x)\, d_k$ with few</span>
+<span id="cb1-199"><a href="#cb1-199" aria-hidden="true" tabindex="-1"></a>$f_k \neq 0$. A **sparse autoencoder** (SAE) tries to recover the dictionary $<span class="sc">\{</span>d_k<span class="sc">\}</span>$ and the</span>
+<span id="cb1-200"><a href="#cb1-200" aria-hidden="true" tabindex="-1"></a>coefficients $f_k$ by training</span>
+<span id="cb1-201"><a href="#cb1-201" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-202"><a href="#cb1-202" aria-hidden="true" tabindex="-1"></a>$$</span>
+<span id="cb1-203"><a href="#cb1-203" aria-hidden="true" tabindex="-1"></a>f(x) = \mathrm{ReLU}(W_{\text{enc}}\, x + b_{\text{enc}}), \qquad</span>
+<span id="cb1-204"><a href="#cb1-204" aria-hidden="true" tabindex="-1"></a>\hat x = W_{\text{dec}}\, f(x) + b_{\text{dec}},</span>
+<span id="cb1-205"><a href="#cb1-205" aria-hidden="true" tabindex="-1"></a>$$</span>
+<span id="cb1-206"><a href="#cb1-206" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-207"><a href="#cb1-207" aria-hidden="true" tabindex="-1"></a>to minimise $<span class="sc">\|</span>x - \hat x<span class="sc">\|</span>^2 + \lambda <span class="sc">\|</span>f(x)<span class="sc">\|</span>_1$ over a large dataset of activations. The</span>
+<span id="cb1-208"><a href="#cb1-208" aria-hidden="true" tabindex="-1"></a>$\ell_1$ penalty enforces sparsity; the columns of $W_{\text{dec}}$ are the learned feature</span>
+<span id="cb1-209"><a href="#cb1-209" aria-hidden="true" tabindex="-1"></a>directions. A **TopK** SAE replaces the penalty by keeping only the $k$ largest</span>
+<span id="cb1-210"><a href="#cb1-210" aria-hidden="true" tabindex="-1"></a>preactivations per input, which is what the essay uses (640 features, $k=2$). "Dictionary</span>
+<span id="cb1-211"><a href="#cb1-211" aria-hidden="true" tabindex="-1"></a>learning" is the general name for this family.</span>
+<span id="cb1-212"><a href="#cb1-212" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-213"><a href="#cb1-213" aria-hidden="true" tabindex="-1"></a>Two numbers are always reported. **Variance explained** says how well $\hat x$ reconstructs</span>
+<span id="cb1-214"><a href="#cb1-214" aria-hidden="true" tabindex="-1"></a>$x$. More honest is to **splice** the SAE into the network, replacing $x$ by $\hat x$ at that</span>
+<span id="cb1-215"><a href="#cb1-215" aria-hidden="true" tabindex="-1"></a>layer, and measure how much the network's accuracy or loss degrades, because small</span>
+<span id="cb1-216"><a href="#cb1-216" aria-hidden="true" tabindex="-1"></a>reconstruction error can still destroy information the network needed. The essay reports</span>
+<span id="cb1-217"><a href="#cb1-217" aria-hidden="true" tabindex="-1"></a>both for its squeeze experiment.</span>
+<span id="cb1-218"><a href="#cb1-218" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-219"><a href="#cb1-219" aria-hidden="true" tabindex="-1"></a>The essay is not against SAEs as such. Its claim is that, in the networks it studied, an SAE</span>
+<span id="cb1-220"><a href="#cb1-220" aria-hidden="true" tabindex="-1"></a>mostly rediscovers the neurons (88 percent of SAE activity on ConvNeXt's last layer is a near</span>
+<span id="cb1-221"><a href="#cb1-221" aria-hidden="true" tabindex="-1"></a>copy of a single neuron) and the rest is loose regroupings of them, and that on InceptionV1</span>
+<span id="cb1-222"><a href="#cb1-222" aria-hidden="true" tabindex="-1"></a>4e:55 the SAE "fractures" a single V-shape neuron into a car feature and a cat feature, which</span>
+<span id="cb1-223"><a href="#cb1-223" aria-hidden="true" tabindex="-1"></a>is further from what the neuron does.</span>
+<span id="cb1-224"><a href="#cb1-224" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-225"><a href="#cb1-225" aria-hidden="true" tabindex="-1"></a><span class="fu">## 7. The model zoo</span></span>
+<span id="cb1-226"><a href="#cb1-226" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-227"><a href="#cb1-227" aria-hidden="true" tabindex="-1"></a>The essay moves between several networks. A one-line sketch of each:</span>
+<span id="cb1-228"><a href="#cb1-228" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-229"><a href="#cb1-229" aria-hidden="true" tabindex="-1"></a><span class="pp">|</span> Model <span class="pp">|</span> Year <span class="pp">|</span> Size <span class="pp">|</span> Type <span class="pp">|</span> Why it appears <span class="pp">|</span></span>
+<span id="cb1-230"><a href="#cb1-230" aria-hidden="true" tabindex="-1"></a><span class="pp">|---|---|---|---|---|</span></span>
+<span id="cb1-231"><a href="#cb1-231" aria-hidden="true" tabindex="-1"></a><span class="pp">|</span> InceptionV1 (GoogLeNet) <span class="pp">|</span> 2014 <span class="pp">|</span> 6.6 M params <span class="pp">|</span> conv net, no residual stream, ReLU <span class="pp">|</span> The original model organism; layers named <span class="in">`mixed3a … mixed5b`</span> <span class="pp">|</span></span>
+<span id="cb1-232"><a href="#cb1-232" aria-hidden="true" tabindex="-1"></a><span class="pp">|</span> ConvNeXt (small / medium / large) <span class="pp">|</span> 2022 design, trained by the author <span class="pp">|</span> 92 k / 7.06 M / 28.6 M <span class="pp">|</span> modern conv net with residuals, LayerNorm, GELU <span class="pp">|</span> A 300× size sweep at fixed architecture; medium matches InceptionV1's parameter count <span class="pp">|</span></span>
+<span id="cb1-233"><a href="#cb1-233" aria-hidden="true" tabindex="-1"></a><span class="pp">|</span> CLIP <span class="pp">|</span> 2021 <span class="pp">|</span> ~ 400 M <span class="pp">|</span> image–text contrastive model <span class="pp">|</span> Source of the "multimodal neurons" paper <span class="pp">|</span></span>
+<span id="cb1-234"><a href="#cb1-234" aria-hidden="true" tabindex="-1"></a><span class="pp">|</span> DINOv2 <span class="pp">|</span> 2023 <span class="pp">|</span> ~ 86 M (ViT-B) <span class="pp">|</span> self-supervised vision transformer <span class="pp">|</span> Shows the same pose neuron appears at 10× InceptionV1's size <span class="pp">|</span></span>
+<span id="cb1-235"><a href="#cb1-235" aria-hidden="true" tabindex="-1"></a><span class="pp">|</span> GPT-2 XL <span class="pp">|</span> 2019 <span class="pp">|</span> 1.5 B <span class="pp">|</span> transformer, GELU <span class="pp">|</span> Model of the 2023 OpenAI automated-interpretability project <span class="pp">|</span></span>
+<span id="cb1-236"><a href="#cb1-236" aria-hidden="true" tabindex="-1"></a><span class="pp">|</span> Qwen3-32B <span class="pp">|</span> 2025 <span class="pp">|</span> 32 B <span class="pp">|</span> dense transformer, SwiGLU <span class="pp">|</span> Main language model in the essay <span class="pp">|</span></span>
+<span id="cb1-237"><a href="#cb1-237" aria-hidden="true" tabindex="-1"></a><span class="pp">|</span> Qwen3.6 (MoE) <span class="pp">|</span> 2026 <span class="pp">|</span> — <span class="pp">|</span> mixture of experts <span class="pp">|</span> The 10,240-expert survey <span class="pp">|</span></span>
+<span id="cb1-238"><a href="#cb1-238" aria-hidden="true" tabindex="-1"></a><span class="pp">|</span> Kimi K3 <span class="pp">|</span> 2026 <span class="pp">|</span> &gt; 1 T <span class="pp">|</span> mixture of experts <span class="pp">|</span> "First attribution graph of a multi-trillion parameter model" <span class="pp">|</span></span>
+<span id="cb1-239"><a href="#cb1-239" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-240"><a href="#cb1-240" aria-hidden="true" tabindex="-1"></a>**Mixture of experts.** In an MoE transformer the MLP sublayer is replaced by many</span>
+<span id="cb1-241"><a href="#cb1-241" aria-hidden="true" tabindex="-1"></a>independent MLPs ("experts") and a learned router that sends each token to a few of them.</span>
+<span id="cb1-242"><a href="#cb1-242" aria-hidden="true" tabindex="-1"></a>Each expert has its own neurons. The essay argues experts are far more specialised than</span>
+<span id="cb1-243"><a href="#cb1-243" aria-hidden="true" tabindex="-1"></a>usually reported and calls the architecture "anti-superposition", because the router would</span>
+<span id="cb1-244"><a href="#cb1-244" aria-hidden="true" tabindex="-1"></a>have to recognise thousands of distinct things for packing to occur.</span>
+<span id="cb1-245"><a href="#cb1-245" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-246"><a href="#cb1-246" aria-hidden="true" tabindex="-1"></a><span class="fu">## 8. A map for physicists {#a-map-for-physicists}</span></span>
+<span id="cb1-247"><a href="#cb1-247" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-248"><a href="#cb1-248" aria-hidden="true" tabindex="-1"></a>Some intuitions carry over cleanly; others actively mislead. A short list.</span>
+<span id="cb1-249"><a href="#cb1-249" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-250"><a href="#cb1-250" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>**Superposition is a compressed-sensing statement.** $n$ sparse signals in $d &lt; n$</span>
+<span id="cb1-251"><a href="#cb1-251" aria-hidden="true" tabindex="-1"></a>  dimensions can be stored and recovered if their directions are nearly orthogonal</span>
+<span id="cb1-252"><a href="#cb1-252" aria-hidden="true" tabindex="-1"></a>  (Johnson–Lindenstrauss: one can fit $e^{O(\epsilon^2 d)}$ vectors in $\mathbb{R}^d$ with</span>
+<span id="cb1-253"><a href="#cb1-253" aria-hidden="true" tabindex="-1"></a>  pairwise overlaps below $\epsilon$). The toy model on the next page is a learned version of</span>
+<span id="cb1-254"><a href="#cb1-254" aria-hidden="true" tabindex="-1"></a>  this with ReLU as the decoder. The essay accepts the mathematics and disputes whether real</span>
+<span id="cb1-255"><a href="#cb1-255" aria-hidden="true" tabindex="-1"></a>  networks are in the regime where the trade-off (capacity vs interference) is the dominant</span>
+<span id="cb1-256"><a href="#cb1-256" aria-hidden="true" tabindex="-1"></a>  consideration.</span>
+<span id="cb1-257"><a href="#cb1-257" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>**"Circuit racing" is mode competition.** The essay's account of why networks generalise is</span>
+<span id="cb1-258"><a href="#cb1-258" aria-hidden="true" tabindex="-1"></a>  that broad features fire on more of the data, receive more gradient, and starve the narrow</span>
+<span id="cb1-259"><a href="#cb1-259" aria-hidden="true" tabindex="-1"></a>  ones. This is rich-get-richer dynamics in the sense of a linear instability: whichever</span>
+<span id="cb1-260"><a href="#cb1-260" aria-hidden="true" tabindex="-1"></a>  direction has the largest growth rate dominates. The companion idea in the literature is</span>
+<span id="cb1-261"><a href="#cb1-261" aria-hidden="true" tabindex="-1"></a>  "gradient starvation" and "coherent gradients".</span>
+<span id="cb1-262"><a href="#cb1-262" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>**The privileged basis is a symmetry statement.** The residual stream has an $O(d)$</span>
+<span id="cb1-263"><a href="#cb1-263" aria-hidden="true" tabindex="-1"></a>  symmetry; the neuron layer breaks it to permutations (and sign flips, in some cases)</span>
+<span id="cb1-264"><a href="#cb1-264" aria-hidden="true" tabindex="-1"></a>  because $\phi$ is elementwise. Asking which basis is "real" is asking which symmetry the</span>
+<span id="cb1-265"><a href="#cb1-265" aria-hidden="true" tabindex="-1"></a>  dynamics breaks.</span>
+<span id="cb1-266"><a href="#cb1-266" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>**Recursive generalisation vs superposition is a locality question.** Generalisation is</span>
+<span id="cb1-267"><a href="#cb1-267" aria-hidden="true" tabindex="-1"></a>  local in some similarity metric on the data; superposition is non-local by design. This is</span>
+<span id="cb1-268"><a href="#cb1-268" aria-hidden="true" tabindex="-1"></a>  the one empirical dichotomy the essay turns on, and watching a neuron over training</span>
+<span id="cb1-269"><a href="#cb1-269" aria-hidden="true" tabindex="-1"></a>  checkpoints is the proposed experiment.</span>
+<span id="cb1-270"><a href="#cb1-270" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>**Beware "feature" as a conserved quantity.** The essay's appendix argues that the toy</span>
+<span id="cb1-271"><a href="#cb1-271" aria-hidden="true" tabindex="-1"></a>  model prices the *cost* of sharing a neuron (interference) but not the *benefit* (reuse by</span>
+<span id="cb1-272"><a href="#cb1-272" aria-hidden="true" tabindex="-1"></a>  downstream readers), because in the toy there is nothing downstream. In a real network a</span>
+<span id="cb1-273"><a href="#cb1-273" aria-hidden="true" tabindex="-1"></a>  representation only matters through what reads it. A physicist's instinct to count degrees</span>
+<span id="cb1-274"><a href="#cb1-274" aria-hidden="true" tabindex="-1"></a>  of freedom and ask whether $n &gt; d$ is, on the essay's account, the wrong question.</span>
+<span id="cb1-275"><a href="#cb1-275" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>**Beware the "microscope" analogy as reassurance.** A real microscope's artefacts are well</span>
+<span id="cb1-276"><a href="#cb1-276" aria-hidden="true" tabindex="-1"></a>  understood; the essay's whole historical section is about artefacts in feature</span>
+<span id="cb1-277"><a href="#cb1-277" aria-hidden="true" tabindex="-1"></a>  visualisation and in the choice of model organism that went unrecognised for years.</span>
+<span id="cb1-278"><a href="#cb1-278" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-279"><a href="#cb1-279" aria-hidden="true" tabindex="-1"></a><span class="fu">## Glossary {#glossary}</span></span>
+<span id="cb1-280"><a href="#cb1-280" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-281"><a href="#cb1-281" aria-hidden="true" tabindex="-1"></a>Terms in the essay's own sense, in roughly the order they appear.</span>
+<span id="cb1-282"><a href="#cb1-282" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-283"><a href="#cb1-283" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>**Polysemantic / monosemantic.** A neuron that appears to respond to several unrelated</span>
+<span id="cb1-284"><a href="#cb1-284" aria-hidden="true" tabindex="-1"></a>  things / to one thing. The essay argues the first is largely an observer's statement.</span>
+<span id="cb1-285"><a href="#cb1-285" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>**Superposition.** Unrelated features stored in overlapping, non-neuron-aligned directions</span>
+<span id="cb1-286"><a href="#cb1-286" aria-hidden="true" tabindex="-1"></a>  because the network has run out of neurons. The essay distinguishes three senses: (a)</span>
+<span id="cb1-287"><a href="#cb1-287" aria-hidden="true" tabindex="-1"></a>  more features than dimensions, which a clean network could also satisfy; (b) a learning</span>
+<span id="cb1-288"><a href="#cb1-288" aria-hidden="true" tabindex="-1"></a>  principle that packs unrelated things into neurons, which is what the essay argues</span>
+<span id="cb1-289"><a href="#cb1-289" aria-hidden="true" tabindex="-1"></a>  against; (c) the same principle applied to directions in the residual stream.</span>
+<span id="cb1-290"><a href="#cb1-290" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>**Recursive generalisation.** A neuron starts on one core and sprouts related offshoots as</span>
+<span id="cb1-291"><a href="#cb1-291" aria-hidden="true" tabindex="-1"></a>  training proceeds, "the way a tree branch sprouts sub-branches". Earlier called "conjoined</span>
+<span id="cb1-292"><a href="#cb1-292" aria-hidden="true" tabindex="-1"></a>  features" in the multimodal-neurons paper.</span>
+<span id="cb1-293"><a href="#cb1-293" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>**Pole.** The positive or negative side of a neuron's preactivation. Both are treated as</span>
+<span id="cb1-294"><a href="#cb1-294" aria-hidden="true" tabindex="-1"></a>  meaningful.</span>
+<span id="cb1-295"><a href="#cb1-295" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>**Gate.** A neuron viewed as control flow: what it lets through and what it keeps out,</span>
+<span id="cb1-296"><a href="#cb1-296" aria-hidden="true" tabindex="-1"></a>  rather than what noun it names.</span>
+<span id="cb1-297"><a href="#cb1-297" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>**Circuit.** A set of neurons across layers connected by large weights, doing an</span>
+<span id="cb1-298"><a href="#cb1-298" aria-hidden="true" tabindex="-1"></a>  identifiable sub-computation.</span>
+<span id="cb1-299"><a href="#cb1-299" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>**Motif.** A pattern that recurs across many circuits (e.g. "summary on punctuation",</span>
+<span id="cb1-300"><a href="#cb1-300" aria-hidden="true" tabindex="-1"></a>  "say or just think", pose neurons feeding class detectors).</span>
+<span id="cb1-301"><a href="#cb1-301" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>**Weak activations.** Everything below the top of a neuron's activation distribution; the</span>
+<span id="cb1-302"><a href="#cb1-302" aria-hidden="true" tabindex="-1"></a>  essay argues they are mostly generalisation and mostly ablatable.</span>
+<span id="cb1-303"><a href="#cb1-303" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>**Blind maximum.** Test an explanation by having a second agent, who sees only the</span>
+<span id="cb1-304"><a href="#cb1-304" aria-hidden="true" tabindex="-1"></a>  explanation, write an input intended to maximally activate the neuron. If it beats the</span>
+<span id="cb1-305"><a href="#cb1-305" aria-hidden="true" tabindex="-1"></a>  dataset maximum the explanation captured the centre of the neuron.</span>
+<span id="cb1-306"><a href="#cb1-306" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>**Neuron paper.** A short written audit of one neuron, produced by an agent; the essay</span>
+<span id="cb1-307"><a href="#cb1-307" aria-hidden="true" tabindex="-1"></a>  reports statistics over 1,000 of them.</span>
+<span id="cb1-308"><a href="#cb1-308" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>**Attribution graph.** A per-prompt graph of which units drive which, from tokens to logits.</span>
+<span id="cb1-309"><a href="#cb1-309" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>**Enumerative vs exploratory interpretability.** Build a complete list of features to</span>
+<span id="cb1-310"><a href="#cb1-310" aria-hidden="true" tabindex="-1"></a>  audit, vs start from questions and move through the network as needed. The essay favours</span>
+<span id="cb1-311"><a href="#cb1-311" aria-hidden="true" tabindex="-1"></a>  the second and says the first was "always a means to an end".</span>
+<span id="cb1-312"><a href="#cb1-312" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>**Already clean.** The essay's thesis: the network's own parts are built to be read by its</span>
+<span id="cb1-313"><a href="#cb1-313" aria-hidden="true" tabindex="-1"></a>  own downstream parts, and are therefore readable by us without being decomposed first.</span>
+<span id="cb1-314"><a href="#cb1-314" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-315"><a href="#cb1-315" aria-hidden="true" tabindex="-1"></a><span class="fu">## Further reading for this page</span></span>
+<span id="cb1-316"><a href="#cb1-316" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-317"><a href="#cb1-317" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>Olah et al., *Feature Visualization*, Distill 2017.</span>
+<span id="cb1-318"><a href="#cb1-318" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>Olah et al., *Zoom In: An Introduction to Circuits*, Distill 2020.</span>
+<span id="cb1-319"><a href="#cb1-319" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>Elhage et al., *Toy Models of Superposition*, Transformer Circuits 2022 (next page).</span>
+<span id="cb1-320"><a href="#cb1-320" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>Bricken et al., *Towards Monosemanticity*, Transformer Circuits 2023 (the SAE paper).</span>
+<span id="cb1-321"><a href="#cb1-321" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>Ameisen et al., *Circuit Tracing* and Lindsey et al., *On the Biology of a Large Language</span>
+<span id="cb1-322"><a href="#cb1-322" aria-hidden="true" tabindex="-1"></a>  Model*, Transformer Circuits 2025 (attribution graphs).</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button" data-in-quarto-modal=""><i class="bi"></i></button></div>
+</div></div></div></div></div>
+</div> <!-- /content -->
+
+
+
+
+</body></html>

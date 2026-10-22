@@ -1,0 +1,1246 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.10.19">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>Cars and Animals – Neural Networks Are Already Clean — a slow read</title>
+<style>
+/* Default styles provided by pandoc.
+** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
+*/
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: 1.5em;}
+div.column{flex: auto;}
+@media screen {
+div.columns{gap: min(4vw, 1.5em);}
+div.column{overflow-x: auto;}
+}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+html { -webkit-text-size-adjust: 100%; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+
+<script src="../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../">
+<script src="../site_libs/quarto-html/quarto.js" type="module"></script>
+<script src="../site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="../site_libs/quarto-html/popper.min.js"></script>
+<script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting-bf27225e3a48a9273f3daa8f8e829971.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../site_libs/bootstrap/bootstrap-27d0aecb2de0abaf2c1b0e6b7abd202f.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "overlay",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+
+
+</head>
+
+<body class="nav-sidebar docked nav-fixed quarto-light">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+    <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container mx-auto">
+    <a class="navbar-brand" href="../index.html">
+    <span class="navbar-title">Neural Networks Are Already Clean — a slow read</span>
+    </a>
+  </div>
+            <div id="quarto-search" class="" title="Search"></div>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" role="menu" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+  <span class="navbar-toggler-icon"></span>
+</button>
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav navbar-nav-scroll me-auto">
+  <li class="nav-item">
+    <a class="nav-link active" href="../index.html" aria-current="page"> 
+<span class="menu-text">Home</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="https://already-clean.goodfire.com/"> 
+<span class="menu-text">The essay</span></a>
+  </li>  
+</ul>
+          </div> <!-- /navcollapse -->
+            <div class="quarto-navbar-tools">
+</div>
+      </div> <!-- /container-fluid -->
+    </nav>
+  <nav class="quarto-secondary-nav">
+    <div class="container-fluid d-flex">
+      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+        <i class="bi bi-layout-text-sidebar-reverse"></i>
+      </button>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../02-the-short-version/index.html">The essay, section by section</a></li><li class="breadcrumb-item"><a href="../03-cars-and-animals/index.html">Cars and Animals</a></li></ol></nav>
+        <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+        </a>
+      <button type="button" class="btn quarto-search-button" aria-label="Search" onclick="window.quartoOpenSearch();">
+        <i class="bi bi-search"></i>
+      </button>
+    </div>
+  </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation docked overflow-auto">
+        <div class="mt-2 flex-shrink-0 align-items-center">
+        <div class="sidebar-search">
+        <div id="quarto-search" class="" title="Search"></div>
+        </div>
+        </div>
+    <div class="sidebar-menu-container"> 
+    <ul class="list-unstyled mt-1">
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">A slow read of <em>Neural Networks Are Already Clean</em></span></a>
+  </div>
+</li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="true">
+ <span class="menu-text">Preliminaries</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-1" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../00-preliminaries/index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Preliminaries: the objects the essay talks about</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" role="navigation" aria-expanded="true">
+ <span class="menu-text">Background: Toy Models of Superposition</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-2" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../01-toy-models-of-superposition/index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Background: Toy Models of Superposition</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" role="navigation" aria-expanded="true">
+ <span class="menu-text">The essay, section by section</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-3" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../02-the-short-version/index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">The Short Version</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../03-cars-and-animals/index.html" class="sidebar-item-text sidebar-link active">
+ <span class="menu-text">Cars and Animals</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../04-microscope-errors/index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Microscope Errors</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../05-recursive-generalization/index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Recursive Generalization</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../06-superposition/index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Superposition</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../07-superposition-of-the-gaps/index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Superposition Of The Gaps</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../08-exploring-image-models/index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Exploring Image Models</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../09-weak-activations/index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Weak Activations</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../10-exploring-language-models/index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Exploring Language Models</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../11-zooming-out/index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Zooming Out</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+    </ul>
+    </div>
+</nav>
+<div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul>
+  <li><a href="#what-the-essay-claims-specifically" id="toc-what-the-essay-claims-specifically" class="nav-link active" data-scroll-target="#what-the-essay-claims-specifically">What the essay claims, specifically</a></li>
+  <li><a href="#the-two-poles-on-5000-photographs" id="toc-the-two-poles-on-5000-photographs" class="nav-link" data-scroll-target="#the-two-poles-on-5000-photographs">The two poles on 5,000 photographs</a></li>
+  <li><a href="#is-it-really-just-cats-and-cars-using-the-labels" id="toc-is-it-really-just-cats-and-cars-using-the-labels" class="nav-link" data-scroll-target="#is-it-really-just-cats-and-cars-using-the-labels">Is it really just cats and cars? Using the labels</a></li>
+  <li><a href="#the-circuit-inputs-and-readers-from-the-weights" id="toc-the-circuit-inputs-and-readers-from-the-weights" class="nav-link" data-scroll-target="#the-circuit-inputs-and-readers-from-the-weights">The circuit: inputs and readers from the weights</a></li>
+  <li><a href="#a-synthetic-probe-does-a-bare-v-excite-it" id="toc-a-synthetic-probe-does-a-bare-v-excite-it" class="nav-link" data-scroll-target="#a-synthetic-probe-does-a-bare-v-excite-it">A synthetic probe: does a bare V excite it?</a></li>
+  <li><a href="#assessment" id="toc-assessment" class="nav-link" data-scroll-target="#assessment">Assessment</a></li>
+  <li><a href="#discussion-questions" id="toc-discussion-questions" class="nav-link" data-scroll-target="#discussion-questions">Discussion questions</a></li>
+  </ul>
+</nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../02-the-short-version/index.html">The essay, section by section</a></li><li class="breadcrumb-item"><a href="../03-cars-and-animals/index.html">Cars and Animals</a></li></ol></nav>
+<div class="quarto-title">
+<div class="quarto-title-block"><div><h1 class="title">Cars and Animals</h1><button type="button" class="btn code-tools-button dropdown-toggle" id="quarto-code-tools-menu" data-bs-toggle="dropdown" aria-expanded="false"><i class="bi"></i> Code</button><ul class="dropdown-menu dropdown-menu-end" aria-labelelledby="quarto-code-tools-menu"><li><a id="quarto-show-all-code" class="dropdown-item" href="javascript:void(0)" role="button">Show All Code</a></li><li><a id="quarto-hide-all-code" class="dropdown-item" href="javascript:void(0)" role="button">Hide All Code</a></li><li><hr class="dropdown-divider"></li><li><a id="quarto-view-source" class="dropdown-item" href="javascript:void(0)" role="button">View Source</a></li></ul></div></div>
+<p class="subtitle lead">Essay section 2: is the famous cat-and-car neuron a V-shape neuron? A direct check on the original weights</p>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<p>The essay’s first piece of evidence is a reinterpretation of the most famous polysemantic neuron in the field, InceptionV1’s <strong>4e:55</strong> (channel 55 of layer <code>mixed4e</code>). <em>Zoom In</em> (2020) presented it as responding to cat faces and car fronts and said outright that it “isn’t responding to some commonality of cars and cat faces”. The essay now says it is a <strong>V-shape</strong> neuron: pointed things drive it positive, round things drive it negative, and the cats and cars are two of many things with a V in them.</p>
+<p>The original 2014 InceptionV1 weights are public (the <code>inception5h</code> graph that the Lucid and Lucent libraries ship), so this is a claim we can check directly. We do not have ImageNet, so we use the 5,000 COCO validation images instead, which have cats, cars, dogs and much else, and which come with object labels we can use for statistics.</p>
+<section id="what-the-essay-claims-specifically" class="level2">
+<h2 class="anchored" data-anchor-id="what-the-essay-claims-specifically">What the essay claims, specifically</h2>
+<ol type="1">
+<li>The neuron’s strongest inputs from the previous layer include 4d:493 (fox snout), 4d:477 (wolf face) and 4d:201 (van front); its strongest reader downstream is 5a:94 (V-shaped flames).</li>
+<li>Its negative pole is “an O, round where the V is pointed”.</li>
+<li>Its positive pole generalises beyond cats and cars to anything pointed: fox faces, pool tables, bullet trains.</li>
+<li>Therefore the right description is a <em>shared pattern</em> (a verb, “pointed versus round”), not a <em>list of nouns</em> (cats OR cars).</li>
+</ol>
+<p>Claims 1 and 2 are checkable from the weights and from any photo collection. Claim 3 we can check partially with COCO’s labels. Claim 4 is an interpretation, and the last section discusses how much the evidence supports it.</p>
+<div id="e15a89be" class="cell" data-execution_count="1">
+<details class="code-fold">
+<summary>Setup: load the original InceptionV1 and scan COCO (cached after the first run)</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> sys, pathlib, json, numpy <span class="im">as</span> np, torch, matplotlib.pyplot <span class="im">as</span> plt</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> PIL <span class="im">import</span> Image</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>ROOT <span class="op">=</span> pathlib.Path.cwd().parent</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>sys.path.insert(<span class="dv">0</span>, <span class="bu">str</span>(ROOT))</span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> common.inception <span class="im">import</span> load_inceptionv1, scan_layer, receptive_crop</span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>plt.rcParams.update({<span class="st">"figure.dpi"</span>: <span class="dv">110</span>, <span class="st">"font.size"</span>: <span class="dv">9</span>})</span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>DEV <span class="op">=</span> <span class="st">"cuda"</span> <span class="cf">if</span> torch.cuda.is_available() <span class="cf">else</span> <span class="st">"cpu"</span></span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>CH <span class="op">=</span> <span class="dv">55</span></span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a>model <span class="op">=</span> load_inceptionv1(DEV)</span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a>paths <span class="op">=</span> <span class="bu">sorted</span>((ROOT <span class="op">/</span> <span class="st">"data/coco/val2017"</span>).glob(<span class="st">"*.jpg"</span>))</span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a>cache <span class="op">=</span> ROOT <span class="op">/</span> <span class="st">"data/cache/mixed4e_1x1_prerelu_coco.npz"</span></span>
+<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> cache.exists():</span>
+<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a>    z <span class="op">=</span> <span class="bu">dict</span>(np.load(cache))</span>
+<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a><span class="cf">else</span>:</span>
+<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a>    res <span class="op">=</span> scan_layer(model, <span class="st">"mixed4e_1x1_pre_relu_conv"</span>, paths, device<span class="op">=</span>DEV, batch<span class="op">=</span><span class="dv">100</span>)</span>
+<span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a>    np.savez_compressed(cache, <span class="op">**</span>{k: v <span class="cf">for</span> k, v <span class="kw">in</span> res.items() <span class="cf">if</span> k <span class="op">!=</span> <span class="st">"paths"</span>}, paths<span class="op">=</span>np.array(res[<span class="st">"paths"</span>]))</span>
+<span id="cb1-17"><a href="#cb1-17" aria-hidden="true" tabindex="-1"></a>    z <span class="op">=</span> <span class="bu">dict</span>(np.load(cache))</span>
+<span id="cb1-18"><a href="#cb1-18" aria-hidden="true" tabindex="-1"></a>mx, mn, grid <span class="op">=</span> z[<span class="st">"max"</span>][:, CH], z[<span class="st">"min"</span>][:, CH], <span class="bu">int</span>(z[<span class="st">"grid"</span>][<span class="dv">0</span>])</span>
+<span id="cb1-19"><a href="#cb1-19" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"</span><span class="sc">{</span><span class="bu">len</span>(paths)<span class="sc">}</span><span class="ss"> images; 4e:55 pre-ReLU spatial max: median </span><span class="sc">{</span>np<span class="sc">.</span>median(mx)<span class="sc">:.0f}</span><span class="ss">, "</span></span>
+<span id="cb1-20"><a href="#cb1-20" aria-hidden="true" tabindex="-1"></a>      <span class="ss">f"99th pct </span><span class="sc">{</span>np<span class="sc">.</span>percentile(mx, <span class="dv">99</span>)<span class="sc">:.0f}</span><span class="ss">, top </span><span class="sc">{</span>mx<span class="sc">.</span><span class="bu">max</span>()<span class="sc">:.0f}</span><span class="ss">; spatial min: bottom </span><span class="sc">{</span>mn<span class="sc">.</span><span class="bu">min</span>()<span class="sc">:.0f}</span><span class="ss">"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>5000 images; 4e:55 pre-ReLU spatial max: median 196, 99th pct 766, top 1719; spatial min: bottom -575</code></pre>
+</div>
+</div>
+<p>A note on what is measured. <code>mixed4e</code> is a concatenation of four branches and channel 55 is in the 1×1 branch, so we hook that branch’s convolution <em>before</em> its ReLU. That way the negative pole is visible; after the ReLU it would be zero everywhere. For each image we record the maximum and minimum over the 14×14 spatial grid and where they occur, and show a crop around that location as a stand-in for the receptive field.</p>
+</section>
+<section id="the-two-poles-on-5000-photographs" class="level2">
+<h2 class="anchored" data-anchor-id="the-two-poles-on-5000-photographs">The two poles on 5,000 photographs</h2>
+<div id="d2d02db8" class="cell" data-execution_count="2">
+<details class="code-fold">
+<summary>Contact sheets of the strongest positive and negative responses</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> sheet(order, locs, n<span class="op">=</span><span class="dv">40</span>, ncol<span class="op">=</span><span class="dv">8</span>, size<span class="op">=</span><span class="dv">96</span>):</span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>    W <span class="op">=</span> Image.new(<span class="st">"RGB"</span>, (ncol<span class="op">*</span>size, (n<span class="op">//</span>ncol)<span class="op">*</span>size), <span class="st">"white"</span>)</span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> k, i <span class="kw">in</span> <span class="bu">enumerate</span>(order[:n]):</span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>        c <span class="op">=</span> receptive_crop(pathlib.Path(z[<span class="st">"paths"</span>][i]), locs[i, CH], grid).resize((size, size))</span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>        W.paste(c, ((k <span class="op">%</span> ncol)<span class="op">*</span>size, (k<span class="op">//</span>ncol)<span class="op">*</span>size))</span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> W</span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a>pos <span class="op">=</span> sheet(np.argsort(<span class="op">-</span>mx), z[<span class="st">"argmax_yx"</span>])<span class="op">;</span> neg <span class="op">=</span> sheet(np.argsort(mn), z[<span class="st">"argmin_yx"</span>])</span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a>fig, axes <span class="op">=</span> plt.subplots(<span class="dv">1</span>, <span class="dv">2</span>, figsize<span class="op">=</span>(<span class="dv">11</span>, <span class="fl">3.8</span>))</span>
+<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> ax, im, t <span class="kw">in</span> <span class="bu">zip</span>(axes, [pos, neg], [<span class="st">"positive pole (top 40)"</span>, <span class="st">"negative pole (bottom 40)"</span>]):</span>
+<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a>    ax.imshow(im)<span class="op">;</span> ax.set_title(t)<span class="op">;</span> ax.axis(<span class="st">"off"</span>)</span>
+<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a>plt.tight_layout()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+<div class="cell-output cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="index_files/figure-html/cell-3-output-1.png" width="1202" height="407" class="figure-img"></p>
+<figcaption>Left: crops around the location of the 40 strongest positive responses of 4e:55 in COCO val2017. Right: the 40 strongest negative responses. Each crop is about 45% of the 224-pixel input, centred on the activation’s location.</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<p>The positive sheet is the famous grid: frontal cat faces and the fronts of cars, with a couple of small dogs. The negative sheet is clocks, the round heads of bears and cows, teddy bears, the backs of human heads, plates and bowls. The essay’s description of the negative pole as “an O” holds up on a dataset the neuron was never ranked on before.</p>
+</section>
+<section id="is-it-really-just-cats-and-cars-using-the-labels" class="level2">
+<h2 class="anchored" data-anchor-id="is-it-really-just-cats-and-cars-using-the-labels">Is it really just cats and cars? Using the labels</h2>
+<p>COCO’s instance annotations tell us what is in each image. If the neuron were an OR of cat and car, images with neither should not reach the top. If it is a V-shape detector, some should, and they should be pointed things.</p>
+<div id="b545adc8" class="cell" data-execution_count="3">
+<details class="code-fold">
+<summary>Label statistics of the top images</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>ann <span class="op">=</span> json.load(<span class="bu">open</span>(ROOT <span class="op">/</span> <span class="st">"data/coco/annotations/instances_val2017.json"</span>))</span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>cat_name <span class="op">=</span> {c[<span class="st">"id"</span>]: c[<span class="st">"name"</span>] <span class="cf">for</span> c <span class="kw">in</span> ann[<span class="st">"categories"</span>]}</span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>labels <span class="op">=</span> {}</span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> a <span class="kw">in</span> ann[<span class="st">"annotations"</span>]:</span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>    labels.setdefault(a[<span class="st">"image_id"</span>], <span class="bu">set</span>()).add(cat_name[a[<span class="st">"category_id"</span>]])</span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>ids <span class="op">=</span> [<span class="bu">int</span>(pathlib.Path(p).stem) <span class="cf">for</span> p <span class="kw">in</span> z[<span class="st">"paths"</span>]]</span>
+<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> has(i, names): <span class="cf">return</span> <span class="bu">bool</span>(labels.get(ids[i], <span class="bu">set</span>()) <span class="op">&amp;</span> <span class="bu">set</span>(names))</span>
+<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a>order <span class="op">=</span> np.argsort(<span class="op">-</span>mx)</span>
+<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a>vehicles <span class="op">=</span> [<span class="st">"car"</span>, <span class="st">"truck"</span>, <span class="st">"bus"</span>]</span>
+<span id="cb4-10"><a href="#cb4-10" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"</span><span class="sc">{</span><span class="st">'top-k'</span><span class="sc">:&gt;6s}</span><span class="ss"> </span><span class="sc">{</span><span class="st">'cat'</span><span class="sc">:&gt;6s}</span><span class="ss"> </span><span class="sc">{</span><span class="st">'car/truck/bus'</span><span class="sc">:&gt;14s}</span><span class="ss"> </span><span class="sc">{</span><span class="st">'dog'</span><span class="sc">:&gt;6s}</span><span class="ss"> </span><span class="sc">{</span><span class="st">'none of these'</span><span class="sc">:&gt;14s}</span><span class="ss">"</span>)</span>
+<span id="cb4-11"><a href="#cb4-11" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> k <span class="kw">in</span> (<span class="dv">20</span>, <span class="dv">50</span>, <span class="dv">200</span>, <span class="dv">500</span>):</span>
+<span id="cb4-12"><a href="#cb4-12" aria-hidden="true" tabindex="-1"></a>    top <span class="op">=</span> order[:k]</span>
+<span id="cb4-13"><a href="#cb4-13" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(<span class="ss">f"</span><span class="sc">{</span>k<span class="sc">:6d}</span><span class="ss"> </span><span class="sc">{</span>np<span class="sc">.</span>mean([has(i,[<span class="st">'cat'</span>]) <span class="cf">for</span> i <span class="kw">in</span> top])<span class="sc">:6.2f}</span><span class="ss"> "</span></span>
+<span id="cb4-14"><a href="#cb4-14" aria-hidden="true" tabindex="-1"></a>          <span class="ss">f"</span><span class="sc">{</span>np<span class="sc">.</span>mean([has(i,vehicles) <span class="cf">for</span> i <span class="kw">in</span> top])<span class="sc">:14.2f}</span><span class="ss"> "</span></span>
+<span id="cb4-15"><a href="#cb4-15" aria-hidden="true" tabindex="-1"></a>          <span class="ss">f"</span><span class="sc">{</span>np<span class="sc">.</span>mean([has(i,[<span class="st">'dog'</span>]) <span class="cf">for</span> i <span class="kw">in</span> top])<span class="sc">:6.2f}</span><span class="ss"> "</span></span>
+<span id="cb4-16"><a href="#cb4-16" aria-hidden="true" tabindex="-1"></a>          <span class="ss">f"</span><span class="sc">{</span>np<span class="sc">.</span>mean([<span class="kw">not</span> has(i,[<span class="st">'cat'</span>,<span class="st">'dog'</span>]<span class="op">+</span>vehicles) <span class="cf">for</span> i <span class="kw">in</span> top])<span class="sc">:14.2f}</span><span class="ss">"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code> top-k    cat  car/truck/bus    dog  none of these
+    20   0.85           0.10   0.05           0.00
+    50   0.66           0.30   0.04           0.02
+   200   0.27           0.42   0.07           0.26
+   500   0.14           0.38   0.06           0.44</code></pre>
+</div>
+</div>
+<div id="3b9cad29" class="cell" data-execution_count="4">
+<details class="code-fold">
+<summary>The strongest responses among images with no cat, dog, car, truck or bus</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb6"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>rest <span class="op">=</span> [i <span class="cf">for</span> i <span class="kw">in</span> order <span class="cf">if</span> <span class="kw">not</span> has(i, [<span class="st">"cat"</span>, <span class="st">"dog"</span>] <span class="op">+</span> vehicles)]</span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"best 'neither' image: activation </span><span class="sc">{</span>mx[rest[<span class="dv">0</span>]]<span class="sc">:.0f}</span><span class="ss"> vs overall top </span><span class="sc">{</span>mx[order[<span class="dv">0</span>]]<span class="sc">:.0f}</span><span class="ss"> "</span></span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>      <span class="ss">f"and 99th percentile </span><span class="sc">{</span>np<span class="sc">.</span>percentile(mx, <span class="dv">99</span>)<span class="sc">:.0f}</span><span class="ss">"</span>)</span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> collections <span class="im">import</span> Counter</span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"most common labels in the top 60 of these:"</span>,</span>
+<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a>      Counter(l <span class="cf">for</span> i <span class="kw">in</span> rest[:<span class="dv">60</span>] <span class="cf">for</span> l <span class="kw">in</span> labels.get(ids[i], [])).most_common(<span class="dv">10</span>))</span>
+<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a>fig, ax <span class="op">=</span> plt.subplots(figsize<span class="op">=</span>(<span class="dv">8</span>, <span class="dv">5</span>))</span>
+<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a>ax.imshow(sheet(rest, z[<span class="st">"argmax_yx"</span>]))<span class="op">;</span> ax.axis(<span class="st">"off"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>best 'neither' image: activation 877 vs overall top 1719 and 99th percentile 766
+most common labels in the top 60 of these: [('person', 21), ('chair', 14), ('bottle', 8), ('cup', 8), ('remote', 7), ('tennis racket', 7), ('sink', 7), ('bed', 6), ('tv', 6), ('airplane', 6)]</code></pre>
+</div>
+<div class="cell-output cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="index_files/figure-html/cell-5-output-2.png" width="699" height="445" class="figure-img"></p>
+<figcaption>The 40 strongest positive responses among COCO images that contain no cat, dog, car, truck or bus. The best of these reaches above the 99th percentile of all images.</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<p>What drives the neuron when cats and cars are excluded: frontal animal faces (goat, bighorn sheep, horse, zebra, bear, small birds), the noses of trains and aircraft, computer mice and remote controls seen end-on, and scenes with strong converging perspective lines such as tennis courts, baseball diamonds, railway tracks and bed corners. The essay’s own examples of what the V generalises to were fox faces, pool tables and bullet trains. The COCO list is the same kind of thing: pointed fronts and converging lines. This is the strongest evidence on this page for the “V, not OR(cat, car)” reading.</p>
+</section>
+<section id="the-circuit-inputs-and-readers-from-the-weights" class="level2">
+<h2 class="anchored" data-anchor-id="the-circuit-inputs-and-readers-from-the-weights">The circuit: inputs and readers from the weights</h2>
+<p>The essay names specific neighbours. Because <code>mixed4e</code>’s 1×1 branch is a 1×1 convolution, its weight matrix is directly the vector of votes each <code>mixed4d</code> channel casts for 4e:55, and the <code>mixed5a</code> convolutions give the votes 4e:55 casts for each <code>mixed5a</code> channel.</p>
+<div id="b4bf0fd1" class="cell" data-execution_count="5">
+<details class="code-fold">
+<summary>Rank the essay’s named inputs and reader by weight</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb8"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>w_in <span class="op">=</span> model.mixed4e_1x1_pre_relu_conv.weight[CH, :, <span class="dv">0</span>, <span class="dv">0</span>].detach().cpu()</span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>top <span class="op">=</span> torch.argsort(<span class="op">-</span>w_in)[:<span class="dv">8</span>]</span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"strongest inputs from mixed4d  (channel, weight):"</span>, [(<span class="bu">int</span>(i), <span class="bu">round</span>(<span class="bu">float</span>(w_in[i]), <span class="dv">3</span>)) <span class="cf">for</span> i <span class="kw">in</span> top])</span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> c, name <span class="kw">in</span> [(<span class="dv">493</span>, <span class="st">"fox snout"</span>), (<span class="dv">477</span>, <span class="st">"wolf face"</span>), (<span class="dv">201</span>, <span class="st">"van front"</span>)]:</span>
+<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(<span class="ss">f"  essay's 4d:</span><span class="sc">{</span>c<span class="sc">}</span><span class="ss"> (</span><span class="sc">{</span>name<span class="sc">}</span><span class="ss">): weight </span><span class="sc">{</span><span class="bu">float</span>(w_in[c])<span class="sc">:+.3f}</span><span class="ss">, rank </span><span class="sc">{</span><span class="bu">int</span>((w_in <span class="op">&gt;</span> w_in[c]).<span class="bu">sum</span>())<span class="op">+</span><span class="dv">1</span><span class="sc">}</span><span class="ss"> of 528"</span>)</span>
+<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a>w1 <span class="op">=</span> model.mixed5a_1x1_pre_relu_conv.weight[:, CH, <span class="dv">0</span>, <span class="dv">0</span>].detach().cpu()</span>
+<span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"strongest readers in mixed5a 1x1 branch:"</span>, [(<span class="bu">int</span>(i), <span class="bu">round</span>(<span class="bu">float</span>(w1[i]), <span class="dv">3</span>)) <span class="cf">for</span> i <span class="kw">in</span> torch.argsort(<span class="op">-</span>w1)[:<span class="dv">6</span>]])</span>
+<span id="cb8-8"><a href="#cb8-8" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"  essay's 5a:94 (V-shaped flames): weight </span><span class="sc">{</span><span class="bu">float</span>(w1[<span class="dv">94</span>])<span class="sc">:+.3f}</span><span class="ss">, rank </span><span class="sc">{</span><span class="bu">int</span>((w1 <span class="op">&gt;</span> w1[<span class="dv">94</span>]).<span class="bu">sum</span>())<span class="op">+</span><span class="dv">1</span><span class="sc">}</span><span class="ss"> of 256"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>strongest inputs from mixed4d  (channel, weight): [(493, 0.311), (511, 0.128), (61, 0.116), (352, 0.102), (334, 0.08), (383, 0.079), (143, 0.072), (477, 0.068)]
+  essay's 4d:493 (fox snout): weight +0.311, rank 1 of 528
+  essay's 4d:477 (wolf face): weight +0.068, rank 8 of 528
+  essay's 4d:201 (van front): weight +0.057, rank 15 of 528
+strongest readers in mixed5a 1x1 branch: [(94, 0.1), (240, 0.058), (81, 0.057), (254, 0.057), (102, 0.057), (62, 0.055)]
+  essay's 5a:94 (V-shaped flames): weight +0.100, rank 1 of 256</code></pre>
+</div>
+</div>
+<p>The essay’s named input 4d:493 is the single strongest weight into the neuron, by a factor of more than two over the next, and its named reader 5a:94 is the single strongest reader in that branch. The other two named inputs are in the top fifteen of 528. These are raw weights rather than data-weighted attributions, so the agreement is if anything stronger than the essay needed. (We have not visualised 4d:493 or 5a:94 ourselves; the labels “fox snout” and “V-shaped flames” are the essay’s.)</p>
+</section>
+<section id="a-synthetic-probe-does-a-bare-v-excite-it" class="level2">
+<h2 class="anchored" data-anchor-id="a-synthetic-probe-does-a-bare-v-excite-it">A synthetic probe: does a bare V excite it?</h2>
+<p>If the neuron were a geometric V detector in the way an early-layer curve detector is a curve detector, a line drawing of a V should drive it. We draw simple shapes on a grey background and record the pre-ReLU maximum and minimum.</p>
+<div id="ecfd7b35" class="cell" data-execution_count="6">
+<details class="code-fold">
+<summary>Line-drawn shapes on grey</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb10"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> PIL <span class="im">import</span> ImageDraw</span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>feats <span class="op">=</span> {}</span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>hook <span class="op">=</span> <span class="bu">dict</span>(model.named_modules())[<span class="st">"mixed4e_1x1_pre_relu_conv"</span>].register_forward_hook(</span>
+<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a>    <span class="kw">lambda</span> m, i, o: feats.<span class="fu">__setitem__</span>(<span class="st">"x"</span>, o))</span>
+<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> canvas(): <span class="cf">return</span> Image.new(<span class="st">"RGB"</span>, (<span class="dv">224</span>, <span class="dv">224</span>), (<span class="dv">128</span>, <span class="dv">128</span>, <span class="dv">128</span>))</span>
+<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> shape(kind, size<span class="op">=</span><span class="dv">90</span>, width<span class="op">=</span><span class="dv">10</span>, angle<span class="op">=</span><span class="fl">0.0</span>, color<span class="op">=</span>(<span class="dv">0</span>, <span class="dv">0</span>, <span class="dv">0</span>), cx<span class="op">=</span><span class="dv">112</span>, cy<span class="op">=</span><span class="dv">112</span>):</span>
+<span id="cb10-7"><a href="#cb10-7" aria-hidden="true" tabindex="-1"></a>    im <span class="op">=</span> canvas()<span class="op">;</span> d <span class="op">=</span> ImageDraw.Draw(im)</span>
+<span id="cb10-8"><a href="#cb10-8" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> kind <span class="op">==</span> <span class="st">"V"</span>:</span>
+<span id="cb10-9"><a href="#cb10-9" aria-hidden="true" tabindex="-1"></a>        a <span class="op">=</span> np.deg2rad(angle)<span class="op">;</span> half <span class="op">=</span> np.deg2rad(<span class="dv">35</span>)</span>
+<span id="cb10-10"><a href="#cb10-10" aria-hidden="true" tabindex="-1"></a>        apex <span class="op">=</span> np.array([cx, cy]) <span class="op">+</span> size<span class="op">*</span><span class="fl">0.5</span><span class="op">*</span>np.array([np.sin(a), np.cos(a)])</span>
+<span id="cb10-11"><a href="#cb10-11" aria-hidden="true" tabindex="-1"></a>        <span class="cf">for</span> s <span class="kw">in</span> (<span class="op">+</span><span class="dv">1</span>, <span class="op">-</span><span class="dv">1</span>):</span>
+<span id="cb10-12"><a href="#cb10-12" aria-hidden="true" tabindex="-1"></a>            end <span class="op">=</span> apex <span class="op">-</span> size<span class="op">*</span>np.array([np.sin(a<span class="op">+</span>s<span class="op">*</span>half), np.cos(a<span class="op">+</span>s<span class="op">*</span>half)])</span>
+<span id="cb10-13"><a href="#cb10-13" aria-hidden="true" tabindex="-1"></a>            d.line([<span class="bu">tuple</span>(apex), <span class="bu">tuple</span>(end)], fill<span class="op">=</span>color, width<span class="op">=</span>width)</span>
+<span id="cb10-14"><a href="#cb10-14" aria-hidden="true" tabindex="-1"></a>    <span class="cf">elif</span> kind <span class="op">==</span> <span class="st">"O"</span>: d.ellipse([cx<span class="op">-</span>size<span class="op">/</span><span class="dv">2</span>, cy<span class="op">-</span>size<span class="op">/</span><span class="dv">2</span>, cx<span class="op">+</span>size<span class="op">/</span><span class="dv">2</span>, cy<span class="op">+</span>size<span class="op">/</span><span class="dv">2</span>], outline<span class="op">=</span>color, width<span class="op">=</span>width)</span>
+<span id="cb10-15"><a href="#cb10-15" aria-hidden="true" tabindex="-1"></a>    <span class="cf">elif</span> kind <span class="op">==</span> <span class="st">"disc"</span>: d.ellipse([cx<span class="op">-</span>size<span class="op">/</span><span class="dv">2</span>, cy<span class="op">-</span>size<span class="op">/</span><span class="dv">2</span>, cx<span class="op">+</span>size<span class="op">/</span><span class="dv">2</span>, cy<span class="op">+</span>size<span class="op">/</span><span class="dv">2</span>], fill<span class="op">=</span>color)</span>
+<span id="cb10-16"><a href="#cb10-16" aria-hidden="true" tabindex="-1"></a>    <span class="cf">elif</span> kind <span class="op">==</span> <span class="st">"square"</span>: d.rectangle([cx<span class="op">-</span>size<span class="op">/</span><span class="dv">2</span>, cy<span class="op">-</span>size<span class="op">/</span><span class="dv">2</span>, cx<span class="op">+</span>size<span class="op">/</span><span class="dv">2</span>, cy<span class="op">+</span>size<span class="op">/</span><span class="dv">2</span>], outline<span class="op">=</span>color, width<span class="op">=</span>width)</span>
+<span id="cb10-17"><a href="#cb10-17" aria-hidden="true" tabindex="-1"></a>    <span class="cf">elif</span> kind <span class="op">==</span> <span class="st">"X"</span>:</span>
+<span id="cb10-18"><a href="#cb10-18" aria-hidden="true" tabindex="-1"></a>        d.line([(cx<span class="op">-</span>size<span class="op">/</span><span class="dv">2</span>, cy<span class="op">-</span>size<span class="op">/</span><span class="dv">2</span>), (cx<span class="op">+</span>size<span class="op">/</span><span class="dv">2</span>, cy<span class="op">+</span>size<span class="op">/</span><span class="dv">2</span>)], fill<span class="op">=</span>color, width<span class="op">=</span>width)</span>
+<span id="cb10-19"><a href="#cb10-19" aria-hidden="true" tabindex="-1"></a>        d.line([(cx<span class="op">-</span>size<span class="op">/</span><span class="dv">2</span>, cy<span class="op">+</span>size<span class="op">/</span><span class="dv">2</span>), (cx<span class="op">+</span>size<span class="op">/</span><span class="dv">2</span>, cy<span class="op">-</span>size<span class="op">/</span><span class="dv">2</span>)], fill<span class="op">=</span>color, width<span class="op">=</span>width)</span>
+<span id="cb10-20"><a href="#cb10-20" aria-hidden="true" tabindex="-1"></a>    <span class="cf">elif</span> kind <span class="op">==</span> <span class="st">"triangle"</span>:</span>
+<span id="cb10-21"><a href="#cb10-21" aria-hidden="true" tabindex="-1"></a>        d.polygon([(cx, cy<span class="op">+</span>size<span class="op">/</span><span class="dv">2</span>), (cx<span class="op">-</span>size<span class="op">/</span><span class="dv">2</span>, cy<span class="op">-</span>size<span class="op">/</span><span class="dv">2</span>), (cx<span class="op">+</span>size<span class="op">/</span><span class="dv">2</span>, cy<span class="op">-</span>size<span class="op">/</span><span class="dv">2</span>)], outline<span class="op">=</span>color, width<span class="op">=</span>width)</span>
+<span id="cb10-22"><a href="#cb10-22" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> im</span>
+<span id="cb10-23"><a href="#cb10-23" aria-hidden="true" tabindex="-1"></a><span class="at">@torch.no_grad</span>()</span>
+<span id="cb10-24"><a href="#cb10-24" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> run(imgs):</span>
+<span id="cb10-25"><a href="#cb10-25" aria-hidden="true" tabindex="-1"></a>    x <span class="op">=</span> torch.stack([torch.from_numpy(np.asarray(im, dtype<span class="op">=</span>np.float32) <span class="op">-</span> <span class="dv">117</span>).permute(<span class="dv">2</span>, <span class="dv">0</span>, <span class="dv">1</span>) <span class="cf">for</span> im <span class="kw">in</span> imgs]).to(DEV)</span>
+<span id="cb10-26"><a href="#cb10-26" aria-hidden="true" tabindex="-1"></a>    model(x)<span class="op">;</span> fm <span class="op">=</span> feats[<span class="st">"x"</span>][:, CH]</span>
+<span id="cb10-27"><a href="#cb10-27" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> fm.flatten(<span class="dv">1</span>).<span class="bu">max</span>(<span class="dv">1</span>).values.cpu().numpy(), fm.flatten(<span class="dv">1</span>).<span class="bu">min</span>(<span class="dv">1</span>).values.cpu().numpy()</span>
+<span id="cb10-28"><a href="#cb10-28" aria-hidden="true" tabindex="-1"></a>kinds <span class="op">=</span> [<span class="st">"V"</span>, <span class="st">"triangle"</span>, <span class="st">"X"</span>, <span class="st">"square"</span>, <span class="st">"O"</span>, <span class="st">"disc"</span>, <span class="st">"blank"</span>]</span>
+<span id="cb10-29"><a href="#cb10-29" aria-hidden="true" tabindex="-1"></a>sizes, widths, colours <span class="op">=</span> [<span class="dv">60</span>, <span class="dv">90</span>, <span class="dv">120</span>, <span class="dv">150</span>], [<span class="dv">6</span>, <span class="dv">12</span>], [(<span class="dv">0</span>, <span class="dv">0</span>, <span class="dv">0</span>), (<span class="dv">255</span>, <span class="dv">255</span>, <span class="dv">255</span>)]</span>
+<span id="cb10-30"><a href="#cb10-30" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"</span><span class="sc">{</span><span class="st">'shape'</span><span class="sc">:9s}</span><span class="ss"> </span><span class="sc">{</span><span class="st">'mean max'</span><span class="sc">:&gt;9s}</span><span class="ss"> </span><span class="sc">{</span><span class="st">'mean min'</span><span class="sc">:&gt;9s}</span><span class="ss">    (over 4 sizes x 2 widths x 2 colours; photo scale: 99th pct max = </span><span class="sc">{</span>np<span class="sc">.</span>percentile(mx,<span class="dv">99</span>)<span class="sc">:.0f}</span><span class="ss">)"</span>)</span>
+<span id="cb10-31"><a href="#cb10-31" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> kind <span class="kw">in</span> kinds:</span>
+<span id="cb10-32"><a href="#cb10-32" aria-hidden="true" tabindex="-1"></a>    imgs <span class="op">=</span> [canvas() <span class="cf">if</span> kind <span class="op">==</span> <span class="st">"blank"</span> <span class="cf">else</span> shape(kind, s, w, color<span class="op">=</span>c) <span class="cf">for</span> s <span class="kw">in</span> sizes <span class="cf">for</span> w <span class="kw">in</span> widths <span class="cf">for</span> c <span class="kw">in</span> colours]</span>
+<span id="cb10-33"><a href="#cb10-33" aria-hidden="true" tabindex="-1"></a>    a, b <span class="op">=</span> run(imgs)<span class="op">;</span> <span class="bu">print</span>(<span class="ss">f"</span><span class="sc">{</span>kind<span class="sc">:9s}</span><span class="ss"> </span><span class="sc">{</span>a<span class="sc">.</span>mean()<span class="sc">:9.0f}</span><span class="ss"> </span><span class="sc">{</span>b<span class="sc">.</span>mean()<span class="sc">:9.0f}</span><span class="ss">"</span>)</span>
+<span id="cb10-34"><a href="#cb10-34" aria-hidden="true" tabindex="-1"></a>hook.remove()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>shape      mean max  mean min    (over 4 sizes x 2 widths x 2 colours; photo scale: 99th pct max = 766)
+V                54       -85
+triangle         97      -100
+X               148       -85
+square           42      -125
+O                44      -136
+disc             16      -160
+blank            -0       -76</code></pre>
+</div>
+</div>
+<p>Two things come out. The round shapes (an outline O and a filled disc) give the most negative responses of any stimulus, a good deal below a blank grey field, so “round pushes it negative” survives even in line drawings. But a bare V does <em>not</em> excite the neuron much: its positive response is about a tenth of what a real cat face produces and no larger than a square’s. Whatever “V” means for this neuron, it is a pattern inside high-level structure (a face, a car front, a converging road) rather than a geometric primitive. The essay says as much in its footnote: “generalization happens inside high-level patterns”, and the V neuron “really does take in cat circuitry”. A mid-network neuron’s inputs are already fairly abstract, so this is not a surprise, but it is a limit on how literally to take the word “V”.</p>
+</section>
+<section id="assessment" class="level2">
+<h2 class="anchored" data-anchor-id="assessment">Assessment</h2>
+<ul>
+<li><strong>Confirmed on public weights:</strong> the named inputs and reader are the strongest by weight; the negative pole is round things; the positive pole extends beyond cats and cars to frontal animal faces, vehicle noses and converging lines.</li>
+<li><strong>Supported but not proven:</strong> that “pointed versus round” is the <em>right</em> one-line description. It fits everything we saw, and it fits better than OR(cat, car), which cannot explain the goats, trains and tennis courts. A line-drawn V alone is not enough, so the description is of a high-level shape cue, not a contour.</li>
+<li><strong>Not addressed here:</strong> the second half of the essay’s section, the car-into-dogs circuit and the “generalised pose neurons”. That needs feature visualisation with and without the bias toward natural paths, which is the subject of the next section.</li>
+</ul>
+</section>
+<section id="discussion-questions" class="level2">
+<h2 class="anchored" data-anchor-id="discussion-questions">Discussion questions</h2>
+<ol type="1">
+<li>The neuron fires on cat faces far more strongly than on anything else in COCO. Is a neuron whose top of the distribution is 85% cats, but whose tail is “pointed things”, best called a cat neuron, a V neuron, or something else? Does the answer depend on what reads it?</li>
+<li>The essay’s recommended trick is to describe a neuron without nouns. Try it on the negative-pole sheet above. Is “round” the only candidate?</li>
+<li>How would one tell a “V-shape” neuron from a “frontal face or front of object” neuron? What stimulus would separate them?</li>
+</ol>
+
+
+<!-- -->
+
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
+      }
+      return false;
+    }
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "Copied!");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "Copied!");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+      const outerScaffold = trigger.parentElement.cloneNode(true);
+      const codeEl = outerScaffold.querySelector('code');
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+    const viewSource = window.document.getElementById('quarto-view-source') ||
+                       window.document.getElementById('quarto-code-tools-source');
+    if (viewSource) {
+      const sourceUrl = viewSource.getAttribute("data-quarto-source-url");
+      viewSource.addEventListener("click", function(e) {
+        if (sourceUrl) {
+          // rstudio viewer pane
+          if (/\bcapabilities=\b/.test(window.location)) {
+            window.open(sourceUrl);
+          } else {
+            window.location.href = sourceUrl;
+          }
+        } else {
+          const modal = new bootstrap.Modal(document.getElementById('quarto-embedded-source-code-modal'));
+          modal.show();
+        }
+        return false;
+      });
+    }
+    function toggleCodeHandler(show) {
+      return function(e) {
+        const cellDetails = window.document.querySelectorAll(".cell details.code-fold");
+        for (let i=0; i<cellDetails.length; i++) {
+          const details = cellDetails[i];
+          if (show) {
+            details.open = true;
+          } else {
+            details.removeAttribute("open");
+          }
+        }
+        const cellCodeDivs = window.document.querySelectorAll(".cell div.sourceCode.cell-code");
+        const fromCls = show ? "hidden" : "unhidden";
+        const toCls = show ? "unhidden" : "hidden";
+        for (let i=0; i<cellCodeDivs.length; i++) {
+          const codeDiv = cellCodeDivs[i];
+          if (codeDiv.classList.contains(fromCls)) {
+            codeDiv.classList.remove(fromCls);
+            codeDiv.classList.add(toCls);
+          } 
+        }
+        return false;
+      }
+    }
+    const hideAllCode = window.document.getElementById("quarto-hide-all-code");
+    if (hideAllCode) {
+      hideAllCode.addEventListener("click", toggleCodeHandler(false));
+    }
+    const showAllCode = window.document.getElementById("quarto-show-all-code");
+    if (showAllCode) {
+      showAllCode.addEventListener("click", toggleCodeHandler(true));
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp("https:\/\/physicsmonkey\.github\.io\/neurons-clean\/");
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
+        }
+      }
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
+      } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
+      }
+    }
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
+          }
+        } else {
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.querySelector('main.content');
+            if (note !== null) {
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }, function(instance) {
+      });
+    }
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          let top = null;
+          let height = null;
+          let parent = null;
+          if (lineIds.length > 0) {
+              //compute the position of the single el (top and bottom and make a div)
+              const el = window.document.getElementById(lineIds[0]);
+              top = el.offsetTop;
+              height = el.offsetHeight;
+              parent = el.parentElement.parentElement;
+            if (lineIds.length > 1) {
+              const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+              const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+              height = bottom - top;
+            }
+            if (top !== null && height !== null && parent !== null) {
+              // cook up a div (if necessary) and position it 
+              let div = window.document.getElementById("code-annotation-line-highlight");
+              if (div === null) {
+                div = window.document.createElement("div");
+                div.setAttribute("id", "code-annotation-line-highlight");
+                div.style.position = 'absolute';
+                parent.appendChild(div);
+              }
+              div.style.top = top - 2 + "px";
+              div.style.height = height + 4 + "px";
+              div.style.left = 0;
+              let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+              if (gutterDiv === null) {
+                gutterDiv = window.document.createElement("div");
+                gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+                gutterDiv.style.position = 'absolute';
+                const codeCell = window.document.getElementById(targetCell);
+                const gutter = codeCell.querySelector('.code-annotation-gutter');
+                gutter.appendChild(gutterDiv);
+              }
+              gutterDiv.style.top = top - 2 + "px";
+              gutterDiv.style.height = height + 4 + "px";
+            }
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script><div class="modal fade" id="quarto-embedded-source-code-modal" tabindex="-1" aria-labelledby="quarto-embedded-source-code-modal-label" aria-hidden="true"><div class="modal-dialog modal-dialog-scrollable"><div class="modal-content"><div class="modal-header"><h5 class="modal-title" id="quarto-embedded-source-code-modal-label">Source Code</h5><button class="btn-close" data-bs-dismiss="modal"></button></div><div class="modal-body"><div class="">
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb12" data-shortcodes="false"><pre class="sourceCode markdown code-with-copy"><code class="sourceCode markdown"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="co">---</span></span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a><span class="an">title:</span><span class="co"> "Cars and Animals"</span></span>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a><span class="an">subtitle:</span><span class="co"> "Essay section 2: is the famous cat-and-car neuron a V-shape neuron? A direct check on the original weights"</span></span>
+<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a><span class="co">---</span></span>
+<span id="cb12-5"><a href="#cb12-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-6"><a href="#cb12-6" aria-hidden="true" tabindex="-1"></a>The essay's first piece of evidence is a reinterpretation of the most famous polysemantic</span>
+<span id="cb12-7"><a href="#cb12-7" aria-hidden="true" tabindex="-1"></a>neuron in the field, InceptionV1's **4e:55** (channel 55 of layer <span class="in">`mixed4e`</span>). *Zoom In* (2020)</span>
+<span id="cb12-8"><a href="#cb12-8" aria-hidden="true" tabindex="-1"></a>presented it as responding to cat faces and car fronts and said outright that it "isn't</span>
+<span id="cb12-9"><a href="#cb12-9" aria-hidden="true" tabindex="-1"></a>responding to some commonality of cars and cat faces". The essay now says it is a **V-shape**</span>
+<span id="cb12-10"><a href="#cb12-10" aria-hidden="true" tabindex="-1"></a>neuron: pointed things drive it positive, round things drive it negative, and the cats and cars</span>
+<span id="cb12-11"><a href="#cb12-11" aria-hidden="true" tabindex="-1"></a>are two of many things with a V in them.</span>
+<span id="cb12-12"><a href="#cb12-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-13"><a href="#cb12-13" aria-hidden="true" tabindex="-1"></a>The original 2014 InceptionV1 weights are public (the <span class="in">`inception5h`</span> graph that the Lucid and</span>
+<span id="cb12-14"><a href="#cb12-14" aria-hidden="true" tabindex="-1"></a>Lucent libraries ship), so this is a claim we can check directly. We do not have ImageNet, so</span>
+<span id="cb12-15"><a href="#cb12-15" aria-hidden="true" tabindex="-1"></a>we use the 5,000 COCO validation images instead, which have cats, cars, dogs and much else, and</span>
+<span id="cb12-16"><a href="#cb12-16" aria-hidden="true" tabindex="-1"></a>which come with object labels we can use for statistics.</span>
+<span id="cb12-17"><a href="#cb12-17" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-18"><a href="#cb12-18" aria-hidden="true" tabindex="-1"></a><span class="fu">## What the essay claims, specifically</span></span>
+<span id="cb12-19"><a href="#cb12-19" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-20"><a href="#cb12-20" aria-hidden="true" tabindex="-1"></a><span class="ss">1. </span>The neuron's strongest inputs from the previous layer include 4d:493 (fox snout),</span>
+<span id="cb12-21"><a href="#cb12-21" aria-hidden="true" tabindex="-1"></a>   4d:477 (wolf face) and 4d:201 (van front); its strongest reader downstream is 5a:94</span>
+<span id="cb12-22"><a href="#cb12-22" aria-hidden="true" tabindex="-1"></a>   (V-shaped flames).</span>
+<span id="cb12-23"><a href="#cb12-23" aria-hidden="true" tabindex="-1"></a><span class="ss">2. </span>Its negative pole is "an O, round where the V is pointed".</span>
+<span id="cb12-24"><a href="#cb12-24" aria-hidden="true" tabindex="-1"></a><span class="ss">3. </span>Its positive pole generalises beyond cats and cars to anything pointed: fox faces, pool</span>
+<span id="cb12-25"><a href="#cb12-25" aria-hidden="true" tabindex="-1"></a>   tables, bullet trains.</span>
+<span id="cb12-26"><a href="#cb12-26" aria-hidden="true" tabindex="-1"></a><span class="ss">4. </span>Therefore the right description is a *shared pattern* (a verb, "pointed versus round"), not</span>
+<span id="cb12-27"><a href="#cb12-27" aria-hidden="true" tabindex="-1"></a>   a *list of nouns* (cats OR cars).</span>
+<span id="cb12-28"><a href="#cb12-28" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-29"><a href="#cb12-29" aria-hidden="true" tabindex="-1"></a>Claims 1 and 2 are checkable from the weights and from any photo collection. Claim 3 we can</span>
+<span id="cb12-30"><a href="#cb12-30" aria-hidden="true" tabindex="-1"></a>check partially with COCO's labels. Claim 4 is an interpretation, and the last section</span>
+<span id="cb12-31"><a href="#cb12-31" aria-hidden="true" tabindex="-1"></a>discusses how much the evidence supports it.</span>
+<span id="cb12-32"><a href="#cb12-32" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-35"><a href="#cb12-35" aria-hidden="true" tabindex="-1"></a><span class="in">```{python}</span></span>
+<span id="cb12-36"><a href="#cb12-36" aria-hidden="true" tabindex="-1"></a><span class="co">#| code-summary: "Setup: load the original InceptionV1 and scan COCO (cached after the first run)"</span></span>
+<span id="cb12-37"><a href="#cb12-37" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> sys, pathlib, json, numpy <span class="im">as</span> np, torch, matplotlib.pyplot <span class="im">as</span> plt</span>
+<span id="cb12-38"><a href="#cb12-38" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> PIL <span class="im">import</span> Image</span>
+<span id="cb12-39"><a href="#cb12-39" aria-hidden="true" tabindex="-1"></a>ROOT <span class="op">=</span> pathlib.Path.cwd().parent</span>
+<span id="cb12-40"><a href="#cb12-40" aria-hidden="true" tabindex="-1"></a>sys.path.insert(<span class="dv">0</span>, <span class="bu">str</span>(ROOT))</span>
+<span id="cb12-41"><a href="#cb12-41" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> common.inception <span class="im">import</span> load_inceptionv1, scan_layer, receptive_crop</span>
+<span id="cb12-42"><a href="#cb12-42" aria-hidden="true" tabindex="-1"></a>plt.rcParams.update({<span class="st">"figure.dpi"</span>: <span class="dv">110</span>, <span class="st">"font.size"</span>: <span class="dv">9</span>})</span>
+<span id="cb12-43"><a href="#cb12-43" aria-hidden="true" tabindex="-1"></a>DEV <span class="op">=</span> <span class="st">"cuda"</span> <span class="cf">if</span> torch.cuda.is_available() <span class="cf">else</span> <span class="st">"cpu"</span></span>
+<span id="cb12-44"><a href="#cb12-44" aria-hidden="true" tabindex="-1"></a>CH <span class="op">=</span> <span class="dv">55</span></span>
+<span id="cb12-45"><a href="#cb12-45" aria-hidden="true" tabindex="-1"></a>model <span class="op">=</span> load_inceptionv1(DEV)</span>
+<span id="cb12-46"><a href="#cb12-46" aria-hidden="true" tabindex="-1"></a>paths <span class="op">=</span> <span class="bu">sorted</span>((ROOT <span class="op">/</span> <span class="st">"data/coco/val2017"</span>).glob(<span class="st">"*.jpg"</span>))</span>
+<span id="cb12-47"><a href="#cb12-47" aria-hidden="true" tabindex="-1"></a>cache <span class="op">=</span> ROOT <span class="op">/</span> <span class="st">"data/cache/mixed4e_1x1_prerelu_coco.npz"</span></span>
+<span id="cb12-48"><a href="#cb12-48" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> cache.exists():</span>
+<span id="cb12-49"><a href="#cb12-49" aria-hidden="true" tabindex="-1"></a>    z <span class="op">=</span> <span class="bu">dict</span>(np.load(cache))</span>
+<span id="cb12-50"><a href="#cb12-50" aria-hidden="true" tabindex="-1"></a><span class="cf">else</span>:</span>
+<span id="cb12-51"><a href="#cb12-51" aria-hidden="true" tabindex="-1"></a>    res <span class="op">=</span> scan_layer(model, <span class="st">"mixed4e_1x1_pre_relu_conv"</span>, paths, device<span class="op">=</span>DEV, batch<span class="op">=</span><span class="dv">100</span>)</span>
+<span id="cb12-52"><a href="#cb12-52" aria-hidden="true" tabindex="-1"></a>    np.savez_compressed(cache, <span class="op">**</span>{k: v <span class="cf">for</span> k, v <span class="kw">in</span> res.items() <span class="cf">if</span> k <span class="op">!=</span> <span class="st">"paths"</span>}, paths<span class="op">=</span>np.array(res[<span class="st">"paths"</span>]))</span>
+<span id="cb12-53"><a href="#cb12-53" aria-hidden="true" tabindex="-1"></a>    z <span class="op">=</span> <span class="bu">dict</span>(np.load(cache))</span>
+<span id="cb12-54"><a href="#cb12-54" aria-hidden="true" tabindex="-1"></a>mx, mn, grid <span class="op">=</span> z[<span class="st">"max"</span>][:, CH], z[<span class="st">"min"</span>][:, CH], <span class="bu">int</span>(z[<span class="st">"grid"</span>][<span class="dv">0</span>])</span>
+<span id="cb12-55"><a href="#cb12-55" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"</span><span class="sc">{</span><span class="bu">len</span>(paths)<span class="sc">}</span><span class="ss"> images; 4e:55 pre-ReLU spatial max: median </span><span class="sc">{</span>np<span class="sc">.</span>median(mx)<span class="sc">:.0f}</span><span class="ss">, "</span></span>
+<span id="cb12-56"><a href="#cb12-56" aria-hidden="true" tabindex="-1"></a>      <span class="ss">f"99th pct </span><span class="sc">{</span>np<span class="sc">.</span>percentile(mx, <span class="dv">99</span>)<span class="sc">:.0f}</span><span class="ss">, top </span><span class="sc">{</span>mx<span class="sc">.</span><span class="bu">max</span>()<span class="sc">:.0f}</span><span class="ss">; spatial min: bottom </span><span class="sc">{</span>mn<span class="sc">.</span><span class="bu">min</span>()<span class="sc">:.0f}</span><span class="ss">"</span>)</span>
+<span id="cb12-57"><a href="#cb12-57" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb12-58"><a href="#cb12-58" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-59"><a href="#cb12-59" aria-hidden="true" tabindex="-1"></a>A note on what is measured. <span class="in">`mixed4e`</span> is a concatenation of four branches and channel 55 is in</span>
+<span id="cb12-60"><a href="#cb12-60" aria-hidden="true" tabindex="-1"></a>the 1×1 branch, so we hook that branch's convolution *before* its ReLU. That way the negative</span>
+<span id="cb12-61"><a href="#cb12-61" aria-hidden="true" tabindex="-1"></a>pole is visible; after the ReLU it would be zero everywhere. For each image we record the</span>
+<span id="cb12-62"><a href="#cb12-62" aria-hidden="true" tabindex="-1"></a>maximum and minimum over the 14×14 spatial grid and where they occur, and show a crop around</span>
+<span id="cb12-63"><a href="#cb12-63" aria-hidden="true" tabindex="-1"></a>that location as a stand-in for the receptive field.</span>
+<span id="cb12-64"><a href="#cb12-64" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-65"><a href="#cb12-65" aria-hidden="true" tabindex="-1"></a><span class="fu">## The two poles on 5,000 photographs</span></span>
+<span id="cb12-66"><a href="#cb12-66" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-69"><a href="#cb12-69" aria-hidden="true" tabindex="-1"></a><span class="in">```{python}</span></span>
+<span id="cb12-70"><a href="#cb12-70" aria-hidden="true" tabindex="-1"></a><span class="co">#| code-summary: "Contact sheets of the strongest positive and negative responses"</span></span>
+<span id="cb12-71"><a href="#cb12-71" aria-hidden="true" tabindex="-1"></a><span class="co">#| fig-cap: "Left: crops around the location of the 40 strongest positive responses of 4e:55 in COCO val2017. Right: the 40 strongest negative responses. Each crop is about 45% of the 224-pixel input, centred on the activation's location."</span></span>
+<span id="cb12-72"><a href="#cb12-72" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> sheet(order, locs, n<span class="op">=</span><span class="dv">40</span>, ncol<span class="op">=</span><span class="dv">8</span>, size<span class="op">=</span><span class="dv">96</span>):</span>
+<span id="cb12-73"><a href="#cb12-73" aria-hidden="true" tabindex="-1"></a>    W <span class="op">=</span> Image.new(<span class="st">"RGB"</span>, (ncol<span class="op">*</span>size, (n<span class="op">//</span>ncol)<span class="op">*</span>size), <span class="st">"white"</span>)</span>
+<span id="cb12-74"><a href="#cb12-74" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> k, i <span class="kw">in</span> <span class="bu">enumerate</span>(order[:n]):</span>
+<span id="cb12-75"><a href="#cb12-75" aria-hidden="true" tabindex="-1"></a>        c <span class="op">=</span> receptive_crop(pathlib.Path(z[<span class="st">"paths"</span>][i]), locs[i, CH], grid).resize((size, size))</span>
+<span id="cb12-76"><a href="#cb12-76" aria-hidden="true" tabindex="-1"></a>        W.paste(c, ((k <span class="op">%</span> ncol)<span class="op">*</span>size, (k<span class="op">//</span>ncol)<span class="op">*</span>size))</span>
+<span id="cb12-77"><a href="#cb12-77" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> W</span>
+<span id="cb12-78"><a href="#cb12-78" aria-hidden="true" tabindex="-1"></a>pos <span class="op">=</span> sheet(np.argsort(<span class="op">-</span>mx), z[<span class="st">"argmax_yx"</span>])<span class="op">;</span> neg <span class="op">=</span> sheet(np.argsort(mn), z[<span class="st">"argmin_yx"</span>])</span>
+<span id="cb12-79"><a href="#cb12-79" aria-hidden="true" tabindex="-1"></a>fig, axes <span class="op">=</span> plt.subplots(<span class="dv">1</span>, <span class="dv">2</span>, figsize<span class="op">=</span>(<span class="dv">11</span>, <span class="fl">3.8</span>))</span>
+<span id="cb12-80"><a href="#cb12-80" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> ax, im, t <span class="kw">in</span> <span class="bu">zip</span>(axes, [pos, neg], [<span class="st">"positive pole (top 40)"</span>, <span class="st">"negative pole (bottom 40)"</span>]):</span>
+<span id="cb12-81"><a href="#cb12-81" aria-hidden="true" tabindex="-1"></a>    ax.imshow(im)<span class="op">;</span> ax.set_title(t)<span class="op">;</span> ax.axis(<span class="st">"off"</span>)</span>
+<span id="cb12-82"><a href="#cb12-82" aria-hidden="true" tabindex="-1"></a>plt.tight_layout()</span>
+<span id="cb12-83"><a href="#cb12-83" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb12-84"><a href="#cb12-84" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-85"><a href="#cb12-85" aria-hidden="true" tabindex="-1"></a>The positive sheet is the famous grid: frontal cat faces and the fronts of cars, with a couple</span>
+<span id="cb12-86"><a href="#cb12-86" aria-hidden="true" tabindex="-1"></a>of small dogs. The negative sheet is clocks, the round heads of bears and cows, teddy bears,</span>
+<span id="cb12-87"><a href="#cb12-87" aria-hidden="true" tabindex="-1"></a>the backs of human heads, plates and bowls. The essay's description of the negative pole as</span>
+<span id="cb12-88"><a href="#cb12-88" aria-hidden="true" tabindex="-1"></a>"an O" holds up on a dataset the neuron was never ranked on before.</span>
+<span id="cb12-89"><a href="#cb12-89" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-90"><a href="#cb12-90" aria-hidden="true" tabindex="-1"></a><span class="fu">## Is it really just cats and cars? Using the labels</span></span>
+<span id="cb12-91"><a href="#cb12-91" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-92"><a href="#cb12-92" aria-hidden="true" tabindex="-1"></a>COCO's instance annotations tell us what is in each image. If the neuron were an OR of cat</span>
+<span id="cb12-93"><a href="#cb12-93" aria-hidden="true" tabindex="-1"></a>and car, images with neither should not reach the top. If it is a V-shape detector, some</span>
+<span id="cb12-94"><a href="#cb12-94" aria-hidden="true" tabindex="-1"></a>should, and they should be pointed things.</span>
+<span id="cb12-95"><a href="#cb12-95" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-98"><a href="#cb12-98" aria-hidden="true" tabindex="-1"></a><span class="in">```{python}</span></span>
+<span id="cb12-99"><a href="#cb12-99" aria-hidden="true" tabindex="-1"></a><span class="co">#| code-summary: "Label statistics of the top images"</span></span>
+<span id="cb12-100"><a href="#cb12-100" aria-hidden="true" tabindex="-1"></a>ann <span class="op">=</span> json.load(<span class="bu">open</span>(ROOT <span class="op">/</span> <span class="st">"data/coco/annotations/instances_val2017.json"</span>))</span>
+<span id="cb12-101"><a href="#cb12-101" aria-hidden="true" tabindex="-1"></a>cat_name <span class="op">=</span> {c[<span class="st">"id"</span>]: c[<span class="st">"name"</span>] <span class="cf">for</span> c <span class="kw">in</span> ann[<span class="st">"categories"</span>]}</span>
+<span id="cb12-102"><a href="#cb12-102" aria-hidden="true" tabindex="-1"></a>labels <span class="op">=</span> {}</span>
+<span id="cb12-103"><a href="#cb12-103" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> a <span class="kw">in</span> ann[<span class="st">"annotations"</span>]:</span>
+<span id="cb12-104"><a href="#cb12-104" aria-hidden="true" tabindex="-1"></a>    labels.setdefault(a[<span class="st">"image_id"</span>], <span class="bu">set</span>()).add(cat_name[a[<span class="st">"category_id"</span>]])</span>
+<span id="cb12-105"><a href="#cb12-105" aria-hidden="true" tabindex="-1"></a>ids <span class="op">=</span> [<span class="bu">int</span>(pathlib.Path(p).stem) <span class="cf">for</span> p <span class="kw">in</span> z[<span class="st">"paths"</span>]]</span>
+<span id="cb12-106"><a href="#cb12-106" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> has(i, names): <span class="cf">return</span> <span class="bu">bool</span>(labels.get(ids[i], <span class="bu">set</span>()) <span class="op">&amp;</span> <span class="bu">set</span>(names))</span>
+<span id="cb12-107"><a href="#cb12-107" aria-hidden="true" tabindex="-1"></a>order <span class="op">=</span> np.argsort(<span class="op">-</span>mx)</span>
+<span id="cb12-108"><a href="#cb12-108" aria-hidden="true" tabindex="-1"></a>vehicles <span class="op">=</span> [<span class="st">"car"</span>, <span class="st">"truck"</span>, <span class="st">"bus"</span>]</span>
+<span id="cb12-109"><a href="#cb12-109" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"</span><span class="sc">{</span><span class="st">'top-k'</span><span class="sc">:&gt;6s}</span><span class="ss"> </span><span class="sc">{</span><span class="st">'cat'</span><span class="sc">:&gt;6s}</span><span class="ss"> </span><span class="sc">{</span><span class="st">'car/truck/bus'</span><span class="sc">:&gt;14s}</span><span class="ss"> </span><span class="sc">{</span><span class="st">'dog'</span><span class="sc">:&gt;6s}</span><span class="ss"> </span><span class="sc">{</span><span class="st">'none of these'</span><span class="sc">:&gt;14s}</span><span class="ss">"</span>)</span>
+<span id="cb12-110"><a href="#cb12-110" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> k <span class="kw">in</span> (<span class="dv">20</span>, <span class="dv">50</span>, <span class="dv">200</span>, <span class="dv">500</span>):</span>
+<span id="cb12-111"><a href="#cb12-111" aria-hidden="true" tabindex="-1"></a>    top <span class="op">=</span> order[:k]</span>
+<span id="cb12-112"><a href="#cb12-112" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(<span class="ss">f"</span><span class="sc">{</span>k<span class="sc">:6d}</span><span class="ss"> </span><span class="sc">{</span>np<span class="sc">.</span>mean([has(i,[<span class="st">'cat'</span>]) <span class="cf">for</span> i <span class="kw">in</span> top])<span class="sc">:6.2f}</span><span class="ss"> "</span></span>
+<span id="cb12-113"><a href="#cb12-113" aria-hidden="true" tabindex="-1"></a>          <span class="ss">f"</span><span class="sc">{</span>np<span class="sc">.</span>mean([has(i,vehicles) <span class="cf">for</span> i <span class="kw">in</span> top])<span class="sc">:14.2f}</span><span class="ss"> "</span></span>
+<span id="cb12-114"><a href="#cb12-114" aria-hidden="true" tabindex="-1"></a>          <span class="ss">f"</span><span class="sc">{</span>np<span class="sc">.</span>mean([has(i,[<span class="st">'dog'</span>]) <span class="cf">for</span> i <span class="kw">in</span> top])<span class="sc">:6.2f}</span><span class="ss"> "</span></span>
+<span id="cb12-115"><a href="#cb12-115" aria-hidden="true" tabindex="-1"></a>          <span class="ss">f"</span><span class="sc">{</span>np<span class="sc">.</span>mean([<span class="kw">not</span> has(i,[<span class="st">'cat'</span>,<span class="st">'dog'</span>]<span class="op">+</span>vehicles) <span class="cf">for</span> i <span class="kw">in</span> top])<span class="sc">:14.2f}</span><span class="ss">"</span>)</span>
+<span id="cb12-116"><a href="#cb12-116" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb12-117"><a href="#cb12-117" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-120"><a href="#cb12-120" aria-hidden="true" tabindex="-1"></a><span class="in">```{python}</span></span>
+<span id="cb12-121"><a href="#cb12-121" aria-hidden="true" tabindex="-1"></a><span class="co">#| code-summary: "The strongest responses among images with no cat, dog, car, truck or bus"</span></span>
+<span id="cb12-122"><a href="#cb12-122" aria-hidden="true" tabindex="-1"></a><span class="co">#| fig-cap: "The 40 strongest positive responses among COCO images that contain no cat, dog, car, truck or bus. The best of these reaches above the 99th percentile of all images."</span></span>
+<span id="cb12-123"><a href="#cb12-123" aria-hidden="true" tabindex="-1"></a>rest <span class="op">=</span> [i <span class="cf">for</span> i <span class="kw">in</span> order <span class="cf">if</span> <span class="kw">not</span> has(i, [<span class="st">"cat"</span>, <span class="st">"dog"</span>] <span class="op">+</span> vehicles)]</span>
+<span id="cb12-124"><a href="#cb12-124" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"best 'neither' image: activation </span><span class="sc">{</span>mx[rest[<span class="dv">0</span>]]<span class="sc">:.0f}</span><span class="ss"> vs overall top </span><span class="sc">{</span>mx[order[<span class="dv">0</span>]]<span class="sc">:.0f}</span><span class="ss"> "</span></span>
+<span id="cb12-125"><a href="#cb12-125" aria-hidden="true" tabindex="-1"></a>      <span class="ss">f"and 99th percentile </span><span class="sc">{</span>np<span class="sc">.</span>percentile(mx, <span class="dv">99</span>)<span class="sc">:.0f}</span><span class="ss">"</span>)</span>
+<span id="cb12-126"><a href="#cb12-126" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> collections <span class="im">import</span> Counter</span>
+<span id="cb12-127"><a href="#cb12-127" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"most common labels in the top 60 of these:"</span>,</span>
+<span id="cb12-128"><a href="#cb12-128" aria-hidden="true" tabindex="-1"></a>      Counter(l <span class="cf">for</span> i <span class="kw">in</span> rest[:<span class="dv">60</span>] <span class="cf">for</span> l <span class="kw">in</span> labels.get(ids[i], [])).most_common(<span class="dv">10</span>))</span>
+<span id="cb12-129"><a href="#cb12-129" aria-hidden="true" tabindex="-1"></a>fig, ax <span class="op">=</span> plt.subplots(figsize<span class="op">=</span>(<span class="dv">8</span>, <span class="dv">5</span>))</span>
+<span id="cb12-130"><a href="#cb12-130" aria-hidden="true" tabindex="-1"></a>ax.imshow(sheet(rest, z[<span class="st">"argmax_yx"</span>]))<span class="op">;</span> ax.axis(<span class="st">"off"</span>)</span>
+<span id="cb12-131"><a href="#cb12-131" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb12-132"><a href="#cb12-132" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-133"><a href="#cb12-133" aria-hidden="true" tabindex="-1"></a>What drives the neuron when cats and cars are excluded: frontal animal faces (goat, bighorn</span>
+<span id="cb12-134"><a href="#cb12-134" aria-hidden="true" tabindex="-1"></a>sheep, horse, zebra, bear, small birds), the noses of trains and aircraft, computer mice and</span>
+<span id="cb12-135"><a href="#cb12-135" aria-hidden="true" tabindex="-1"></a>remote controls seen end-on, and scenes with strong converging perspective lines such as tennis</span>
+<span id="cb12-136"><a href="#cb12-136" aria-hidden="true" tabindex="-1"></a>courts, baseball diamonds, railway tracks and bed corners. The essay's own examples of what the</span>
+<span id="cb12-137"><a href="#cb12-137" aria-hidden="true" tabindex="-1"></a>V generalises to were fox faces, pool tables and bullet trains. The COCO list is the same kind</span>
+<span id="cb12-138"><a href="#cb12-138" aria-hidden="true" tabindex="-1"></a>of thing: pointed fronts and converging lines. This is the strongest evidence on this page for</span>
+<span id="cb12-139"><a href="#cb12-139" aria-hidden="true" tabindex="-1"></a>the "V, not OR(cat, car)" reading.</span>
+<span id="cb12-140"><a href="#cb12-140" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-141"><a href="#cb12-141" aria-hidden="true" tabindex="-1"></a><span class="fu">## The circuit: inputs and readers from the weights</span></span>
+<span id="cb12-142"><a href="#cb12-142" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-143"><a href="#cb12-143" aria-hidden="true" tabindex="-1"></a>The essay names specific neighbours. Because <span class="in">`mixed4e`</span>'s 1×1 branch is a 1×1 convolution,</span>
+<span id="cb12-144"><a href="#cb12-144" aria-hidden="true" tabindex="-1"></a>its weight matrix is directly the vector of votes each <span class="in">`mixed4d`</span> channel casts for 4e:55, and</span>
+<span id="cb12-145"><a href="#cb12-145" aria-hidden="true" tabindex="-1"></a>the <span class="in">`mixed5a`</span> convolutions give the votes 4e:55 casts for each <span class="in">`mixed5a`</span> channel.</span>
+<span id="cb12-146"><a href="#cb12-146" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-149"><a href="#cb12-149" aria-hidden="true" tabindex="-1"></a><span class="in">```{python}</span></span>
+<span id="cb12-150"><a href="#cb12-150" aria-hidden="true" tabindex="-1"></a><span class="co">#| code-summary: "Rank the essay's named inputs and reader by weight"</span></span>
+<span id="cb12-151"><a href="#cb12-151" aria-hidden="true" tabindex="-1"></a>w_in <span class="op">=</span> model.mixed4e_1x1_pre_relu_conv.weight[CH, :, <span class="dv">0</span>, <span class="dv">0</span>].detach().cpu()</span>
+<span id="cb12-152"><a href="#cb12-152" aria-hidden="true" tabindex="-1"></a>top <span class="op">=</span> torch.argsort(<span class="op">-</span>w_in)[:<span class="dv">8</span>]</span>
+<span id="cb12-153"><a href="#cb12-153" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"strongest inputs from mixed4d  (channel, weight):"</span>, [(<span class="bu">int</span>(i), <span class="bu">round</span>(<span class="bu">float</span>(w_in[i]), <span class="dv">3</span>)) <span class="cf">for</span> i <span class="kw">in</span> top])</span>
+<span id="cb12-154"><a href="#cb12-154" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> c, name <span class="kw">in</span> [(<span class="dv">493</span>, <span class="st">"fox snout"</span>), (<span class="dv">477</span>, <span class="st">"wolf face"</span>), (<span class="dv">201</span>, <span class="st">"van front"</span>)]:</span>
+<span id="cb12-155"><a href="#cb12-155" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(<span class="ss">f"  essay's 4d:</span><span class="sc">{</span>c<span class="sc">}</span><span class="ss"> (</span><span class="sc">{</span>name<span class="sc">}</span><span class="ss">): weight </span><span class="sc">{</span><span class="bu">float</span>(w_in[c])<span class="sc">:+.3f}</span><span class="ss">, rank </span><span class="sc">{</span><span class="bu">int</span>((w_in <span class="op">&gt;</span> w_in[c]).<span class="bu">sum</span>())<span class="op">+</span><span class="dv">1</span><span class="sc">}</span><span class="ss"> of 528"</span>)</span>
+<span id="cb12-156"><a href="#cb12-156" aria-hidden="true" tabindex="-1"></a>w1 <span class="op">=</span> model.mixed5a_1x1_pre_relu_conv.weight[:, CH, <span class="dv">0</span>, <span class="dv">0</span>].detach().cpu()</span>
+<span id="cb12-157"><a href="#cb12-157" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"strongest readers in mixed5a 1x1 branch:"</span>, [(<span class="bu">int</span>(i), <span class="bu">round</span>(<span class="bu">float</span>(w1[i]), <span class="dv">3</span>)) <span class="cf">for</span> i <span class="kw">in</span> torch.argsort(<span class="op">-</span>w1)[:<span class="dv">6</span>]])</span>
+<span id="cb12-158"><a href="#cb12-158" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"  essay's 5a:94 (V-shaped flames): weight </span><span class="sc">{</span><span class="bu">float</span>(w1[<span class="dv">94</span>])<span class="sc">:+.3f}</span><span class="ss">, rank </span><span class="sc">{</span><span class="bu">int</span>((w1 <span class="op">&gt;</span> w1[<span class="dv">94</span>]).<span class="bu">sum</span>())<span class="op">+</span><span class="dv">1</span><span class="sc">}</span><span class="ss"> of 256"</span>)</span>
+<span id="cb12-159"><a href="#cb12-159" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb12-160"><a href="#cb12-160" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-161"><a href="#cb12-161" aria-hidden="true" tabindex="-1"></a>The essay's named input 4d:493 is the single strongest weight into the neuron, by a factor of</span>
+<span id="cb12-162"><a href="#cb12-162" aria-hidden="true" tabindex="-1"></a>more than two over the next, and its named reader 5a:94 is the single strongest reader in that</span>
+<span id="cb12-163"><a href="#cb12-163" aria-hidden="true" tabindex="-1"></a>branch. The other two named inputs are in the top fifteen of 528. These are raw weights rather</span>
+<span id="cb12-164"><a href="#cb12-164" aria-hidden="true" tabindex="-1"></a>than data-weighted attributions, so the agreement is if anything stronger than the essay</span>
+<span id="cb12-165"><a href="#cb12-165" aria-hidden="true" tabindex="-1"></a>needed. (We have not visualised 4d:493 or 5a:94 ourselves; the labels "fox snout" and</span>
+<span id="cb12-166"><a href="#cb12-166" aria-hidden="true" tabindex="-1"></a>"V-shaped flames" are the essay's.)</span>
+<span id="cb12-167"><a href="#cb12-167" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-168"><a href="#cb12-168" aria-hidden="true" tabindex="-1"></a><span class="fu">## A synthetic probe: does a bare V excite it?</span></span>
+<span id="cb12-169"><a href="#cb12-169" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-170"><a href="#cb12-170" aria-hidden="true" tabindex="-1"></a>If the neuron were a geometric V detector in the way an early-layer curve detector is a curve</span>
+<span id="cb12-171"><a href="#cb12-171" aria-hidden="true" tabindex="-1"></a>detector, a line drawing of a V should drive it. We draw simple shapes on a grey background and</span>
+<span id="cb12-172"><a href="#cb12-172" aria-hidden="true" tabindex="-1"></a>record the pre-ReLU maximum and minimum.</span>
+<span id="cb12-173"><a href="#cb12-173" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-176"><a href="#cb12-176" aria-hidden="true" tabindex="-1"></a><span class="in">```{python}</span></span>
+<span id="cb12-177"><a href="#cb12-177" aria-hidden="true" tabindex="-1"></a><span class="co">#| code-summary: "Line-drawn shapes on grey"</span></span>
+<span id="cb12-178"><a href="#cb12-178" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> PIL <span class="im">import</span> ImageDraw</span>
+<span id="cb12-179"><a href="#cb12-179" aria-hidden="true" tabindex="-1"></a>feats <span class="op">=</span> {}</span>
+<span id="cb12-180"><a href="#cb12-180" aria-hidden="true" tabindex="-1"></a>hook <span class="op">=</span> <span class="bu">dict</span>(model.named_modules())[<span class="st">"mixed4e_1x1_pre_relu_conv"</span>].register_forward_hook(</span>
+<span id="cb12-181"><a href="#cb12-181" aria-hidden="true" tabindex="-1"></a>    <span class="kw">lambda</span> m, i, o: feats.<span class="fu">__setitem__</span>(<span class="st">"x"</span>, o))</span>
+<span id="cb12-182"><a href="#cb12-182" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> canvas(): <span class="cf">return</span> Image.new(<span class="st">"RGB"</span>, (<span class="dv">224</span>, <span class="dv">224</span>), (<span class="dv">128</span>, <span class="dv">128</span>, <span class="dv">128</span>))</span>
+<span id="cb12-183"><a href="#cb12-183" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> shape(kind, size<span class="op">=</span><span class="dv">90</span>, width<span class="op">=</span><span class="dv">10</span>, angle<span class="op">=</span><span class="fl">0.0</span>, color<span class="op">=</span>(<span class="dv">0</span>, <span class="dv">0</span>, <span class="dv">0</span>), cx<span class="op">=</span><span class="dv">112</span>, cy<span class="op">=</span><span class="dv">112</span>):</span>
+<span id="cb12-184"><a href="#cb12-184" aria-hidden="true" tabindex="-1"></a>    im <span class="op">=</span> canvas()<span class="op">;</span> d <span class="op">=</span> ImageDraw.Draw(im)</span>
+<span id="cb12-185"><a href="#cb12-185" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> kind <span class="op">==</span> <span class="st">"V"</span>:</span>
+<span id="cb12-186"><a href="#cb12-186" aria-hidden="true" tabindex="-1"></a>        a <span class="op">=</span> np.deg2rad(angle)<span class="op">;</span> half <span class="op">=</span> np.deg2rad(<span class="dv">35</span>)</span>
+<span id="cb12-187"><a href="#cb12-187" aria-hidden="true" tabindex="-1"></a>        apex <span class="op">=</span> np.array([cx, cy]) <span class="op">+</span> size<span class="op">*</span><span class="fl">0.5</span><span class="op">*</span>np.array([np.sin(a), np.cos(a)])</span>
+<span id="cb12-188"><a href="#cb12-188" aria-hidden="true" tabindex="-1"></a>        <span class="cf">for</span> s <span class="kw">in</span> (<span class="op">+</span><span class="dv">1</span>, <span class="op">-</span><span class="dv">1</span>):</span>
+<span id="cb12-189"><a href="#cb12-189" aria-hidden="true" tabindex="-1"></a>            end <span class="op">=</span> apex <span class="op">-</span> size<span class="op">*</span>np.array([np.sin(a<span class="op">+</span>s<span class="op">*</span>half), np.cos(a<span class="op">+</span>s<span class="op">*</span>half)])</span>
+<span id="cb12-190"><a href="#cb12-190" aria-hidden="true" tabindex="-1"></a>            d.line([<span class="bu">tuple</span>(apex), <span class="bu">tuple</span>(end)], fill<span class="op">=</span>color, width<span class="op">=</span>width)</span>
+<span id="cb12-191"><a href="#cb12-191" aria-hidden="true" tabindex="-1"></a>    <span class="cf">elif</span> kind <span class="op">==</span> <span class="st">"O"</span>: d.ellipse([cx<span class="op">-</span>size<span class="op">/</span><span class="dv">2</span>, cy<span class="op">-</span>size<span class="op">/</span><span class="dv">2</span>, cx<span class="op">+</span>size<span class="op">/</span><span class="dv">2</span>, cy<span class="op">+</span>size<span class="op">/</span><span class="dv">2</span>], outline<span class="op">=</span>color, width<span class="op">=</span>width)</span>
+<span id="cb12-192"><a href="#cb12-192" aria-hidden="true" tabindex="-1"></a>    <span class="cf">elif</span> kind <span class="op">==</span> <span class="st">"disc"</span>: d.ellipse([cx<span class="op">-</span>size<span class="op">/</span><span class="dv">2</span>, cy<span class="op">-</span>size<span class="op">/</span><span class="dv">2</span>, cx<span class="op">+</span>size<span class="op">/</span><span class="dv">2</span>, cy<span class="op">+</span>size<span class="op">/</span><span class="dv">2</span>], fill<span class="op">=</span>color)</span>
+<span id="cb12-193"><a href="#cb12-193" aria-hidden="true" tabindex="-1"></a>    <span class="cf">elif</span> kind <span class="op">==</span> <span class="st">"square"</span>: d.rectangle([cx<span class="op">-</span>size<span class="op">/</span><span class="dv">2</span>, cy<span class="op">-</span>size<span class="op">/</span><span class="dv">2</span>, cx<span class="op">+</span>size<span class="op">/</span><span class="dv">2</span>, cy<span class="op">+</span>size<span class="op">/</span><span class="dv">2</span>], outline<span class="op">=</span>color, width<span class="op">=</span>width)</span>
+<span id="cb12-194"><a href="#cb12-194" aria-hidden="true" tabindex="-1"></a>    <span class="cf">elif</span> kind <span class="op">==</span> <span class="st">"X"</span>:</span>
+<span id="cb12-195"><a href="#cb12-195" aria-hidden="true" tabindex="-1"></a>        d.line([(cx<span class="op">-</span>size<span class="op">/</span><span class="dv">2</span>, cy<span class="op">-</span>size<span class="op">/</span><span class="dv">2</span>), (cx<span class="op">+</span>size<span class="op">/</span><span class="dv">2</span>, cy<span class="op">+</span>size<span class="op">/</span><span class="dv">2</span>)], fill<span class="op">=</span>color, width<span class="op">=</span>width)</span>
+<span id="cb12-196"><a href="#cb12-196" aria-hidden="true" tabindex="-1"></a>        d.line([(cx<span class="op">-</span>size<span class="op">/</span><span class="dv">2</span>, cy<span class="op">+</span>size<span class="op">/</span><span class="dv">2</span>), (cx<span class="op">+</span>size<span class="op">/</span><span class="dv">2</span>, cy<span class="op">-</span>size<span class="op">/</span><span class="dv">2</span>)], fill<span class="op">=</span>color, width<span class="op">=</span>width)</span>
+<span id="cb12-197"><a href="#cb12-197" aria-hidden="true" tabindex="-1"></a>    <span class="cf">elif</span> kind <span class="op">==</span> <span class="st">"triangle"</span>:</span>
+<span id="cb12-198"><a href="#cb12-198" aria-hidden="true" tabindex="-1"></a>        d.polygon([(cx, cy<span class="op">+</span>size<span class="op">/</span><span class="dv">2</span>), (cx<span class="op">-</span>size<span class="op">/</span><span class="dv">2</span>, cy<span class="op">-</span>size<span class="op">/</span><span class="dv">2</span>), (cx<span class="op">+</span>size<span class="op">/</span><span class="dv">2</span>, cy<span class="op">-</span>size<span class="op">/</span><span class="dv">2</span>)], outline<span class="op">=</span>color, width<span class="op">=</span>width)</span>
+<span id="cb12-199"><a href="#cb12-199" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> im</span>
+<span id="cb12-200"><a href="#cb12-200" aria-hidden="true" tabindex="-1"></a><span class="at">@torch.no_grad</span>()</span>
+<span id="cb12-201"><a href="#cb12-201" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> run(imgs):</span>
+<span id="cb12-202"><a href="#cb12-202" aria-hidden="true" tabindex="-1"></a>    x <span class="op">=</span> torch.stack([torch.from_numpy(np.asarray(im, dtype<span class="op">=</span>np.float32) <span class="op">-</span> <span class="dv">117</span>).permute(<span class="dv">2</span>, <span class="dv">0</span>, <span class="dv">1</span>) <span class="cf">for</span> im <span class="kw">in</span> imgs]).to(DEV)</span>
+<span id="cb12-203"><a href="#cb12-203" aria-hidden="true" tabindex="-1"></a>    model(x)<span class="op">;</span> fm <span class="op">=</span> feats[<span class="st">"x"</span>][:, CH]</span>
+<span id="cb12-204"><a href="#cb12-204" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> fm.flatten(<span class="dv">1</span>).<span class="bu">max</span>(<span class="dv">1</span>).values.cpu().numpy(), fm.flatten(<span class="dv">1</span>).<span class="bu">min</span>(<span class="dv">1</span>).values.cpu().numpy()</span>
+<span id="cb12-205"><a href="#cb12-205" aria-hidden="true" tabindex="-1"></a>kinds <span class="op">=</span> [<span class="st">"V"</span>, <span class="st">"triangle"</span>, <span class="st">"X"</span>, <span class="st">"square"</span>, <span class="st">"O"</span>, <span class="st">"disc"</span>, <span class="st">"blank"</span>]</span>
+<span id="cb12-206"><a href="#cb12-206" aria-hidden="true" tabindex="-1"></a>sizes, widths, colours <span class="op">=</span> [<span class="dv">60</span>, <span class="dv">90</span>, <span class="dv">120</span>, <span class="dv">150</span>], [<span class="dv">6</span>, <span class="dv">12</span>], [(<span class="dv">0</span>, <span class="dv">0</span>, <span class="dv">0</span>), (<span class="dv">255</span>, <span class="dv">255</span>, <span class="dv">255</span>)]</span>
+<span id="cb12-207"><a href="#cb12-207" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"</span><span class="sc">{</span><span class="st">'shape'</span><span class="sc">:9s}</span><span class="ss"> </span><span class="sc">{</span><span class="st">'mean max'</span><span class="sc">:&gt;9s}</span><span class="ss"> </span><span class="sc">{</span><span class="st">'mean min'</span><span class="sc">:&gt;9s}</span><span class="ss">    (over 4 sizes x 2 widths x 2 colours; photo scale: 99th pct max = </span><span class="sc">{</span>np<span class="sc">.</span>percentile(mx,<span class="dv">99</span>)<span class="sc">:.0f}</span><span class="ss">)"</span>)</span>
+<span id="cb12-208"><a href="#cb12-208" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> kind <span class="kw">in</span> kinds:</span>
+<span id="cb12-209"><a href="#cb12-209" aria-hidden="true" tabindex="-1"></a>    imgs <span class="op">=</span> [canvas() <span class="cf">if</span> kind <span class="op">==</span> <span class="st">"blank"</span> <span class="cf">else</span> shape(kind, s, w, color<span class="op">=</span>c) <span class="cf">for</span> s <span class="kw">in</span> sizes <span class="cf">for</span> w <span class="kw">in</span> widths <span class="cf">for</span> c <span class="kw">in</span> colours]</span>
+<span id="cb12-210"><a href="#cb12-210" aria-hidden="true" tabindex="-1"></a>    a, b <span class="op">=</span> run(imgs)<span class="op">;</span> <span class="bu">print</span>(<span class="ss">f"</span><span class="sc">{</span>kind<span class="sc">:9s}</span><span class="ss"> </span><span class="sc">{</span>a<span class="sc">.</span>mean()<span class="sc">:9.0f}</span><span class="ss"> </span><span class="sc">{</span>b<span class="sc">.</span>mean()<span class="sc">:9.0f}</span><span class="ss">"</span>)</span>
+<span id="cb12-211"><a href="#cb12-211" aria-hidden="true" tabindex="-1"></a>hook.remove()</span>
+<span id="cb12-212"><a href="#cb12-212" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb12-213"><a href="#cb12-213" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-214"><a href="#cb12-214" aria-hidden="true" tabindex="-1"></a>Two things come out. The round shapes (an outline O and a filled disc) give the most negative</span>
+<span id="cb12-215"><a href="#cb12-215" aria-hidden="true" tabindex="-1"></a>responses of any stimulus, a good deal below a blank grey field, so "round pushes it negative"</span>
+<span id="cb12-216"><a href="#cb12-216" aria-hidden="true" tabindex="-1"></a>survives even in line drawings. But a bare V does *not* excite the neuron much: its positive</span>
+<span id="cb12-217"><a href="#cb12-217" aria-hidden="true" tabindex="-1"></a>response is about a tenth of what a real cat face produces and no larger than a square's.</span>
+<span id="cb12-218"><a href="#cb12-218" aria-hidden="true" tabindex="-1"></a>Whatever "V" means for this neuron, it is a pattern inside high-level structure (a face, a car</span>
+<span id="cb12-219"><a href="#cb12-219" aria-hidden="true" tabindex="-1"></a>front, a converging road) rather than a geometric primitive. The essay says as much in its</span>
+<span id="cb12-220"><a href="#cb12-220" aria-hidden="true" tabindex="-1"></a>footnote: "generalization happens inside high-level patterns", and the V neuron "really does</span>
+<span id="cb12-221"><a href="#cb12-221" aria-hidden="true" tabindex="-1"></a>take in cat circuitry". A mid-network neuron's inputs are already fairly abstract, so this is</span>
+<span id="cb12-222"><a href="#cb12-222" aria-hidden="true" tabindex="-1"></a>not a surprise, but it is a limit on how literally to take the word "V".</span>
+<span id="cb12-223"><a href="#cb12-223" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-224"><a href="#cb12-224" aria-hidden="true" tabindex="-1"></a><span class="fu">## Assessment</span></span>
+<span id="cb12-225"><a href="#cb12-225" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-226"><a href="#cb12-226" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>**Confirmed on public weights:** the named inputs and reader are the strongest by weight;</span>
+<span id="cb12-227"><a href="#cb12-227" aria-hidden="true" tabindex="-1"></a>  the negative pole is round things; the positive pole extends beyond cats and cars to frontal</span>
+<span id="cb12-228"><a href="#cb12-228" aria-hidden="true" tabindex="-1"></a>  animal faces, vehicle noses and converging lines.</span>
+<span id="cb12-229"><a href="#cb12-229" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>**Supported but not proven:** that "pointed versus round" is the *right* one-line</span>
+<span id="cb12-230"><a href="#cb12-230" aria-hidden="true" tabindex="-1"></a>  description. It fits everything we saw, and it fits better than OR(cat, car), which cannot</span>
+<span id="cb12-231"><a href="#cb12-231" aria-hidden="true" tabindex="-1"></a>  explain the goats, trains and tennis courts. A line-drawn V alone is not enough, so the</span>
+<span id="cb12-232"><a href="#cb12-232" aria-hidden="true" tabindex="-1"></a>  description is of a high-level shape cue, not a contour.</span>
+<span id="cb12-233"><a href="#cb12-233" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>**Not addressed here:** the second half of the essay's section, the car-into-dogs circuit</span>
+<span id="cb12-234"><a href="#cb12-234" aria-hidden="true" tabindex="-1"></a>  and the "generalised pose neurons". That needs feature visualisation with and without the</span>
+<span id="cb12-235"><a href="#cb12-235" aria-hidden="true" tabindex="-1"></a>  bias toward natural paths, which is the subject of the next section.</span>
+<span id="cb12-236"><a href="#cb12-236" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-237"><a href="#cb12-237" aria-hidden="true" tabindex="-1"></a><span class="fu">## Discussion questions</span></span>
+<span id="cb12-238"><a href="#cb12-238" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-239"><a href="#cb12-239" aria-hidden="true" tabindex="-1"></a><span class="ss">1. </span>The neuron fires on cat faces far more strongly than on anything else in COCO. Is a neuron</span>
+<span id="cb12-240"><a href="#cb12-240" aria-hidden="true" tabindex="-1"></a>   whose top of the distribution is 85% cats, but whose tail is "pointed things", best</span>
+<span id="cb12-241"><a href="#cb12-241" aria-hidden="true" tabindex="-1"></a>   called a cat neuron, a V neuron, or something else? Does the answer depend on what reads</span>
+<span id="cb12-242"><a href="#cb12-242" aria-hidden="true" tabindex="-1"></a>   it?</span>
+<span id="cb12-243"><a href="#cb12-243" aria-hidden="true" tabindex="-1"></a><span class="ss">2. </span>The essay's recommended trick is to describe a neuron without nouns. Try it on the</span>
+<span id="cb12-244"><a href="#cb12-244" aria-hidden="true" tabindex="-1"></a>   negative-pole sheet above. Is "round" the only candidate?</span>
+<span id="cb12-245"><a href="#cb12-245" aria-hidden="true" tabindex="-1"></a><span class="ss">3. </span>How would one tell a "V-shape" neuron from a "frontal face or front of object" neuron?</span>
+<span id="cb12-246"><a href="#cb12-246" aria-hidden="true" tabindex="-1"></a>   What stimulus would separate them?</span>
+</code></pre></div><button title="Copy to Clipboard" class="code-copy-button" data-in-quarto-modal=""><i class="bi"></i></button></div>
+</div></div></div></div></div>
+</div> <!-- /content -->
+
+
+
+
+</body></html>
