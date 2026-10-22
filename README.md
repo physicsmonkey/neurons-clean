@@ -3,7 +3,7 @@ Brian Swingle - 10/17/2026: The purpose of this project is to understand the rec
 
 ## Layout and build (added 2026-10-19)
 
-- `source/essay.md` — plain-text copy of the essay.
+- `source/essay.md` — plain-text copy of the essay, kept locally and not committed (it is the author's text). Fetch it with `curl -sL -o source/essay.md https://already-clean.goodfire.com/essay.md`.
 - `00-preliminaries/`, `01-toy-models-of-superposition/`, then `02-…` to `11-…` — one folder per essay section, each an `index.qmd` (Quarto: markdown + executable Python).
 - `common/` — shared Python (toy models, InceptionV1 helpers).
 - `data/` (gitignored) — COCO val2017 images and cached activation scans.
