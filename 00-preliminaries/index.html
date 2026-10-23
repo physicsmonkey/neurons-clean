@@ -343,6 +343,7 @@ window.Quarto = {
   <li><a href="#the-model-zoo" id="toc-the-model-zoo" class="nav-link" data-scroll-target="#the-model-zoo">7. The model zoo</a></li>
   <li><a href="#a-map-for-physicists" id="toc-a-map-for-physicists" class="nav-link" data-scroll-target="#a-map-for-physicists">8. A map for physicists</a></li>
   <li><a href="#glossary" id="toc-glossary" class="nav-link" data-scroll-target="#glossary">Glossary</a></li>
+  <li><a href="#questions-from-the-reading-group" id="toc-questions-from-the-reading-group" class="nav-link" data-scroll-target="#questions-from-the-reading-group">Questions from the reading group</a></li>
   <li><a href="#further-reading-for-this-page" id="toc-further-reading-for-this-page" class="nav-link" data-scroll-target="#further-reading-for-this-page">Further reading for this page</a></li>
   </ul>
 </nav>
@@ -558,6 +559,29 @@ f(x) = \mathrm{ReLU}(W_{\text{enc}}\, x + b_{\text{enc}}), \qquad
 <li><strong>Enumerative vs exploratory interpretability.</strong> Build a complete list of features to audit, vs start from questions and move through the network as needed. The essay favours the second and says the first was “always a means to an end”.</li>
 <li><strong>Already clean.</strong> The essay’s thesis: the network’s own parts are built to be read by its own downstream parts, and are therefore readable by us without being decomposed first.</li>
 </ul>
+</section>
+<section id="questions-from-the-reading-group" class="level2 beyond">
+<h2 class="anchored" data-anchor-id="questions-from-the-reading-group">Questions from the reading group</h2>
+<p>Raised in discussion on 22 October 2026. The answers are ours, not the essay’s.</p>
+<p><strong>Under the recursive-generalisation picture, is the number of features capped at the number of neurons?</strong></p>
+<p>At the level of neuron-sized features, more or less yes. Each neuron, or each pole, is one coarse concept with a tree of related offshoots, so the number of first-class concepts in a layer is about twice the neuron count. The essay accepts this and treats it as fine, for three reasons.</p>
+<ul>
+<li><em>Granularity scales with room.</em> A small model has one car neuron; a large one has many kinds of car. The missing distinctions in the small model are not hidden anywhere; the model does not make them. The toy-model page shows this directly: twenty inputs are represented as four directions, and the within-group identity is simply absent until a reader wants it.</li>
+<li><em>Composition is not superposition.</em> “Dog in frontal pose” is represented by a dog neuron and a pose neuron firing together, each independently meaningful. Readers use conjunctions without any cancellation, so the number of distinguishable situations is combinatorial without any neuron being a mixture. The essay cites Anthropic’s note on exactly this distinction.</li>
+<li><em>Depth adds levels.</em> Offshoots in one layer become first-class neurons in the next.</li>
+</ul>
+<p>The essay’s broader move is to say that counting features was never the goal: what matters is whether every distinction the network uses can be traced to neurons and circuits, and the question “are there more features than dimensions” is, in its words, mostly irrelevant. Whether to accept that reframing is a fair thing to argue about.</p>
+<p><strong>So is the cap per layer or per network? Is the maximum roughly the residual-stream width, or do different layers hold different features so that the counts add?</strong></p>
+<p>The counts add. The cap is per layer of MLP neurons, different layers hold different features, and the neuron-level total is the sum over layers. Qwen3-32B has 64 layers of 25,600 neurons, about 1.6 million, against a residual stream of width 5,120: neuron-level features outnumber stream dimensions by roughly 300 to 1. The same holds in a modern conv net.</p>
+<p>The residual stream is therefore not a cap on the number of features. It is a cap on how many can be <em>simultaneously</em> present and linearly separable at one position, and even that has slack. Four things reconcile 1.6 million writers with 5,120 dimensions:</p>
+<ul>
+<li><em>Features are not simultaneously active.</em> At any token only a small fraction of neurons fire. The stream is a bus, not a storage array, so what has to fit at once is the active set, not the catalogue.</li>
+<li><em>Directions are reused across depth.</em> A direction written by layer 10 and read by layer 14 can be overwritten or ignored afterwards, and layer 40 can use it for something else.</li>
+<li><em>Related neurons write nearby directions.</em> Many car-part neurons write into a shared car region, which is composition rather than packing.</li>
+<li><em>Near-orthogonality is cheap in high dimension.</em> This is the Johnson–Lindenstrauss slack, and it is the one place where the strict sense of superposition genuinely lives in the stream.</li>
+</ul>
+<p>That last point is where the essay is most careful and least decisive. It concedes that packing in the stream, its sense (c), may be impossible to rule out, and claims only that it has not been a bottleneck in practice: neuron reads and writes come out clean, and attribution graphs come out clean. Its supporting evidence is the “crushing” experiment, in which a 7-million-parameter conv net was retrained with its stream four and eight times narrower, down to 46 dimensions in the last block, keeping the neurons. Accuracy fell from 72% to 60% and then 39%, but the map of what the neurons do looked the same, only messier. The information flowing through the stream at any moment is far lower dimensional than the count of things that ever flow through it.</p>
+<p>The honest summary: the number of concepts a network can represent is set by its neurons, summed over layers, and by compositions of them. The stream width constrains concurrency and separability, not the catalogue. Whether the concurrent set is ever packed non-locally in the stream is the residual claim the essay leaves open, and it is where a sceptic should push.</p>
 </section>
 <section id="further-reading-for-this-page" class="level2">
 <h2 class="anchored" data-anchor-id="further-reading-for-this-page">Further reading for this page</h2>
@@ -1340,14 +1364,85 @@ f(x) = \mathrm{ReLU}(W_{\text{enc}}\, x + b_{\text{enc}}), \qquad
 <span id="cb1-312"><a href="#cb1-312" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>**Already clean.** The essay's thesis: the network's own parts are built to be read by its</span>
 <span id="cb1-313"><a href="#cb1-313" aria-hidden="true" tabindex="-1"></a>  own downstream parts, and are therefore readable by us without being decomposed first.</span>
 <span id="cb1-314"><a href="#cb1-314" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-315"><a href="#cb1-315" aria-hidden="true" tabindex="-1"></a><span class="fu">## Further reading for this page</span></span>
+<span id="cb1-315"><a href="#cb1-315" aria-hidden="true" tabindex="-1"></a>::: {.beyond}</span>
 <span id="cb1-316"><a href="#cb1-316" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-317"><a href="#cb1-317" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>Olah et al., *Feature Visualization*, Distill 2017.</span>
-<span id="cb1-318"><a href="#cb1-318" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>Olah et al., *Zoom In: An Introduction to Circuits*, Distill 2020.</span>
-<span id="cb1-319"><a href="#cb1-319" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>Elhage et al., *Toy Models of Superposition*, Transformer Circuits 2022 (next page).</span>
-<span id="cb1-320"><a href="#cb1-320" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>Bricken et al., *Towards Monosemanticity*, Transformer Circuits 2023 (the SAE paper).</span>
-<span id="cb1-321"><a href="#cb1-321" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>Ameisen et al., *Circuit Tracing* and Lindsey et al., *On the Biology of a Large Language</span>
-<span id="cb1-322"><a href="#cb1-322" aria-hidden="true" tabindex="-1"></a>  Model*, Transformer Circuits 2025 (attribution graphs).</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button" data-in-quarto-modal=""><i class="bi"></i></button></div>
+<span id="cb1-317"><a href="#cb1-317" aria-hidden="true" tabindex="-1"></a><span class="fu">## Questions from the reading group</span></span>
+<span id="cb1-318"><a href="#cb1-318" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-319"><a href="#cb1-319" aria-hidden="true" tabindex="-1"></a>Raised in discussion on 22 October 2026. The answers are ours, not the essay's.</span>
+<span id="cb1-320"><a href="#cb1-320" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-321"><a href="#cb1-321" aria-hidden="true" tabindex="-1"></a>**Under the recursive-generalisation picture, is the number of features capped at the number</span>
+<span id="cb1-322"><a href="#cb1-322" aria-hidden="true" tabindex="-1"></a>of neurons?**</span>
+<span id="cb1-323"><a href="#cb1-323" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-324"><a href="#cb1-324" aria-hidden="true" tabindex="-1"></a>At the level of neuron-sized features, more or less yes. Each neuron, or each pole, is one</span>
+<span id="cb1-325"><a href="#cb1-325" aria-hidden="true" tabindex="-1"></a>coarse concept with a tree of related offshoots, so the number of first-class concepts in a</span>
+<span id="cb1-326"><a href="#cb1-326" aria-hidden="true" tabindex="-1"></a>layer is about twice the neuron count. The essay accepts this and treats it as fine, for</span>
+<span id="cb1-327"><a href="#cb1-327" aria-hidden="true" tabindex="-1"></a>three reasons.</span>
+<span id="cb1-328"><a href="#cb1-328" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-329"><a href="#cb1-329" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>*Granularity scales with room.* A small model has one car neuron; a large one has many</span>
+<span id="cb1-330"><a href="#cb1-330" aria-hidden="true" tabindex="-1"></a>  kinds of car. The missing distinctions in the small model are not hidden anywhere; the</span>
+<span id="cb1-331"><a href="#cb1-331" aria-hidden="true" tabindex="-1"></a>  model does not make them. The toy-model page shows this directly: twenty inputs are</span>
+<span id="cb1-332"><a href="#cb1-332" aria-hidden="true" tabindex="-1"></a>  represented as four directions, and the within-group identity is simply absent until a</span>
+<span id="cb1-333"><a href="#cb1-333" aria-hidden="true" tabindex="-1"></a>  reader wants it.</span>
+<span id="cb1-334"><a href="#cb1-334" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>*Composition is not superposition.* "Dog in frontal pose" is represented by a dog neuron and</span>
+<span id="cb1-335"><a href="#cb1-335" aria-hidden="true" tabindex="-1"></a>  a pose neuron firing together, each independently meaningful. Readers use conjunctions</span>
+<span id="cb1-336"><a href="#cb1-336" aria-hidden="true" tabindex="-1"></a>  without any cancellation, so the number of distinguishable situations is combinatorial</span>
+<span id="cb1-337"><a href="#cb1-337" aria-hidden="true" tabindex="-1"></a>  without any neuron being a mixture. The essay cites Anthropic's note on exactly this</span>
+<span id="cb1-338"><a href="#cb1-338" aria-hidden="true" tabindex="-1"></a>  distinction.</span>
+<span id="cb1-339"><a href="#cb1-339" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>*Depth adds levels.* Offshoots in one layer become first-class neurons in the next.</span>
+<span id="cb1-340"><a href="#cb1-340" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-341"><a href="#cb1-341" aria-hidden="true" tabindex="-1"></a>The essay's broader move is to say that counting features was never the goal: what matters</span>
+<span id="cb1-342"><a href="#cb1-342" aria-hidden="true" tabindex="-1"></a>is whether every distinction the network uses can be traced to neurons and circuits, and the</span>
+<span id="cb1-343"><a href="#cb1-343" aria-hidden="true" tabindex="-1"></a>question "are there more features than dimensions" is, in its words, mostly irrelevant.</span>
+<span id="cb1-344"><a href="#cb1-344" aria-hidden="true" tabindex="-1"></a>Whether to accept that reframing is a fair thing to argue about.</span>
+<span id="cb1-345"><a href="#cb1-345" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-346"><a href="#cb1-346" aria-hidden="true" tabindex="-1"></a>**So is the cap per layer or per network? Is the maximum roughly the residual-stream width,</span>
+<span id="cb1-347"><a href="#cb1-347" aria-hidden="true" tabindex="-1"></a>or do different layers hold different features so that the counts add?**</span>
+<span id="cb1-348"><a href="#cb1-348" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-349"><a href="#cb1-349" aria-hidden="true" tabindex="-1"></a>The counts add. The cap is per layer of MLP neurons, different layers hold different</span>
+<span id="cb1-350"><a href="#cb1-350" aria-hidden="true" tabindex="-1"></a>features, and the neuron-level total is the sum over layers. Qwen3-32B has 64 layers of</span>
+<span id="cb1-351"><a href="#cb1-351" aria-hidden="true" tabindex="-1"></a>25,600 neurons, about 1.6 million, against a residual stream of width 5,120: neuron-level</span>
+<span id="cb1-352"><a href="#cb1-352" aria-hidden="true" tabindex="-1"></a>features outnumber stream dimensions by roughly 300 to 1. The same holds in a modern conv net.</span>
+<span id="cb1-353"><a href="#cb1-353" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-354"><a href="#cb1-354" aria-hidden="true" tabindex="-1"></a>The residual stream is therefore not a cap on the number of features. It is a cap on how</span>
+<span id="cb1-355"><a href="#cb1-355" aria-hidden="true" tabindex="-1"></a>many can be *simultaneously* present and linearly separable at one position, and even that</span>
+<span id="cb1-356"><a href="#cb1-356" aria-hidden="true" tabindex="-1"></a>has slack. Four things reconcile 1.6 million writers with 5,120 dimensions:</span>
+<span id="cb1-357"><a href="#cb1-357" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-358"><a href="#cb1-358" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>*Features are not simultaneously active.* At any token only a small fraction of neurons</span>
+<span id="cb1-359"><a href="#cb1-359" aria-hidden="true" tabindex="-1"></a>  fire. The stream is a bus, not a storage array, so what has to fit at once is the active</span>
+<span id="cb1-360"><a href="#cb1-360" aria-hidden="true" tabindex="-1"></a>  set, not the catalogue.</span>
+<span id="cb1-361"><a href="#cb1-361" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>*Directions are reused across depth.* A direction written by layer 10 and read by layer 14</span>
+<span id="cb1-362"><a href="#cb1-362" aria-hidden="true" tabindex="-1"></a>  can be overwritten or ignored afterwards, and layer 40 can use it for something else.</span>
+<span id="cb1-363"><a href="#cb1-363" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>*Related neurons write nearby directions.* Many car-part neurons write into a shared car</span>
+<span id="cb1-364"><a href="#cb1-364" aria-hidden="true" tabindex="-1"></a>  region, which is composition rather than packing.</span>
+<span id="cb1-365"><a href="#cb1-365" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>*Near-orthogonality is cheap in high dimension.* This is the Johnson–Lindenstrauss slack,</span>
+<span id="cb1-366"><a href="#cb1-366" aria-hidden="true" tabindex="-1"></a>  and it is the one place where the strict sense of superposition genuinely lives in the</span>
+<span id="cb1-367"><a href="#cb1-367" aria-hidden="true" tabindex="-1"></a>  stream.</span>
+<span id="cb1-368"><a href="#cb1-368" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-369"><a href="#cb1-369" aria-hidden="true" tabindex="-1"></a>That last point is where the essay is most careful and least decisive. It concedes that</span>
+<span id="cb1-370"><a href="#cb1-370" aria-hidden="true" tabindex="-1"></a>packing in the stream, its sense (c), may be impossible to rule out, and claims only that it</span>
+<span id="cb1-371"><a href="#cb1-371" aria-hidden="true" tabindex="-1"></a>has not been a bottleneck in practice: neuron reads and writes come out clean, and</span>
+<span id="cb1-372"><a href="#cb1-372" aria-hidden="true" tabindex="-1"></a>attribution graphs come out clean. Its supporting evidence is the "crushing" experiment, in</span>
+<span id="cb1-373"><a href="#cb1-373" aria-hidden="true" tabindex="-1"></a>which a 7-million-parameter conv net was retrained with its stream four and eight times</span>
+<span id="cb1-374"><a href="#cb1-374" aria-hidden="true" tabindex="-1"></a>narrower, down to 46 dimensions in the last block, keeping the neurons. Accuracy fell from</span>
+<span id="cb1-375"><a href="#cb1-375" aria-hidden="true" tabindex="-1"></a>72% to 60% and then 39%, but the map of what the neurons do looked the same, only messier.</span>
+<span id="cb1-376"><a href="#cb1-376" aria-hidden="true" tabindex="-1"></a>The information flowing through the stream at any moment is far lower dimensional than the</span>
+<span id="cb1-377"><a href="#cb1-377" aria-hidden="true" tabindex="-1"></a>count of things that ever flow through it.</span>
+<span id="cb1-378"><a href="#cb1-378" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-379"><a href="#cb1-379" aria-hidden="true" tabindex="-1"></a>The honest summary: the number of concepts a network can represent is set by its neurons,</span>
+<span id="cb1-380"><a href="#cb1-380" aria-hidden="true" tabindex="-1"></a>summed over layers, and by compositions of them. The stream width constrains concurrency and</span>
+<span id="cb1-381"><a href="#cb1-381" aria-hidden="true" tabindex="-1"></a>separability, not the catalogue. Whether the concurrent set is ever packed non-locally in the</span>
+<span id="cb1-382"><a href="#cb1-382" aria-hidden="true" tabindex="-1"></a>stream is the residual claim the essay leaves open, and it is where a sceptic should push.</span>
+<span id="cb1-383"><a href="#cb1-383" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-384"><a href="#cb1-384" aria-hidden="true" tabindex="-1"></a>:::</span>
+<span id="cb1-385"><a href="#cb1-385" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-386"><a href="#cb1-386" aria-hidden="true" tabindex="-1"></a><span class="fu">## Further reading for this page</span></span>
+<span id="cb1-387"><a href="#cb1-387" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-388"><a href="#cb1-388" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>Olah et al., *Feature Visualization*, Distill 2017.</span>
+<span id="cb1-389"><a href="#cb1-389" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>Olah et al., *Zoom In: An Introduction to Circuits*, Distill 2020.</span>
+<span id="cb1-390"><a href="#cb1-390" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>Elhage et al., *Toy Models of Superposition*, Transformer Circuits 2022 (next page).</span>
+<span id="cb1-391"><a href="#cb1-391" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>Bricken et al., *Towards Monosemanticity*, Transformer Circuits 2023 (the SAE paper).</span>
+<span id="cb1-392"><a href="#cb1-392" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>Ameisen et al., *Circuit Tracing* and Lindsey et al., *On the Biology of a Large Language</span>
+<span id="cb1-393"><a href="#cb1-393" aria-hidden="true" tabindex="-1"></a>  Model*, Transformer Circuits 2025 (attribution graphs).</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button" data-in-quarto-modal=""><i class="bi"></i></button></div>
 </div></div></div></div></div>
 </div> <!-- /content -->
 

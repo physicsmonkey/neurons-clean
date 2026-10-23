@@ -297,6 +297,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <li><a href="#the-circuit-inputs-and-readers-from-the-weights" id="toc-the-circuit-inputs-and-readers-from-the-weights" class="nav-link" data-scroll-target="#the-circuit-inputs-and-readers-from-the-weights">The circuit: inputs and readers from the weights</a></li>
   <li><a href="#a-synthetic-probe-does-a-bare-v-excite-it" id="toc-a-synthetic-probe-does-a-bare-v-excite-it" class="nav-link" data-scroll-target="#a-synthetic-probe-does-a-bare-v-excite-it">A synthetic probe: does a bare V excite it?</a></li>
   <li><a href="#assessment" id="toc-assessment" class="nav-link" data-scroll-target="#assessment">Assessment</a></li>
+  <li><a href="#questions-from-the-reading-group" id="toc-questions-from-the-reading-group" class="nav-link" data-scroll-target="#questions-from-the-reading-group">Questions from the reading group</a></li>
   <li><a href="#discussion-questions" id="toc-discussion-questions" class="nav-link" data-scroll-target="#discussion-questions">Discussion questions</a></li>
   </ul>
 </nav>
@@ -341,7 +342,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <li>Therefore the right description is a <em>shared pattern</em> (a verb, “pointed versus round”), not a <em>list of nouns</em> (cats OR cars).</li>
 </ol>
 <p>Claims 1 and 2 are checkable from the weights and from any photo collection. Claim 3 we can check partially with COCO’s labels. Claim 4 is an interpretation, and the last section discusses how much the evidence supports it.</p>
-<div id="f4719f85" class="cell" data-execution_count="1">
+<div id="f9491b92" class="cell" data-execution_count="1">
 <details class="code-fold">
 <summary>Setup: load the original InceptionV1 and scan COCO (cached after the first run)</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> sys, pathlib, json, numpy <span class="im">as</span> np, torch, matplotlib.pyplot <span class="im">as</span> plt</span>
@@ -373,7 +374,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </section>
 <section id="the-two-poles-on-5000-photographs" class="level2">
 <h2 class="anchored" data-anchor-id="the-two-poles-on-5000-photographs">The two poles on 5,000 photographs</h2>
-<div id="2ac73f7c" class="cell" data-execution_count="2">
+<div id="1c16f14d" class="cell" data-execution_count="2">
 <details class="code-fold">
 <summary>Contact sheets of the strongest positive and negative responses</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> sheet(order, locs, n<span class="op">=</span><span class="dv">40</span>, ncol<span class="op">=</span><span class="dv">8</span>, size<span class="op">=</span><span class="dv">96</span>):</span>
@@ -402,7 +403,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <section id="is-it-really-just-cats-and-cars-using-the-labels" class="level2">
 <h2 class="anchored" data-anchor-id="is-it-really-just-cats-and-cars-using-the-labels">Is it really just cats and cars? Using the labels</h2>
 <p>COCO’s instance annotations tell us what is in each image. If the neuron were an OR of cat and car, images with neither should not reach the top. If it is a V-shape detector, some should, and they should be pointed things.</p>
-<div id="6823bd20" class="cell" data-execution_count="3">
+<div id="5cd4165d" class="cell" data-execution_count="3">
 <details class="code-fold">
 <summary>Label statistics of the top images</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>ann <span class="op">=</span> json.load(<span class="bu">open</span>(ROOT <span class="op">/</span> <span class="st">"data/coco/annotations/instances_val2017.json"</span>))</span>
@@ -430,7 +431,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
    500   0.14           0.38   0.06           0.44</code></pre>
 </div>
 </div>
-<div id="5da73095" class="cell" data-execution_count="4">
+<div id="98c9be13" class="cell" data-execution_count="4">
 <details class="code-fold">
 <summary>The strongest responses among images with no cat, dog, car, truck or bus</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb6"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>rest <span class="op">=</span> [i <span class="cf">for</span> i <span class="kw">in</span> order <span class="cf">if</span> <span class="kw">not</span> has(i, [<span class="st">"cat"</span>, <span class="st">"dog"</span>] <span class="op">+</span> vehicles)]</span>
@@ -460,7 +461,7 @@ most common labels in the top 60 of these: [('person', 21), ('chair', 14), ('bot
 <section id="the-circuit-inputs-and-readers-from-the-weights" class="level2">
 <h2 class="anchored" data-anchor-id="the-circuit-inputs-and-readers-from-the-weights">The circuit: inputs and readers from the weights</h2>
 <p>The essay names specific neighbours. Because <code>mixed4e</code>’s 1×1 branch is a 1×1 convolution, its weight matrix is directly the vector of votes each <code>mixed4d</code> channel casts for 4e:55, and the <code>mixed5a</code> convolutions give the votes 4e:55 casts for each <code>mixed5a</code> channel.</p>
-<div id="a80ae176" class="cell" data-execution_count="5">
+<div id="47fa271d" class="cell" data-execution_count="5">
 <details class="code-fold">
 <summary>Rank the essay’s named inputs and reader by weight</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb8"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>w_in <span class="op">=</span> model.mixed4e_1x1_pre_relu_conv.weight[CH, :, <span class="dv">0</span>, <span class="dv">0</span>].detach().cpu()</span>
@@ -486,7 +487,7 @@ strongest readers in mixed5a 1x1 branch: [(94, 0.1), (240, 0.058), (81, 0.057), 
 <section id="a-synthetic-probe-does-a-bare-v-excite-it" class="level2 beyond">
 <h2 class="anchored" data-anchor-id="a-synthetic-probe-does-a-bare-v-excite-it">A synthetic probe: does a bare V excite it?</h2>
 <p>If the neuron were a geometric V detector in the way an early-layer curve detector is a curve detector, a line drawing of a V should drive it. We draw simple shapes on a grey background and record the pre-ReLU maximum and minimum.</p>
-<div id="3689bc9c" class="cell" data-execution_count="6">
+<div id="93c09aad" class="cell" data-execution_count="6">
 <details class="code-fold">
 <summary>Line-drawn shapes on grey</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb10"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> PIL <span class="im">import</span> ImageDraw</span>
@@ -544,6 +545,16 @@ blank            -0       -76</code></pre>
 <li><strong>Supported but not proven:</strong> that “pointed versus round” is the <em>right</em> one-line description. It fits everything we saw, and it fits better than OR(cat, car), which cannot explain the goats, trains and tennis courts. A line-drawn V alone is not enough, so the description is of a high-level shape cue, not a contour.</li>
 <li><strong>Not addressed here:</strong> the second half of the essay’s section, the car-into-dogs circuit and the “generalised pose neurons”. That needs feature visualisation with and without the bias toward natural paths, which is the subject of the next section.</li>
 </ul>
+</section>
+<section id="questions-from-the-reading-group" class="level2 beyond">
+<h2 class="anchored" data-anchor-id="questions-from-the-reading-group">Questions from the reading group</h2>
+<p>Raised in discussion on 22 October 2026. The answers are ours, not the essay’s.</p>
+<p><strong>Before the essay, was the idea that 4e:55 fired on both cats and cars because it was helping encode those two features in superposition, with many other neurons firing too?</strong></p>
+<p>Roughly yes, with a historical wrinkle. <em>Zoom In</em> (2020) described 4e:55 as responding to cat faces, cat legs and car fronts, and offered superposition as a hypothesis for why: a network that needs more features than it has neurons folds several into one, and a neuron that is “OR(cat, car)” is the visible symptom. <em>Toy Models of Superposition</em> only made this precise in 2022. Under the precise version a feature is a direction in activation space, and if the car direction is not neuron-aligned it spans several neurons: 4e:55 carries a piece of “car” and a piece of “cat”, other neurons carry other pieces, and a downstream reader recovers “car” by the linear combination that cancels the cat part. Interference is tolerable because cats and cars rarely co-occur. The car-into-dogs circuit was read the same way, as the car being stored across several dog neurons for later decoding.</p>
+<p>The essay’s rebuttal is aimed at the decoding step. If that were the mechanism, some downstream weight pattern would have to read the cancelling combination. The essay says none does: the readers of 4e:55 use it as one thing (its strongest reader is a V-shaped-flame neuron, which we confirmed from the weights above), and the dog neurons the car writes into are shared pose neurons feeding car specialists. “Nothing reads that combination” turns a question about appearances into a question about weights.</p>
+<p><strong>The neuron does not fire strongly for a literal drawn V. How should we make sense of the “V-shape” label? Is it “V-shapes in objects”?</strong></p>
+<p>Yes, and we would go a little further. A neuron at <code>mixed4e</code> is defined by its inputs, and its strongest inputs are already part detectors: a fox snout, a wolf face, a van front. What those share is a pointed, convergent frontal structure built from the textures and parts that mid-level neurons respond to. A line drawing has the geometry but none of the parts, so it drives none of the inputs and therefore barely drives the neuron. The essay’s own footnote says this: to see the shared pattern you have to visualise what the neuron’s <em>inputs</em> have in common, not the neuron on its own.</p>
+<p>So “V” is a compression of “pointed convergent front, as it appears in natural objects”. The COCO result supports that compression, since goats, horses, train noses, aircraft and converging court lines all drive it, which OR(cat, car) cannot explain. What the evidence does not settle is whether “V” is a better label than “frontal pointed object”. A sharper synthetic test would use photographic crops of pointed things with no face, such as boat bows, roof gables and arrowheads, rather than drawn lines.</p>
 </section>
 <section id="discussion-questions" class="level2">
 <h2 class="anchored" data-anchor-id="discussion-questions">Discussion questions</h2>
@@ -1238,16 +1249,63 @@ blank            -0       -76</code></pre>
 <span id="cb12-238"><a href="#cb12-238" aria-hidden="true" tabindex="-1"></a>  and the "generalised pose neurons". That needs feature visualisation with and without the</span>
 <span id="cb12-239"><a href="#cb12-239" aria-hidden="true" tabindex="-1"></a>  bias toward natural paths, which is the subject of the next section.</span>
 <span id="cb12-240"><a href="#cb12-240" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb12-241"><a href="#cb12-241" aria-hidden="true" tabindex="-1"></a><span class="fu">## Discussion questions</span></span>
+<span id="cb12-241"><a href="#cb12-241" aria-hidden="true" tabindex="-1"></a>::: {.beyond}</span>
 <span id="cb12-242"><a href="#cb12-242" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb12-243"><a href="#cb12-243" aria-hidden="true" tabindex="-1"></a><span class="ss">1. </span>The neuron fires on cat faces far more strongly than on anything else in COCO. Is a neuron</span>
-<span id="cb12-244"><a href="#cb12-244" aria-hidden="true" tabindex="-1"></a>   whose top of the distribution is 85% cats, but whose tail is "pointed things", best</span>
-<span id="cb12-245"><a href="#cb12-245" aria-hidden="true" tabindex="-1"></a>   called a cat neuron, a V neuron, or something else? Does the answer depend on what reads</span>
-<span id="cb12-246"><a href="#cb12-246" aria-hidden="true" tabindex="-1"></a>   it?</span>
-<span id="cb12-247"><a href="#cb12-247" aria-hidden="true" tabindex="-1"></a><span class="ss">2. </span>The essay's recommended trick is to describe a neuron without nouns. Try it on the</span>
-<span id="cb12-248"><a href="#cb12-248" aria-hidden="true" tabindex="-1"></a>   negative-pole sheet above. Is "round" the only candidate?</span>
-<span id="cb12-249"><a href="#cb12-249" aria-hidden="true" tabindex="-1"></a><span class="ss">3. </span>How would one tell a "V-shape" neuron from a "frontal face or front of object" neuron?</span>
-<span id="cb12-250"><a href="#cb12-250" aria-hidden="true" tabindex="-1"></a>   What stimulus would separate them?</span>
+<span id="cb12-243"><a href="#cb12-243" aria-hidden="true" tabindex="-1"></a><span class="fu">## Questions from the reading group</span></span>
+<span id="cb12-244"><a href="#cb12-244" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-245"><a href="#cb12-245" aria-hidden="true" tabindex="-1"></a>Raised in discussion on 22 October 2026. The answers are ours, not the essay's.</span>
+<span id="cb12-246"><a href="#cb12-246" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-247"><a href="#cb12-247" aria-hidden="true" tabindex="-1"></a>**Before the essay, was the idea that 4e:55 fired on both cats and cars because it was</span>
+<span id="cb12-248"><a href="#cb12-248" aria-hidden="true" tabindex="-1"></a>helping encode those two features in superposition, with many other neurons firing too?**</span>
+<span id="cb12-249"><a href="#cb12-249" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-250"><a href="#cb12-250" aria-hidden="true" tabindex="-1"></a>Roughly yes, with a historical wrinkle. *Zoom In* (2020) described 4e:55 as responding to cat</span>
+<span id="cb12-251"><a href="#cb12-251" aria-hidden="true" tabindex="-1"></a>faces, cat legs and car fronts, and offered superposition as a hypothesis for why: a network</span>
+<span id="cb12-252"><a href="#cb12-252" aria-hidden="true" tabindex="-1"></a>that needs more features than it has neurons folds several into one, and a neuron that is</span>
+<span id="cb12-253"><a href="#cb12-253" aria-hidden="true" tabindex="-1"></a>"OR(cat, car)" is the visible symptom. *Toy Models of Superposition* only made this precise</span>
+<span id="cb12-254"><a href="#cb12-254" aria-hidden="true" tabindex="-1"></a>in 2022. Under the precise version a feature is a direction in activation space, and if the</span>
+<span id="cb12-255"><a href="#cb12-255" aria-hidden="true" tabindex="-1"></a>car direction is not neuron-aligned it spans several neurons: 4e:55 carries a piece of "car"</span>
+<span id="cb12-256"><a href="#cb12-256" aria-hidden="true" tabindex="-1"></a>and a piece of "cat", other neurons carry other pieces, and a downstream reader recovers "car"</span>
+<span id="cb12-257"><a href="#cb12-257" aria-hidden="true" tabindex="-1"></a>by the linear combination that cancels the cat part. Interference is tolerable because cats</span>
+<span id="cb12-258"><a href="#cb12-258" aria-hidden="true" tabindex="-1"></a>and cars rarely co-occur. The car-into-dogs circuit was read the same way, as the car being</span>
+<span id="cb12-259"><a href="#cb12-259" aria-hidden="true" tabindex="-1"></a>stored across several dog neurons for later decoding.</span>
+<span id="cb12-260"><a href="#cb12-260" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-261"><a href="#cb12-261" aria-hidden="true" tabindex="-1"></a>The essay's rebuttal is aimed at the decoding step. If that were the mechanism, some</span>
+<span id="cb12-262"><a href="#cb12-262" aria-hidden="true" tabindex="-1"></a>downstream weight pattern would have to read the cancelling combination. The essay says none</span>
+<span id="cb12-263"><a href="#cb12-263" aria-hidden="true" tabindex="-1"></a>does: the readers of 4e:55 use it as one thing (its strongest reader is a V-shaped-flame</span>
+<span id="cb12-264"><a href="#cb12-264" aria-hidden="true" tabindex="-1"></a>neuron, which we confirmed from the weights above), and the dog neurons the car writes into</span>
+<span id="cb12-265"><a href="#cb12-265" aria-hidden="true" tabindex="-1"></a>are shared pose neurons feeding car specialists. "Nothing reads that combination" turns a</span>
+<span id="cb12-266"><a href="#cb12-266" aria-hidden="true" tabindex="-1"></a>question about appearances into a question about weights.</span>
+<span id="cb12-267"><a href="#cb12-267" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-268"><a href="#cb12-268" aria-hidden="true" tabindex="-1"></a>**The neuron does not fire strongly for a literal drawn V. How should we make sense of the</span>
+<span id="cb12-269"><a href="#cb12-269" aria-hidden="true" tabindex="-1"></a>"V-shape" label? Is it "V-shapes in objects"?**</span>
+<span id="cb12-270"><a href="#cb12-270" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-271"><a href="#cb12-271" aria-hidden="true" tabindex="-1"></a>Yes, and we would go a little further. A neuron at <span class="in">`mixed4e`</span> is defined by its inputs, and</span>
+<span id="cb12-272"><a href="#cb12-272" aria-hidden="true" tabindex="-1"></a>its strongest inputs are already part detectors: a fox snout, a wolf face, a van front. What</span>
+<span id="cb12-273"><a href="#cb12-273" aria-hidden="true" tabindex="-1"></a>those share is a pointed, convergent frontal structure built from the textures and parts that</span>
+<span id="cb12-274"><a href="#cb12-274" aria-hidden="true" tabindex="-1"></a>mid-level neurons respond to. A line drawing has the geometry but none of the parts, so it</span>
+<span id="cb12-275"><a href="#cb12-275" aria-hidden="true" tabindex="-1"></a>drives none of the inputs and therefore barely drives the neuron. The essay's own footnote</span>
+<span id="cb12-276"><a href="#cb12-276" aria-hidden="true" tabindex="-1"></a>says this: to see the shared pattern you have to visualise what the neuron's *inputs* have in</span>
+<span id="cb12-277"><a href="#cb12-277" aria-hidden="true" tabindex="-1"></a>common, not the neuron on its own.</span>
+<span id="cb12-278"><a href="#cb12-278" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-279"><a href="#cb12-279" aria-hidden="true" tabindex="-1"></a>So "V" is a compression of "pointed convergent front, as it appears in natural objects". The</span>
+<span id="cb12-280"><a href="#cb12-280" aria-hidden="true" tabindex="-1"></a>COCO result supports that compression, since goats, horses, train noses, aircraft and</span>
+<span id="cb12-281"><a href="#cb12-281" aria-hidden="true" tabindex="-1"></a>converging court lines all drive it, which OR(cat, car) cannot explain. What the evidence does</span>
+<span id="cb12-282"><a href="#cb12-282" aria-hidden="true" tabindex="-1"></a>not settle is whether "V" is a better label than "frontal pointed object". A sharper synthetic</span>
+<span id="cb12-283"><a href="#cb12-283" aria-hidden="true" tabindex="-1"></a>test would use photographic crops of pointed things with no face, such as boat bows, roof</span>
+<span id="cb12-284"><a href="#cb12-284" aria-hidden="true" tabindex="-1"></a>gables and arrowheads, rather than drawn lines.</span>
+<span id="cb12-285"><a href="#cb12-285" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-286"><a href="#cb12-286" aria-hidden="true" tabindex="-1"></a>:::</span>
+<span id="cb12-287"><a href="#cb12-287" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-288"><a href="#cb12-288" aria-hidden="true" tabindex="-1"></a><span class="fu">## Discussion questions</span></span>
+<span id="cb12-289"><a href="#cb12-289" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-290"><a href="#cb12-290" aria-hidden="true" tabindex="-1"></a><span class="ss">1. </span>The neuron fires on cat faces far more strongly than on anything else in COCO. Is a neuron</span>
+<span id="cb12-291"><a href="#cb12-291" aria-hidden="true" tabindex="-1"></a>   whose top of the distribution is 85% cats, but whose tail is "pointed things", best</span>
+<span id="cb12-292"><a href="#cb12-292" aria-hidden="true" tabindex="-1"></a>   called a cat neuron, a V neuron, or something else? Does the answer depend on what reads</span>
+<span id="cb12-293"><a href="#cb12-293" aria-hidden="true" tabindex="-1"></a>   it?</span>
+<span id="cb12-294"><a href="#cb12-294" aria-hidden="true" tabindex="-1"></a><span class="ss">2. </span>The essay's recommended trick is to describe a neuron without nouns. Try it on the</span>
+<span id="cb12-295"><a href="#cb12-295" aria-hidden="true" tabindex="-1"></a>   negative-pole sheet above. Is "round" the only candidate?</span>
+<span id="cb12-296"><a href="#cb12-296" aria-hidden="true" tabindex="-1"></a><span class="ss">3. </span>How would one tell a "V-shape" neuron from a "frontal face or front of object" neuron?</span>
+<span id="cb12-297"><a href="#cb12-297" aria-hidden="true" tabindex="-1"></a>   What stimulus would separate them?</span>
 </code></pre></div><button title="Copy to Clipboard" class="code-copy-button" data-in-quarto-modal=""><i class="bi"></i></button></div>
 </div></div></div></div></div>
 </div> <!-- /content -->

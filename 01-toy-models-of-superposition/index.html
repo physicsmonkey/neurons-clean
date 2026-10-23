@@ -346,6 +346,7 @@ window.Quarto = {
   </ul></li>
   <li><a href="#what-to-carry-into-the-essay" id="toc-what-to-carry-into-the-essay" class="nav-link" data-scroll-target="#what-to-carry-into-the-essay">7. What to carry into the essay</a></li>
   <li><a href="#what-the-toy-does-and-does-not-say" id="toc-what-the-toy-does-and-does-not-say" class="nav-link" data-scroll-target="#what-the-toy-does-and-does-not-say">8. What the toy does and does not say</a></li>
+  <li><a href="#questions-from-the-reading-group" id="toc-questions-from-the-reading-group" class="nav-link" data-scroll-target="#questions-from-the-reading-group">Questions from the reading group</a></li>
   <li><a href="#further-reading" id="toc-further-reading" class="nav-link" data-scroll-target="#further-reading">Further reading</a></li>
   </ul>
 </nav>
@@ -395,7 +396,7 @@ h = W x \in \mathbb{R}^m, \qquad \hat x = \mathrm{ReLU}(W^{\mathsf T} h + b).
 <li>The <strong>superposition index</strong> <span class="math inline">\sum_{j\ne i} (\hat W_i\cdot W_j)^2</span>: how much other features overlap with feature <span class="math inline">i</span>’s direction. Zero means a private direction.</li>
 <li>The <strong>dimensionality</strong> <span class="math inline">D_i = \|W_i\|^2 / \sum_j (\hat W_i\cdot W_j)^2</span>. A feature with its own orthogonal direction has <span class="math inline">D_i = 1</span>; two features sharing a direction antipodally have <span class="math inline">D_i = \tfrac12</span>; the paper shows the values cluster at simple fractions.</li>
 </ul>
-<div id="fea08084" class="cell" data-execution_count="1">
+<div id="0689537f" class="cell" data-execution_count="1">
 <details class="code-fold">
 <summary>Imports and helpers</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> sys, pathlib</span>
@@ -419,7 +420,7 @@ h = W x \in \mathbb{R}^m, \qquad \hat x = \mathrm{ReLU}(W^{\mathsf T} h + b).
 <section id="from-keep-the-top-m-to-packing-as-sparsity-rises" class="level2">
 <h2 class="anchored" data-anchor-id="from-keep-the-top-m-to-packing-as-sparsity-rises">2. From “keep the top <span class="math inline">m</span>” to packing, as sparsity rises</h2>
 <p>The paper’s headline figure: <span class="math inline">n=20</span> features in <span class="math inline">m=5</span> dimensions, trained at increasing sparsity. Each panel shows the Gram matrix <span class="math inline">W^{\mathsf T}W</span> (which features overlap with which) and, below it, each feature’s norm coloured by its superposition index.</p>
-<div id="a3ab53e9" class="cell" data-execution_count="2">
+<div id="fb3f2698" class="cell" data-execution_count="2">
 <details class="code-fold">
 <summary>Train n=20, m=5 across sparsity</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>n, m <span class="op">=</span> <span class="dv">20</span>, <span class="dv">5</span></span>
@@ -456,7 +457,7 @@ h = W x \in \mathbb{R}^m, \qquad \hat x = \mathrm{ReLU}(W^{\mathsf T} h + b).
 <section id="the-geometry-of-packing" class="level2">
 <h2 class="anchored" data-anchor-id="the-geometry-of-packing">3. The geometry of packing</h2>
 <p>With <span class="math inline">m = 2</span> we can draw the columns <span class="math inline">W_i</span> directly.</p>
-<div id="d36721b2" class="cell" data-execution_count="3">
+<div id="6be2cc72" class="cell" data-execution_count="3">
 <details class="code-fold">
 <summary>Train n=5 and n=6 features into m=2 dims at high sparsity</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>fig, axes <span class="op">=</span> plt.subplots(<span class="dv">2</span>, <span class="dv">4</span>, figsize<span class="op">=</span>(<span class="dv">9</span>, <span class="fl">4.6</span>))</span>
@@ -487,7 +488,7 @@ h = W x \in \mathbb{R}^m, \qquad \hat x = \mathrm{ReLU}(W^{\mathsf T} h + b).
 <section id="dimensionality-per-feature-is-quantised" class="level2">
 <h2 class="anchored" data-anchor-id="dimensionality-per-feature-is-quantised">4. Dimensionality per feature is quantised</h2>
 <p>Scaling up the counts shows the paper’s most striking observation: the amount of bottleneck each feature gets, <span class="math inline">D_i</span>, does not vary continuously with sparsity but jumps between a few discrete values that correspond to regular geometric arrangements.</p>
-<div id="6db4c6b5" class="cell" data-execution_count="4">
+<div id="9f5c2210" class="cell" data-execution_count="4">
 <details class="code-fold">
 <summary>Train n=80, m=20 across many sparsity values and scatter D_i</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>n, m <span class="op">=</span> <span class="dv">80</span>, <span class="dv">20</span></span>
@@ -526,7 +527,7 @@ h = W x \in \mathbb{R}^m, \qquad \hat x = \mathrm{ReLU}(W^{\mathsf T} h + b).
 </ol></li>
 <li><strong>A hidden layer.</strong> After the 5-dimensional bottleneck there is a layer of <span class="math inline">k</span> ReLU neurons before the output: <span class="math inline">a = \mathrm{ReLU}(V h + c)</span>, <span class="math inline">\hat x = U a + b</span>. These are the “neurons” whose cleanliness we can now ask about; the original toy has none.</li>
 </ol>
-<div id="fb37fea3" class="cell" data-execution_count="5">
+<div id="06d7e03e" class="cell" data-execution_count="5">
 <details class="code-fold">
 <summary>Train the grouped model, sparse and dense</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>n_groups, group_size, m, k <span class="op">=</span> <span class="dv">4</span>, <span class="dv">5</span>, <span class="dv">5</span>, <span class="dv">10</span></span>
@@ -547,7 +548,7 @@ h = W x \in \mathbb{R}^m, \qquad \hat x = \mathrm{ReLU}(W^{\mathsf T} h + b).
 </details>
 </div>
 <p>First, what the bottleneck does with correlated inputs. The cosine matrix between the 20 input directions <span class="math inline">W_i</span> shows whether the model gave each group a shared direction.</p>
-<div id="24435515" class="cell" data-execution_count="6">
+<div id="9da9358c" class="cell" data-execution_count="6">
 <details class="code-fold">
 <summary>Cosine between input directions</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb6"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>fig, axes <span class="op">=</span> plt.subplots(<span class="dv">2</span>, <span class="dv">2</span>, figsize<span class="op">=</span>(<span class="fl">6.2</span>, <span class="dv">6</span>))</span>
@@ -574,7 +575,7 @@ h = W x \in \mathbb{R}^m, \qquad \hat x = \mathrm{ReLU}(W^{\mathsf T} h + b).
 </div>
 <p>Reading the figure. Without a hidden layer (left column) the toy behaves as the paper says: sparse groups are packed input by input, with no block structure, exactly as if the inputs were independent; dense groups get the “PCA-like” solution in which each group of five shares one direction. With a hidden layer (right column) the block structure appears <em>even in the sparse regime</em>: related inputs are written to a shared direction and the hidden neurons read that direction. That is the essay’s “related inputs grew onto the neurons”.</p>
 <p>Second, what the hidden neurons read. For each hidden neuron <span class="math inline">j</span> we take the cosine of its read direction <span class="math inline">V_j</span> with each of the four group directions, defined as the mean of each group’s <span class="math inline">W_i</span>. The sign matters: a neuron that is positive on one group and negative on another is a <em>contrast</em> between two things, which is what the essay calls a gate with two poles, not a mixture.</p>
-<div id="c43927ed" class="cell" data-execution_count="7">
+<div id="84ab6474" class="cell" data-execution_count="7">
 <details class="code-fold">
 <summary>Hidden neurons in the group basis</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb7"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> group_cosines(model):</span>
@@ -606,7 +607,7 @@ h = W x \in \mathbb{R}^m, \qquad \hat x = \mathrm{ReLU}(W^{\mathsf T} h + b).
 <p>The pole-by-pole audit of the hidden neurons that follows is our own analysis. The essay’s figure for this variant shows only the bottleneck’s cosine structure.</p>
 </div>
 <p>Because the output ReLU discards a neuron’s negative side, what the neuron <em>transmits</em> is its positive pole. So the fair question, in the essay’s own terms, is whether the positive pole is about one group. We count a neuron as “one group on the positive pole” if, among the groups it reads with positive sign, one carries more than 80% of the positive weight; we also record whether it has a strong negative pole on some other group.</p>
-<div id="77a5d242" class="cell" data-execution_count="8">
+<div id="9f11952d" class="cell" data-execution_count="8">
 <details class="code-fold">
 <summary>Summary over several seeds</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb8"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> classify(model):</span>
@@ -644,7 +645,7 @@ dense        50               22                  12           28</code></pre>
 </ul>
 <p>With <span class="math inline">J = 4</span> and only four tasks the two conditions would be identical, which is the relabelling point again; the difference appears only when several readers want the same combination. That is what the essay calls reuse, so <span class="math inline">J</span> is the quantity under test rather than a proxy for it.</p>
 <p><strong>What to measure</strong>, without reference to any grouping the data does not contain: the <strong>participation ratio</strong> of the singular values of <span class="math inline">W</span> (the effective number of bottleneck dimensions in use), the mean |cosine| between input directions for pairs that <strong>share a subset</strong> versus pairs that <strong>share none</strong>, the <strong>task loss</strong>, and the hidden-neuron poles scored against the task-defined subsets.</p>
-<div id="15940084" class="cell" data-execution_count="9">
+<div id="7902dca0" class="cell" data-execution_count="9">
 <details class="code-fold">
 <summary>Train the reader toy across the reuse knob J</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb10"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> common.toy_models <span class="im">import</span> (ReaderToy, make_subsets, make_tasks, train_tasks,</span>
@@ -679,7 +680,7 @@ dense        50               22                  12           28</code></pre>
  12            2    0.388   4.61          0.42     0.25</code></pre>
 </div>
 </div>
-<div id="6153511c" class="cell" data-execution_count="10">
+<div id="a0669669" class="cell" data-execution_count="10">
 <details class="code-fold">
 <summary>Input directions, ordered by subset, at the two ends of the knob</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb12"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>fig, axes <span class="op">=</span> plt.subplots(<span class="dv">1</span>, <span class="dv">2</span>, figsize<span class="op">=</span>(<span class="fl">7.2</span>, <span class="fl">3.6</span>))</span>
@@ -708,7 +709,7 @@ dense        50               22                  12           28</code></pre>
 </div>
 <p>With maximal reuse the bottleneck becomes four coarse directions, one per shared sum, with the five inputs of each sum nearly parallel (|cosine| about 0.8 within, 0.2 between) and a participation ratio of 4. Nothing about the inputs asked for this; the readers did. With no reuse the same inputs are spread with no block structure, the participation ratio rises toward 5, and the task loss is seventy times larger: twelve independent sums do not fit in five dimensions, so the network packs them with interference. Intermediate <span class="math inline">J</span> gives intermediate values of everything.</p>
 <p>Two remarks on the control. First, it is the original toy’s situation transposed up one level: the quantities being packed are now the readers’ sums rather than the inputs, but the mechanism is the same. Second, the control is not a strawman. Each task still reads five inputs through the same function; it just reads a combination nobody else wants.</p>
-<div id="ea8e3446" class="cell" data-execution_count="11">
+<div id="d1e56b6c" class="cell" data-execution_count="11">
 <details class="code-fold">
 <summary>Hidden-neuron poles against the task subsets</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb13"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> subset_cosines(model, subs):</span>
@@ -735,7 +736,7 @@ dense        50               22                  12           28</code></pre>
 </div>
 </div>
 </div>
-<div id="f1e5852d" class="cell" data-execution_count="12">
+<div id="7ee83547" class="cell" data-execution_count="12">
 <details class="code-fold">
 <summary>Does sparsity rescue the no-reuse control?</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb14"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a>S_list <span class="op">=</span> [<span class="fl">0.0</span>, <span class="fl">0.5</span>, <span class="fl">0.8</span>, <span class="fl">0.9</span>, <span class="fl">0.97</span>]</span>
@@ -769,7 +770,7 @@ dense        50               22                  12           28</code></pre>
 <section id="a-private-offshoot" class="level3">
 <h3 class="anchored" data-anchor-id="a-private-offshoot">A private offshoot</h3>
 <p>If reuse makes inputs coarse, what happens when one reader wants fine structure? We keep the <span class="math inline">J = 4</span> tasks and add a single extra task that reads one input alone, <span class="math inline">y = x_{i^\star}</span> for some <span class="math inline">i^\star</span> in the first subset. The prediction from the essay’s picture is that <span class="math inline">W_{i^\star}</span> stays aligned with its group direction and grows a private component that the rest of the group lacks.</p>
-<div id="af1a8d76" class="cell" data-execution_count="13">
+<div id="555e5668" class="cell" data-execution_count="13">
 <details class="code-fold">
 <summary>One extra reader on a single input</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb15"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> offshoot_stats(extra, seeds<span class="op">=</span><span class="dv">3</span>):</span>
@@ -823,6 +824,15 @@ dense        50               22                  12           28</code></pre>
 <li><strong>There are no hidden neurons</strong> in the main experiments. Superposition in the toy is about directions in a bottleneck; reports of polysemanticity in real networks are about mixtures in neurons. The paper itself studies hidden neurons and correlated features, but separately.</li>
 </ul>
 <p>The toy therefore predicts where to <em>expect</em> packing: memories that are ends in themselves and related to nothing else. The essay’s claim is that real networks are rarely in that regime, and the rest of the essay is an attempt to show this empirically in vision and language models.</p>
+</section>
+<section id="questions-from-the-reading-group" class="level2 beyond">
+<h2 class="anchored" data-anchor-id="questions-from-the-reading-group">Questions from the reading group</h2>
+<p>Raised in discussion on 22 October 2026. The answers are ours, not the essay’s.</p>
+<p><strong>What does the readers experiment in section 6 actually test? If the number of independent tasks exceeds the bottleneck, isn’t the network simply forced into something like superposition?</strong></p>
+<p>At the endpoints, yes, the outcome is forced by counting. Twelve independent sums cannot pass losslessly through five dimensions, so the network must drop some or pack them with interference; four sums can, so it does. The toy discovers nothing there.</p>
+<p>What it tests is a claim that is often read into the original toy: that <em>more features than dimensions implies superposition</em>. In both of our conditions there are twenty inputs and five dimensions, and in both the inputs are independent and sparse, so the original toy’s premise holds identically. Yet with shared readers the network does not pack the twenty inputs at all. It builds four coarse directions and discards the within-group identity that nobody downstream asked for. The relevant count is not “features versus dimensions” but “what the readers need versus dimensions”, and when readers want shared things the answer is coarse-and-clean rather than packed. That is the essay’s “coarser, never fractured” in its smallest form.</p>
+<p>The non-trivial content is at the margins rather than the endpoints. With six or eight distinct sums the required information exceeds the bottleneck but overlaps partially, and the network’s compromise is intermediate rather than a switch. When packing is forced, it only becomes cheap at high sparsity, so the original phase boundary reappears for the readers’ quantities, which supports reading superposition as what one objective does in one regime rather than as a second principle. And the offshoot test shows that a single reader is enough to grow a private direction inside a coarse one.</p>
+<p>A tighter version would hold the <em>dimension</em> of what readers need fixed and vary only its <em>structure</em>: for instance eight tasks on subsets that overlap hierarchically against eight on subsets that overlap at random. That would separate “how much information” from “how organised the information is”, which is closer to the essay’s real claim. Not yet built.</p>
 </section>
 <section id="further-reading" class="level2">
 <h2 class="anchored" data-anchor-id="further-reading">Further reading</h2>
@@ -1820,11 +1830,50 @@ dense        50               22                  12           28</code></pre>
 <span id="cb17-556"><a href="#cb17-556" aria-hidden="true" tabindex="-1"></a>regime, and the rest of the essay is an attempt to show this empirically in vision and</span>
 <span id="cb17-557"><a href="#cb17-557" aria-hidden="true" tabindex="-1"></a>language models.</span>
 <span id="cb17-558"><a href="#cb17-558" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb17-559"><a href="#cb17-559" aria-hidden="true" tabindex="-1"></a><span class="fu">## Further reading</span></span>
+<span id="cb17-559"><a href="#cb17-559" aria-hidden="true" tabindex="-1"></a>::: {.beyond}</span>
 <span id="cb17-560"><a href="#cb17-560" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb17-561"><a href="#cb17-561" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>Elhage et al., *Toy Models of Superposition* (2022), especially the sections on feature</span>
-<span id="cb17-562"><a href="#cb17-562" aria-hidden="true" tabindex="-1"></a>  geometry, phase diagrams, and correlated features.</span>
-<span id="cb17-563"><a href="#cb17-563" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>The essay's appendix sections "Toy Models" and "A Note on Features and Definitions".</span>
+<span id="cb17-561"><a href="#cb17-561" aria-hidden="true" tabindex="-1"></a><span class="fu">## Questions from the reading group</span></span>
+<span id="cb17-562"><a href="#cb17-562" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-563"><a href="#cb17-563" aria-hidden="true" tabindex="-1"></a>Raised in discussion on 22 October 2026. The answers are ours, not the essay's.</span>
+<span id="cb17-564"><a href="#cb17-564" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-565"><a href="#cb17-565" aria-hidden="true" tabindex="-1"></a>**What does the readers experiment in section 6 actually test? If the number of independent</span>
+<span id="cb17-566"><a href="#cb17-566" aria-hidden="true" tabindex="-1"></a>tasks exceeds the bottleneck, isn't the network simply forced into something like</span>
+<span id="cb17-567"><a href="#cb17-567" aria-hidden="true" tabindex="-1"></a>superposition?**</span>
+<span id="cb17-568"><a href="#cb17-568" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-569"><a href="#cb17-569" aria-hidden="true" tabindex="-1"></a>At the endpoints, yes, the outcome is forced by counting. Twelve independent sums cannot pass</span>
+<span id="cb17-570"><a href="#cb17-570" aria-hidden="true" tabindex="-1"></a>losslessly through five dimensions, so the network must drop some or pack them with</span>
+<span id="cb17-571"><a href="#cb17-571" aria-hidden="true" tabindex="-1"></a>interference; four sums can, so it does. The toy discovers nothing there.</span>
+<span id="cb17-572"><a href="#cb17-572" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-573"><a href="#cb17-573" aria-hidden="true" tabindex="-1"></a>What it tests is a claim that is often read into the original toy: that *more features than</span>
+<span id="cb17-574"><a href="#cb17-574" aria-hidden="true" tabindex="-1"></a>dimensions implies superposition*. In both of our conditions there are twenty inputs and five</span>
+<span id="cb17-575"><a href="#cb17-575" aria-hidden="true" tabindex="-1"></a>dimensions, and in both the inputs are independent and sparse, so the original toy's premise</span>
+<span id="cb17-576"><a href="#cb17-576" aria-hidden="true" tabindex="-1"></a>holds identically. Yet with shared readers the network does not pack the twenty inputs at</span>
+<span id="cb17-577"><a href="#cb17-577" aria-hidden="true" tabindex="-1"></a>all. It builds four coarse directions and discards the within-group identity that nobody</span>
+<span id="cb17-578"><a href="#cb17-578" aria-hidden="true" tabindex="-1"></a>downstream asked for. The relevant count is not "features versus dimensions" but "what the</span>
+<span id="cb17-579"><a href="#cb17-579" aria-hidden="true" tabindex="-1"></a>readers need versus dimensions", and when readers want shared things the answer is</span>
+<span id="cb17-580"><a href="#cb17-580" aria-hidden="true" tabindex="-1"></a>coarse-and-clean rather than packed. That is the essay's "coarser, never fractured" in its</span>
+<span id="cb17-581"><a href="#cb17-581" aria-hidden="true" tabindex="-1"></a>smallest form.</span>
+<span id="cb17-582"><a href="#cb17-582" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-583"><a href="#cb17-583" aria-hidden="true" tabindex="-1"></a>The non-trivial content is at the margins rather than the endpoints. With six or eight</span>
+<span id="cb17-584"><a href="#cb17-584" aria-hidden="true" tabindex="-1"></a>distinct sums the required information exceeds the bottleneck but overlaps partially, and</span>
+<span id="cb17-585"><a href="#cb17-585" aria-hidden="true" tabindex="-1"></a>the network's compromise is intermediate rather than a switch. When packing is forced, it only</span>
+<span id="cb17-586"><a href="#cb17-586" aria-hidden="true" tabindex="-1"></a>becomes cheap at high sparsity, so the original phase boundary reappears for the readers'</span>
+<span id="cb17-587"><a href="#cb17-587" aria-hidden="true" tabindex="-1"></a>quantities, which supports reading superposition as what one objective does in one regime</span>
+<span id="cb17-588"><a href="#cb17-588" aria-hidden="true" tabindex="-1"></a>rather than as a second principle. And the offshoot test shows that a single reader is enough</span>
+<span id="cb17-589"><a href="#cb17-589" aria-hidden="true" tabindex="-1"></a>to grow a private direction inside a coarse one.</span>
+<span id="cb17-590"><a href="#cb17-590" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-591"><a href="#cb17-591" aria-hidden="true" tabindex="-1"></a>A tighter version would hold the *dimension* of what readers need fixed and vary only its</span>
+<span id="cb17-592"><a href="#cb17-592" aria-hidden="true" tabindex="-1"></a>*structure*: for instance eight tasks on subsets that overlap hierarchically against eight on</span>
+<span id="cb17-593"><a href="#cb17-593" aria-hidden="true" tabindex="-1"></a>subsets that overlap at random. That would separate "how much information" from "how</span>
+<span id="cb17-594"><a href="#cb17-594" aria-hidden="true" tabindex="-1"></a>organised the information is", which is closer to the essay's real claim. Not yet built.</span>
+<span id="cb17-595"><a href="#cb17-595" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-596"><a href="#cb17-596" aria-hidden="true" tabindex="-1"></a>:::</span>
+<span id="cb17-597"><a href="#cb17-597" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-598"><a href="#cb17-598" aria-hidden="true" tabindex="-1"></a><span class="fu">## Further reading</span></span>
+<span id="cb17-599"><a href="#cb17-599" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-600"><a href="#cb17-600" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>Elhage et al., *Toy Models of Superposition* (2022), especially the sections on feature</span>
+<span id="cb17-601"><a href="#cb17-601" aria-hidden="true" tabindex="-1"></a>  geometry, phase diagrams, and correlated features.</span>
+<span id="cb17-602"><a href="#cb17-602" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>The essay's appendix sections "Toy Models" and "A Note on Features and Definitions".</span>
 </code></pre></div><button title="Copy to Clipboard" class="code-copy-button" data-in-quarto-modal=""><i class="bi"></i></button></div>
 </div></div></div></div></div>
 </div> <!-- /content -->
