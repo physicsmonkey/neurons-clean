@@ -312,6 +312,77 @@ Terms in the essay's own sense, in roughly the order they appear.
 - **Already clean.** The essay's thesis: the network's own parts are built to be read by its
   own downstream parts, and are therefore readable by us without being decomposed first.
 
+::: {.beyond}
+
+## Questions from the reading group
+
+Raised in discussion on 22 October 2026. The answers are ours, not the essay's.
+
+**Under the recursive-generalisation picture, is the number of features capped at the number
+of neurons?**
+
+At the level of neuron-sized features, more or less yes. Each neuron, or each pole, is one
+coarse concept with a tree of related offshoots, so the number of first-class concepts in a
+layer is about twice the neuron count. The essay accepts this and treats it as fine, for
+three reasons.
+
+- *Granularity scales with room.* A small model has one car neuron; a large one has many
+  kinds of car. The missing distinctions in the small model are not hidden anywhere; the
+  model does not make them. The toy-model page shows this directly: twenty inputs are
+  represented as four directions, and the within-group identity is simply absent until a
+  reader wants it.
+- *Composition is not superposition.* "Dog in frontal pose" is represented by a dog neuron and
+  a pose neuron firing together, each independently meaningful. Readers use conjunctions
+  without any cancellation, so the number of distinguishable situations is combinatorial
+  without any neuron being a mixture. The essay cites Anthropic's note on exactly this
+  distinction.
+- *Depth adds levels.* Offshoots in one layer become first-class neurons in the next.
+
+The essay's broader move is to say that counting features was never the goal: what matters
+is whether every distinction the network uses can be traced to neurons and circuits, and the
+question "are there more features than dimensions" is, in its words, mostly irrelevant.
+Whether to accept that reframing is a fair thing to argue about.
+
+**So is the cap per layer or per network? Is the maximum roughly the residual-stream width,
+or do different layers hold different features so that the counts add?**
+
+The counts add. The cap is per layer of MLP neurons, different layers hold different
+features, and the neuron-level total is the sum over layers. Qwen3-32B has 64 layers of
+25,600 neurons, about 1.6 million, against a residual stream of width 5,120: neuron-level
+features outnumber stream dimensions by roughly 300 to 1. The same holds in a modern conv net.
+
+The residual stream is therefore not a cap on the number of features. It is a cap on how
+many can be *simultaneously* present and linearly separable at one position, and even that
+has slack. Four things reconcile 1.6 million writers with 5,120 dimensions:
+
+- *Features are not simultaneously active.* At any token only a small fraction of neurons
+  fire. The stream is a bus, not a storage array, so what has to fit at once is the active
+  set, not the catalogue.
+- *Directions are reused across depth.* A direction written by layer 10 and read by layer 14
+  can be overwritten or ignored afterwards, and layer 40 can use it for something else.
+- *Related neurons write nearby directions.* Many car-part neurons write into a shared car
+  region, which is composition rather than packing.
+- *Near-orthogonality is cheap in high dimension.* This is the Johnson–Lindenstrauss slack,
+  and it is the one place where the strict sense of superposition genuinely lives in the
+  stream.
+
+That last point is where the essay is most careful and least decisive. It concedes that
+packing in the stream, its sense (c), may be impossible to rule out, and claims only that it
+has not been a bottleneck in practice: neuron reads and writes come out clean, and
+attribution graphs come out clean. Its supporting evidence is the "crushing" experiment, in
+which a 7-million-parameter conv net was retrained with its stream four and eight times
+narrower, down to 46 dimensions in the last block, keeping the neurons. Accuracy fell from
+72% to 60% and then 39%, but the map of what the neurons do looked the same, only messier.
+The information flowing through the stream at any moment is far lower dimensional than the
+count of things that ever flow through it.
+
+The honest summary: the number of concepts a network can represent is set by its neurons,
+summed over layers, and by compositions of them. The stream width constrains concurrency and
+separability, not the catalogue. Whether the concurrent set is ever packed non-locally in the
+stream is the residual claim the essay leaves open, and it is where a sceptic should push.
+
+:::
+
 ## Further reading for this page
 
 - Olah et al., *Feature Visualization*, Distill 2017.

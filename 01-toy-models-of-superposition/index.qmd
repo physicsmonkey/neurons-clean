@@ -530,6 +530,45 @@ and related to nothing else. The essay's claim is that real networks are rarely 
 regime, and the rest of the essay is an attempt to show this empirically in vision and
 language models.
 
+::: {.beyond}
+
+## Questions from the reading group
+
+Raised in discussion on 22 October 2026. The answers are ours, not the essay's.
+
+**What does the readers experiment in section 6 actually test? If the number of independent
+tasks exceeds the bottleneck, isn't the network simply forced into something like
+superposition?**
+
+At the endpoints, yes, the outcome is forced by counting. Twelve independent sums cannot pass
+losslessly through five dimensions, so the network must drop some or pack them with
+interference; four sums can, so it does. The toy discovers nothing there.
+
+What it tests is a claim that is often read into the original toy: that *more features than
+dimensions implies superposition*. In both of our conditions there are twenty inputs and five
+dimensions, and in both the inputs are independent and sparse, so the original toy's premise
+holds identically. Yet with shared readers the network does not pack the twenty inputs at
+all. It builds four coarse directions and discards the within-group identity that nobody
+downstream asked for. The relevant count is not "features versus dimensions" but "what the
+readers need versus dimensions", and when readers want shared things the answer is
+coarse-and-clean rather than packed. That is the essay's "coarser, never fractured" in its
+smallest form.
+
+The non-trivial content is at the margins rather than the endpoints. With six or eight
+distinct sums the required information exceeds the bottleneck but overlaps partially, and
+the network's compromise is intermediate rather than a switch. When packing is forced, it only
+becomes cheap at high sparsity, so the original phase boundary reappears for the readers'
+quantities, which supports reading superposition as what one objective does in one regime
+rather than as a second principle. And the offshoot test shows that a single reader is enough
+to grow a private direction inside a coarse one.
+
+A tighter version would hold the *dimension* of what readers need fixed and vary only its
+*structure*: for instance eight tasks on subsets that overlap hierarchically against eight on
+subsets that overlap at random. That would separate "how much information" from "how
+organised the information is", which is closer to the essay's real claim. Not yet built.
+
+:::
+
 ## Further reading
 
 - Elhage et al., *Toy Models of Superposition* (2022), especially the sections on feature

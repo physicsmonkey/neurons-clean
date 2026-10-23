@@ -226,6 +226,53 @@ not a surprise, but it is a limit on how literally to take the word "V".
   and the "generalised pose neurons". That needs feature visualisation with and without the
   bias toward natural paths, which is the subject of the next section.
 
+::: {.beyond}
+
+## Questions from the reading group
+
+Raised in discussion on 22 October 2026. The answers are ours, not the essay's.
+
+**Before the essay, was the idea that 4e:55 fired on both cats and cars because it was
+helping encode those two features in superposition, with many other neurons firing too?**
+
+Roughly yes, with a historical wrinkle. *Zoom In* (2020) described 4e:55 as responding to cat
+faces, cat legs and car fronts, and offered superposition as a hypothesis for why: a network
+that needs more features than it has neurons folds several into one, and a neuron that is
+"OR(cat, car)" is the visible symptom. *Toy Models of Superposition* only made this precise
+in 2022. Under the precise version a feature is a direction in activation space, and if the
+car direction is not neuron-aligned it spans several neurons: 4e:55 carries a piece of "car"
+and a piece of "cat", other neurons carry other pieces, and a downstream reader recovers "car"
+by the linear combination that cancels the cat part. Interference is tolerable because cats
+and cars rarely co-occur. The car-into-dogs circuit was read the same way, as the car being
+stored across several dog neurons for later decoding.
+
+The essay's rebuttal is aimed at the decoding step. If that were the mechanism, some
+downstream weight pattern would have to read the cancelling combination. The essay says none
+does: the readers of 4e:55 use it as one thing (its strongest reader is a V-shaped-flame
+neuron, which we confirmed from the weights above), and the dog neurons the car writes into
+are shared pose neurons feeding car specialists. "Nothing reads that combination" turns a
+question about appearances into a question about weights.
+
+**The neuron does not fire strongly for a literal drawn V. How should we make sense of the
+"V-shape" label? Is it "V-shapes in objects"?**
+
+Yes, and we would go a little further. A neuron at `mixed4e` is defined by its inputs, and
+its strongest inputs are already part detectors: a fox snout, a wolf face, a van front. What
+those share is a pointed, convergent frontal structure built from the textures and parts that
+mid-level neurons respond to. A line drawing has the geometry but none of the parts, so it
+drives none of the inputs and therefore barely drives the neuron. The essay's own footnote
+says this: to see the shared pattern you have to visualise what the neuron's *inputs* have in
+common, not the neuron on its own.
+
+So "V" is a compression of "pointed convergent front, as it appears in natural objects". The
+COCO result supports that compression, since goats, horses, train noses, aircraft and
+converging court lines all drive it, which OR(cat, car) cannot explain. What the evidence does
+not settle is whether "V" is a better label than "frontal pointed object". A sharper synthetic
+test would use photographic crops of pointed things with no face, such as boat bows, roof
+gables and arrowheads, rather than drawn lines.
+
+:::
+
 ## Discussion questions
 
 1. The neuron fires on cat faces far more strongly than on anything else in COCO. Is a neuron
